@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>SINTA - Thinking AI</title>
 	
 	<meta name="apple-mobile-web-app-capable" content="yes">
@@ -11,7 +11,6 @@
     <meta name="apple-mobile-web-app-title" content="AURA">
     <link rel="apple-touch-icon" href="icon/icon-512.png">
     <link rel="icon" type="image/png" href="icon/icon-512.png">
-	
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -20,176 +19,182 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono&display=swap');
         
-        body {
-		    font-family: 'Inter', sans-serif;
-		    overscroll-behavior: none;
-		    touch-action: pan-x pan-y;
-		    -webkit-text-size-adjust: 100%;
-		}
-		
-		header, footer {
-    touch-action: none;
-    user-select: none;
-}
+        html, body {
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            overscroll-behavior: none;
+            -webkit-text-size-adjust: 100%;
+            font-family: 'Inter', sans-serif;
+        }
 
-#chatContainer {
-    overscroll-behavior-y: contain;
-    -webkit-overflow-scrolling: touch;
-}
-		
-		code {
-		    font-family: 'JetBrains Mono', monospace;
-		}
-		
-		.prose pre {
-		    background: #f3f4f6 !important;
-		    padding: 1rem !important;
-		    border-radius: 1rem !important;
-		    margin: 0.75rem 0;
-		    overflow-x: auto;
-		    
-		}
-		
-		.prose pre code {
-		    background: transparent !important;
-		    padding: 0 !important;
-		}
-		
-		.prose code {
-		    color: #1f2937;
-		    font-size: 0.85rem;
-		}
-		
-		.prose ul {
-		    list-style-type: disc;
-		    margin-left: 1.5rem;
-		    margin-bottom: 0.75rem;
-		}
-		
-		.prose ol {
-		    list-style-type: decimal;
-		    margin-left: 1.5rem;
-		    margin-bottom: 0.75rem;
-		}
-		
-		.prose table {
-		    width: 100%;
-		    border-collapse: collapse;
-		    margin: 0.75rem 0;
-		    font-size: 0.875rem;
-		}
-		
-		.prose th, .prose td {
-		    border: 1px solid #e5e7eb;
-		    padding: 0.5rem 0.75rem;
-		    text-align: left;
-		}
-		
-		.prose th {
-		    background-color: #f9fafb;
-		    font-weight: 600;
-		}
-		
-		.prose p {
-		    margin-bottom: 0.5rem;
-		}
-		
-		.prose *:last-child {
-		    margin-bottom: 0 !important;
-		}
-		
-		.custom-scroll::-webkit-scrollbar {
-		    width: 5px;
-		}
-		
-		.custom-scroll::-webkit-scrollbar-thumb {
-		    background: #e5e7eb;
-		    border-radius: 10px;
-		}
-		
-		.app-container {
-    height: 100dvh;
-    display: grid;
-    grid-template-rows: 72px 1fr auto;
-    grid-template-areas: 
-        "header"
-        "main"
-        "footer";
-    overflow: hidden;
-    background-color: #ffffff;
-}
-		
-		.content-width {
-		    width: 100%;
-		    max-width: 48rem;
-		    margin-left: auto;
-		    margin-right: auto;
-		}
-		
-		textarea:focus {
-		    outline: none;
-		    box-shadow: none;
-		}
-		
-		@keyframes dots {
-		    0%, 20% { content: ''; }
-		    40% { content: '.'; }
-		    60% { content: '..'; }
-		    80%, 100% { content: '...'; }
-		}
-		
-		.thinking-text::after {
-		    content: '';
-		    animation: dots 1.5s steps(4, end) infinite;
-		}
+        .app-container {
+            height: 100dvh;
+            display: grid;
+            grid-template-rows: 72px 1fr auto;
+            grid-template-areas: 
+                "header"
+                "main"
+                "footer";
+            overflow: hidden;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ffffff;
+        }
+
+        header { grid-area: header; }
+        main { grid-area: main; }
+        footer { grid-area: footer; }
+
+        header, footer {
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
+            z-index: 30;
+        }
+
+        #chatContainer {
+            overflow-y: auto;
+            overscroll-behavior-y: contain;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+            overflow-anchor: auto;
+        }
+
+        code { font-family: 'JetBrains Mono', monospace; }
+
+        .prose pre {
+            background: #f3f4f6 !important;
+            padding: 1rem !important;
+            border-radius: 1rem !important;
+            margin: 0.75rem 0;
+            overflow-x: auto;
+        }
+
+        .prose pre code {
+            background: transparent !important;
+            padding: 0 !important;
+        }
+
+        .prose code {
+            color: #1f2937;
+            font-size: 0.85rem;
+        }
+
+        .prose ul {
+            list-style-type: disc;
+            margin-left: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .prose ol {
+            list-style-type: decimal;
+            margin-left: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .prose table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0.75rem 0;
+            font-size: 0.875rem;
+        }
+
+        .prose th, .prose td {
+            border: 1px solid #e5e7eb;
+            padding: 0.5rem 0.75rem;
+            text-align: left;
+        }
+
+        .prose th {
+            background-color: #f9fafb;
+            font-weight: 600;
+        }
+
+        .prose p { margin-bottom: 0.5rem; }
+        .prose *:last-child { margin-bottom: 0 !important; }
+
+        .custom-scroll::-webkit-scrollbar { width: 5px; }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #e5e7eb;
+            border-radius: 10px;
+        }
+
+        .content-width {
+            width: 100%;
+            max-width: 48rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        textarea:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: ''; }
+            40% { content: '.'; }
+            60% { content: '..'; }
+            80%, 100% { content: '...'; }
+        }
+
+        .thinking-text::after {
+            content: '';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
     </style>
 </head>
-<body class="text-slate-900 overflow-hidden">
+<body class="text-slate-900">
 
     <div class="app-container">
-        <header class="border-b border-slate-100 bg-white z-20 w-full px-4 md:px-8" style="grid-area: header;">
-    <div class="h-full flex justify-between items-center">
-        <div class="flex items-center gap-3">
-            <div class="bg-indigo-600 p-2 rounded-xl">
-                <i data-lucide="brain" class="text-white w-5 h-5"></i>
-            </div>
-            <div>
-                <h1 class="font-extrabold text-lg tracking-tight leading-none uppercase text-indigo-600">SINTA</h1>
-            </div>
-        </div>
-        <button id="clearBtn" class="p-2.5 hover:bg-slate-50 text-slate-400 rounded-xl transition-all active:scale-95">
-            <i data-lucide="rotate-ccw" class="w-5 h-5"></i>
-        </button>
-    </div>
-</header>
-
-<main id="chatContainer" class="overflow-y-auto custom-scroll bg-white" style="grid-area: main;">
-    <div class="content-width px-4 md:px-8 pt-4 md:pt-8 pb-0 space-y-4">
-        <div id="messagesArea" class="space-y-4 pb-2"></div>
-    </div>
-</main>
-
-<footer class="bg-white z-20 pb-[calc(1rem+env(safe-area-inset-bottom))] md:pb-6 w-full border-t border-slate-50" style="grid-area: footer;">
-    <div class="content-width px-4 md:px-8 py-4">
-        <form id="chatForm" class="w-full flex items-center gap-3">
-            <div class="relative flex-1 flex items-center bg-slate-50 rounded-[28px] px-2 py-1.5 transition-all focus-within:bg-slate-100">
-                <textarea
-                    id="userInput"
-                    placeholder="Tulis pesan..."
-                    rows="1"
-                    class="w-full bg-transparent border-none py-3 px-4 focus:ring-0 text-sm font-semibold resize-none overflow-hidden placeholder:text-slate-400"
-                ></textarea>
-                <button
-                    type="submit"
-                    id="sendBtn"
-                    class="p-2.5 bg-slate-800 text-white rounded-full hover:bg-slate-900 shadow-sm transition-all active:scale-95 shrink-0 flex items-center justify-center min-w-[40px] h-[40px]"
-                >
-                    <i data-lucide="arrow-right" class="w-5 h-5"></i>
+        <header class="border-b border-slate-100 bg-white w-full px-4 md:px-8">
+            <div class="h-full flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div class="bg-indigo-600 p-2 rounded-xl">
+                        <i data-lucide="brain" class="text-white w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-extrabold text-lg tracking-tight leading-none uppercase text-indigo-600">SINTA</h1>
+                    </div>
+                </div>
+                <button id="clearBtn" class="p-2.5 hover:bg-slate-50 text-slate-400 rounded-xl transition-all active:scale-95">
+                    <i data-lucide="rotate-ccw" class="w-5 h-5"></i>
                 </button>
             </div>
-        </form>
-    </div>
-</footer>
+        </header>
+
+        <main id="chatContainer" class="custom-scroll bg-white">
+            <div class="content-width px-4 md:px-8 pt-4 md:pt-8 pb-0 space-y-4">
+                <div id="messagesArea" class="space-y-4 pb-2"></div>
+            </div>
+        </main>
+
+        <footer class="bg-white pb-[calc(1rem+env(safe-area-inset-bottom))] md:pb-6 w-full border-t border-slate-50">
+            <div class="content-width px-4 md:px-8 py-4">
+                <form id="chatForm" class="w-full flex items-center gap-3">
+                    <div class="relative flex-1 flex items-center bg-slate-50 rounded-[28px] px-2 py-1.5 transition-all focus-within:bg-slate-100">
+                        <textarea
+                            id="userInput"
+                            placeholder="Tulis pesan..."
+                            rows="1"
+                            class="w-full bg-transparent border-none py-3 px-4 focus:ring-0 text-sm font-semibold resize-none overflow-hidden placeholder:text-slate-400"
+                        ></textarea>
+                        <button
+                            type="submit"
+                            id="sendBtn"
+                            class="p-2.5 bg-slate-800 text-white rounded-full hover:bg-slate-900 shadow-sm transition-all active:scale-95 shrink-0 flex items-center justify-center min-w-[40px] h-[40px]"
+                        >
+                            <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </footer>
     </div>
 
     <script>
@@ -222,40 +227,44 @@
         let isGenerating = false;
         let abortController = null;
 
+        function scrollBottom(smooth = true) {
+            if (!chatContainer) return;
+            const isAtBottom = chatContainer.scrollHeight - chatContainer.scrollTop <= chatContainer.clientHeight + 100;
+            if (isAtBottom || !smooth) {
+                chatContainer.scrollTo({
+                    top: chatContainer.scrollHeight,
+                    behavior: smooth ? 'smooth' : 'auto'
+                });
+            }
+        }
+
         function renderHistory() {
-		    messagesArea.innerHTML = '';
-		    chatHistory.forEach(msg => {
-		        const role = msg.role === 'user' ? 'user' : 'model';
-		        appendMessageToUI(role, msg.parts[0].text, true);
-		    });
-		
-		    setTimeout(() => {
-		        scrollBottom(true);
-		    }, 300);
-		}
-		
-		function init() {
-		    const savedHistory = localStorage.getItem(STORAGE_KEY);
-		    if (savedHistory) {
-		        chatHistory = JSON.parse(savedHistory);
-		        renderHistory();
-		    }
-		}
-		
-		function scrollBottom(smooth = true) {
-		    requestAnimationFrame(() => {
-		        chatContainer.scrollTo({
-		            top: chatContainer.scrollHeight,
-		            behavior: smooth ? 'smooth' : 'auto'
-		        });
-		    });
-		}
+            messagesArea.innerHTML = '';
+            chatHistory.forEach(msg => {
+                const role = msg.role === 'user' ? 'user' : 'model';
+                appendMessageToUI(role, msg.parts[0].text, false);
+            });
+            setTimeout(() => scrollBottom(false), 100);
+        }
+        
+        function init() {
+            const savedHistory = localStorage.getItem(STORAGE_KEY);
+            if (savedHistory) {
+                chatHistory = JSON.parse(savedHistory);
+                renderHistory();
+            }
+        }
 
         userInput.addEventListener('input', function() {
             this.style.height = 'auto';
             const newHeight = Math.min(this.scrollHeight, 150);
             this.style.height = newHeight + 'px';
             this.style.overflowY = this.scrollHeight > 150 ? 'auto' : 'hidden';
+            window.scrollTo(0, 0);
+        });
+
+        userInput.addEventListener('blur', () => {
+            window.scrollTo(0, 0);
         });
 
         function appendMessageToUI(role, text, animate = true) {
@@ -268,16 +277,16 @@
             div.className = `w-full ${animate ? 'animate-in fade-in slide-in-from-bottom-2 duration-300' : ''} mb-2`;
 
             div.innerHTML = `
-			    <div class="w-full bg-slate-50 rounded-2xl p-4 shadow-sm border-none">
-			        <div class="flex justify-between items-center border-b border-slate-100 pb-1 mb-0.5">
-			            <span class="text-[10px] font-black text-indigo-600 uppercase tracking-widest">${nameLabel}</span>
-			            <span class="text-[10px] font-bold text-slate-300 uppercase">${timeStr}</span>
-			        </div>
-			        <div class="w-full prose-container prose prose-sm max-w-none text-slate-800 text-[15px] leading-relaxed font-medium">
-			            ${isError ? `<div class="text-red-600 text-xs font-mono whitespace-pre-wrap">${text}</div>` : marked.parse(text)}
-			        </div>
-			    </div>
-			`;
+                <div class="w-full bg-slate-50 rounded-2xl p-4 shadow-sm border-none">
+                    <div class="flex justify-between items-center border-b border-slate-100 pb-1 mb-0.5">
+                        <span class="text-[10px] font-black text-indigo-600 uppercase tracking-widest">${nameLabel}</span>
+                        <span class="text-[10px] font-bold text-slate-300 uppercase">${timeStr}</span>
+                    </div>
+                    <div class="w-full prose-container prose prose-sm max-w-none text-slate-800 text-[15px] leading-relaxed font-medium">
+                        ${isError ? `<div class="text-red-600 text-xs font-mono whitespace-pre-wrap">${text}</div>` : marked.parse(text)}
+                    </div>
+                </div>
+            `;
 
             messagesArea.appendChild(div);
             lucide.createIcons();
@@ -290,21 +299,16 @@
 
         async function streamText(element, text) {
             let cursor = 0;
-            let currentDisplay = "";
-            
             while (cursor < text.length) {
                 if (!isGenerating) break;
-                
                 cursor += STREAM_CHUNK_SIZE;
-                currentDisplay = text.substring(0, cursor);
-                
+                const currentDisplay = text.substring(0, cursor);
                 element.innerHTML = marked.parse(currentDisplay);
-                
-                scrollBottom(false); 
-                
+                if (cursor % (STREAM_CHUNK_SIZE * 3) === 0) {
+                    scrollBottom(false);
+                }
                 await new Promise(resolve => setTimeout(resolve, STREAM_SPEED));
             }
-            
             element.innerHTML = marked.parse(text);
             if (window.hljs) {
                 element.querySelectorAll('pre code').forEach(hljs.highlightElement);
@@ -314,23 +318,23 @@
         }
 
         function showTyping() {
-		    const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-		    typingBubble = document.createElement('div');
-		    typingBubble.className = "w-full animate-in fade-in slide-in-from-bottom-2 duration-300 mb-2";
-		    typingBubble.innerHTML = `
-		        <div class="w-full bg-slate-50 rounded-2xl p-4 shadow-sm border-none">
-		            <div class="flex justify-between items-center border-b border-slate-100 pb-1 mb-0.5">
-		                <span class="text-[10px] font-black text-indigo-600 uppercase tracking-widest">SINTA</span>
-		                <span class="text-[10px] font-bold text-slate-300 uppercase">${timeStr}</span>
-		            </div>
-		            <div class="flex items-baseline">
-		                <span class="text-[14px] leading-relaxed font-medium italic text-gray-600 thinking-text">sedang mikir</span>
-		            </div>
-		        </div>
-		    `;
-		    messagesArea.appendChild(typingBubble);
-		    scrollBottom(true);
-		}
+            const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            typingBubble = document.createElement('div');
+            typingBubble.className = "w-full animate-in fade-in slide-in-from-bottom-2 duration-300 mb-2";
+            typingBubble.innerHTML = `
+                <div class="w-full bg-slate-50 rounded-2xl p-4 shadow-sm border-none">
+                    <div class="flex justify-between items-center border-b border-slate-100 pb-1 mb-0.5">
+                        <span class="text-[10px] font-black text-indigo-600 uppercase tracking-widest">SINTA</span>
+                        <span class="text-[10px] font-bold text-slate-300 uppercase">${timeStr}</span>
+                    </div>
+                    <div class="flex items-baseline">
+                        <span class="text-[14px] leading-relaxed font-medium italic text-gray-600 thinking-text">sedang mikir</span>
+                    </div>
+                </div>
+            `;
+            messagesArea.appendChild(typingBubble);
+            scrollBottom(true);
+        }
 
         function hideTyping() {
             if (typingBubble) {
@@ -340,28 +344,26 @@
         }
 
         function setGeneratingState(state) {
-		    isGenerating = state;
-		    if (state) {
-		        sendBtn.innerHTML = '<i data-lucide="square" class="w-5 h-5 text-red-600" fill="currentColor"></i>';
-		        sendBtn.classList.remove('bg-gray-800', 'hover:bg-gray-900', 'text-white');
-		        sendBtn.classList.add('bg-gray-100', 'hover:bg-gray-100');
-		    } else {
-		        sendBtn.innerHTML = '<i data-lucide="arrow-right" class="w-5 h-5 text-white"></i>';
-		        sendBtn.classList.remove('bg-gray-100', 'hover:bg-gray-200');
-		        sendBtn.classList.add('bg-gray-800', 'hover:bg-gray-900', 'text-white');
-		    }
-		    lucide.createIcons();
-		}
+            isGenerating = state;
+            if (state) {
+                sendBtn.innerHTML = '<i data-lucide="square" class="w-5 h-5 text-red-600" fill="currentColor"></i>';
+                sendBtn.classList.remove('bg-gray-800', 'text-white');
+                sendBtn.classList.add('bg-gray-100');
+            } else {
+                sendBtn.innerHTML = '<i data-lucide="arrow-right" class="w-5 h-5 text-white"></i>';
+                sendBtn.classList.remove('bg-gray-100');
+                sendBtn.classList.add('bg-gray-800', 'text-white');
+            }
+            lucide.createIcons();
+        }
 
         async function sendMessage(e) {
             e.preventDefault();
-
             if (isGenerating) {
                 if (abortController) abortController.abort();
                 setGeneratingState(false);
                 return;
             }
-
             const prompt = userInput.value.trim();
             if (!prompt) return;
 
@@ -400,17 +402,14 @@
                 parts.forEach(part => { if (part.text && !part.thought) finalResponse += part.text; });
 
                 hideTyping();
-                
                 if (finalResponse) {
                     const aiContainer = appendMessageToUI('model', "");
                     await streamText(aiContainer, finalResponse);
-                    
                     if (isGenerating) { 
                         chatHistory.push({ role: "model", parts: [{ text: finalResponse }] });
                         localStorage.setItem(STORAGE_KEY, JSON.stringify(chatHistory));
                     }
                 }
-
             } catch (error) {
                 hideTyping();
                 if (error.name !== 'AbortError') {
@@ -433,29 +432,32 @@
                 messagesArea.innerHTML = '';
             }
         });
-		
-		document.addEventListener('touchstart', function (event) {
-		    if (event.touches.length > 1) {
-		        event.preventDefault();
-		    }
-		}, { passive: false });
-		
-		let lastTouchEnd = 0;
-		document.addEventListener('touchend', function (event) {
-		    const now = (new Date()).getTime();
-		    if (now - lastTouchEnd <= 300) {
-		        event.preventDefault();
-		    }
-		    lastTouchEnd = now;
-		}, false);
-		
-		document.addEventListener('gesturestart', function (event) {
-		    event.preventDefault();
-		});
-		
-		userInput.addEventListener('blur', () => {
-		    window.scrollTo(0, 0);
-		});
+
+        document.addEventListener('touchstart', (e) => {
+            if (e.touches.length > 1) e.preventDefault();
+        }, { passive: false });
+
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', (e) => {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) e.preventDefault();
+            lastTouchEnd = now;
+        }, false);
+
+        document.addEventListener('gesturestart', (e) => e.preventDefault());
+
+        const lockElements = document.querySelectorAll('header, footer');
+        lockElements.forEach(el => {
+            el.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
+        });
+
+        chatContainer.addEventListener('touchstart', () => {
+            const top = chatContainer.scrollTop;
+            const totalScroll = chatContainer.scrollHeight;
+            const currentScroll = top + chatContainer.offsetHeight;
+            if (top === 0) chatContainer.scrollTop = 1;
+            else if (currentScroll === totalScroll) chatContainer.scrollTop = top - 1;
+        }, { passive: true });
 
         init();
     </script>
