@@ -2,227 +2,436 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="theme-color" content="#ffffff">
-    <meta name="apple-mobile-web-app-title" content="AURA">
-    <link rel="apple-touch-icon" href="icon/icon-512.png">
-    <link rel="icon" type="image/png" href="icon/icon-512.png">
-    <title>AURA No-Bounce UI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SINTA - Thinking AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        html, body {
-            height: 100%;
-            width: 100%;
-            position: fixed;
-            overflow: hidden;
-            background-color: #ffffff;
-            touch-action: none;
-        }
-
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono&display=swap');
+        
         body {
-            display: grid;
-            grid-template-rows: auto 1fr auto;
-            height: 100dvh;
-            width: 100vw;
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-            color: #1a1a1a;
-            overscroll-behavior: none;
-        }
-
-        header {
-            background-color: #ffffff;
-            padding: 1.2rem;
-            text-align: center;
-            border-bottom: 1px solid #f0f0f0;
-            z-index: 10;
-            touch-action: none;
-        }
-
-        header h1 {
-            font-size: 1rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
-
-        main {
-            overflow-y: auto;
-            background-color: #ffffff;
-            -webkit-overflow-scrolling: touch;
-            overscroll-behavior-y: contain;
-            touch-action: pan-y;
-        }
-
-        .chat-area {
-            max-width: 700px;
-            margin: 0 auto;
-            padding: 2rem 1.2rem;
-        }
-
-        .bubble {
-            background: #f3f4f6;
-            padding: 1rem;
-            border-radius: 18px;
-            max-width: 85%;
-            font-size: 0.95rem;
-            line-height: 1.4;
-            margin-bottom: 1rem;
-        }
-
-        footer {
-            background-color: #ffffff;
-            border-top: 1px solid #f0f0f0;
-            padding: 0.75rem 0 calc(0.75rem + env(safe-area-inset-bottom));
-            touch-action: none;
-            z-index: 10;
-        }
-
-        .input-container {
-            max-width: 700px;
-            margin: 0 auto;
-            padding: 0 1rem;
-        }
-
-        .input-box {
-            background-color: #f3f4f6;
-            border-radius: 20px;
-            padding: 8px;
-            display: grid;
-            grid-template-rows: auto auto;
-            gap: 4px;
-        }
-
-        .input-row {
-            display: grid;
-            grid-template-columns: auto 1fr auto;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .media-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            border-top: 1px solid rgba(0,0,0,0.03);
-            padding-top: 4px;
-        }
-
-        textarea {
-            width: 100%;
-            border: none;
-            background: transparent;
-            padding: 8px;
-            font-family: inherit;
-            font-size: 16px;
-            resize: none;
-            outline: none;
-            max-height: 120px;
-            color: #1a1a1a;
-        }
-
-        .btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 8px;
-            color: #666;
-        }
-
-        .btn:active {
-            transform: scale(0.9);
-            color: #000;
-        }
-
-        .send-btn {
-            color: #007bff;
-        }
+    font-family: 'Inter', sans-serif;
+    overscroll-behavior: none;
+    touch-action: pan-x pan-y;
+    -webkit-text-size-adjust: 100%;
+}
+		
+		code {
+		    font-family: 'JetBrains Mono', monospace;
+		}
+		
+		.prose pre {
+		    background: #f3f4f6 !important;
+		    padding: 1rem !important;
+		    border-radius: 1rem !important;
+		    margin: 0.75rem 0;
+		    overflow-x: auto;
+		    
+		}
+		
+		.prose pre code {
+		    background: transparent !important;
+		    padding: 0 !important;
+		}
+		
+		.prose code {
+		    color: #1f2937;
+		    font-size: 0.85rem;
+		}
+		
+		.prose ul {
+		    list-style-type: disc;
+		    margin-left: 1.5rem;
+		    margin-bottom: 0.75rem;
+		}
+		
+		.prose ol {
+		    list-style-type: decimal;
+		    margin-left: 1.5rem;
+		    margin-bottom: 0.75rem;
+		}
+		
+		.prose table {
+		    width: 100%;
+		    border-collapse: collapse;
+		    margin: 0.75rem 0;
+		    font-size: 0.875rem;
+		}
+		
+		.prose th, .prose td {
+		    border: 1px solid #e5e7eb;
+		    padding: 0.5rem 0.75rem;
+		    text-align: left;
+		}
+		
+		.prose th {
+		    background-color: #f9fafb;
+		    font-weight: 600;
+		}
+		
+		.prose p {
+		    margin-bottom: 0.5rem;
+		}
+		
+		.prose *:last-child {
+		    margin-bottom: 0 !important;
+		}
+		
+		.custom-scroll::-webkit-scrollbar {
+		    width: 5px;
+		}
+		
+		.custom-scroll::-webkit-scrollbar-thumb {
+		    background: #e5e7eb;
+		    border-radius: 10px;
+		}
+		
+		.app-container {
+		    height: 100dvh;
+		    display: flex;
+		    flex-direction: column;
+		    overflow: hidden;
+		    background-color: #ffffff;
+		}
+		
+		.content-width {
+		    width: 100%;
+		    max-width: 48rem;
+		    margin-left: auto;
+		    margin-right: auto;
+		}
+		
+		textarea:focus {
+		    outline: none;
+		    box-shadow: none;
+		}
+		
+		@keyframes dots {
+		    0%, 20% { content: ''; }
+		    40% { content: '.'; }
+		    60% { content: '..'; }
+		    80%, 100% { content: '...'; }
+		}
+		
+		.thinking-text::after {
+		    content: '';
+		    animation: dots 1.5s steps(4, end) infinite;
+		}
     </style>
 </head>
-<body>
+<body class="text-slate-900 overflow-hidden">
 
-    <header id="fixed-header">
-        <h1>AURA</h1>
-    </header>
-
-    <main id="scroll-content">
-        <div class="chat-area">
-            <div class="bubble">Efek karet iOS sudah dimatikan.</div>
-            <div class="bubble">Header dan footer kini terkunci rapat.</div>
-            <div style="height: 1500px;"></div>
-            <div class="bubble">Batas akhir pesan.</div>
-        </div>
-    </main>
-
-    <footer id="fixed-footer">
-        <div class="input-container">
-            <div class="input-box">
-                <div class="input-row">
-                    <button class="btn"><i data-lucide="plus" size="20"></i></button>
-                    <textarea placeholder="Pesan" rows="1"></textarea>
-                    <button class="btn send-btn"><i data-lucide="send-horizontal" size="20"></i></button>
+    <div class="app-container">
+        <header class="h-[72px] border-b border-slate-100 shrink-0 bg-white z-20 w-full px-4 md:px-8">
+            <div class="h-full flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <div class="bg-indigo-600 p-2 rounded-xl">
+                        <i data-lucide="brain" class="text-white w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-extrabold text-lg tracking-tight leading-none uppercase text-indigo-600">SINTA</h1>
+                    </div>
                 </div>
-                <div class="media-row">
-                    <button class="btn"><i data-lucide="image" size="18"></i></button>
-                    <button class="btn"><i data-lucide="video" size="18"></i></button>
-                    <button class="btn"><i data-lucide="mic" size="18"></i></button>
-                </div>
+                <button id="clearBtn" class="p-2.5 hover:bg-slate-50 text-slate-400 rounded-xl transition-all active:scale-95">
+                    <i data-lucide="rotate-ccw" class="w-5 h-5"></i>
+                </button>
             </div>
-        </div>
-    </footer>
+        </header>
+
+        <main id="chatContainer" class="flex-1 overflow-y-auto custom-scroll bg-white">
+		    <div class="content-width px-4 md:px-8 pt-4 md:pt-8 pb-0 space-y-4">
+		        <div id="messagesArea" class="space-y-4 pb-8"></div>
+		    </div>
+		</main>
+
+        <footer class="bg-white shrink-0 z-20 pb-[calc(1rem+env(safe-area-inset-bottom))] md:pb-6 w-full border-t border-slate-50">
+            <div class="content-width px-4 md:px-8 py-4">
+                <form id="chatForm" class="w-full flex items-center gap-3">
+                    <div class="relative flex-1 flex items-center bg-slate-50 rounded-[28px] px-2 py-1.5 transition-all focus-within:bg-slate-100">
+                        <textarea
+                            id="userInput"
+                            placeholder="Tulis pesan..."
+                            rows="1"
+                            class="w-full bg-transparent border-none py-3 px-4 focus:ring-0 text-sm font-semibold resize-none overflow-hidden placeholder:text-slate-400"
+                        ></textarea>
+                        <button
+						    type="submit"
+						    id="sendBtn"
+						    class="p-2.5 bg-slate-800 text-white rounded-full hover:bg-slate-900 shadow-sm transition-all active:scale-95 shrink-0 flex items-center justify-center min-w-[40px] h-[40px]"
+						>
+						    <i data-lucide="arrow-right" class="w-5 h-5"></i>
+						</button>
+                    </div>
+                </form>
+            </div>
+        </footer>
+    </div>
 
     <script>
         lucide.createIcons();
 
-        const tx = document.querySelector("textarea");
-
-        const fixScroll = () => {
-            window.scrollTo(0, 0);
-            document.body.scrollTop = 0;
-        };
-
-        tx.addEventListener("focus", fixScroll);
-        tx.addEventListener("blur", fixScroll);
-        tx.addEventListener("input", function() {
-            fixScroll();
-            this.style.height = "auto";
-            this.style.height = (this.scrollHeight) + "px";
+        marked.setOptions({
+            gfm: true,
+            breaks: true,
+            headerIds: false,
+            mangle: false
         });
 
-        document.addEventListener('touchmove', function (e) {
-            if (!e.target.closest('#scroll-content')) {
-                e.preventDefault();
-            }
-        }, { passive: false });
+        const PROXY_URL = "https://eofuiyhnyyxrapxilank.supabase.co/functions/v1/ai-proxy-v2";
+        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVvZnVpeWhueXl4cmFweGlsYW5rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU5Mzc3NTEsImV4cCI6MjA4MTUxMzc1MX0.aogUNcs5K2-q7h8cDHpgRwYN5dTO9sm2P2aHlKeUlvc";
+        const MODEL_NAME = "gemini-3-flash-preview";
+        const STORAGE_KEY = "sinta_chat_history";
+        
+        const STREAM_SPEED = 8; 
+        const STREAM_CHUNK_SIZE = 5; 
 
-        document.addEventListener('touchstart', function (event) {
-            if (event.touches.length > 1) {
-                event.preventDefault();
-            }
-        }, { passive: false });
+        const chatForm = document.getElementById('chatForm');
+        const userInput = document.getElementById('userInput');
+        const chatContainer = document.getElementById('chatContainer');
+        const messagesArea = document.getElementById('messagesArea');
+        const clearBtn = document.getElementById('clearBtn');
+        const sendBtn = document.getElementById('sendBtn');
 
-        let lastTouchEnd = 0;
-        document.addEventListener('touchend', function (event) {
-            const now = (new Date()).getTime();
-            if (now - lastTouchEnd <= 300) {
-                event.preventDefault();
-            }
-            lastTouchEnd = now;
-        }, false);
+        let chatHistory = [];
+        let typingBubble = null;
+        let isGenerating = false;
+        let abortController = null;
 
-        document.addEventListener('gesturestart', function (event) {
-            event.preventDefault();
+        function renderHistory() {
+		    messagesArea.innerHTML = '';
+		    chatHistory.forEach(msg => {
+		        const role = msg.role === 'user' ? 'user' : 'model';
+		        appendMessageToUI(role, msg.parts[0].text, true);
+		    });
+		
+		    setTimeout(() => {
+		        scrollBottom(true);
+		    }, 300);
+		}
+		
+		function init() {
+		    const savedHistory = localStorage.getItem(STORAGE_KEY);
+		    if (savedHistory) {
+		        chatHistory = JSON.parse(savedHistory);
+		        renderHistory();
+		    }
+		}
+		
+		function scrollBottom(smooth = true) {
+		    requestAnimationFrame(() => {
+		        chatContainer.scrollTo({
+		            top: chatContainer.scrollHeight,
+		            behavior: smooth ? 'smooth' : 'auto'
+		        });
+		    });
+		}
+
+        userInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            const newHeight = Math.min(this.scrollHeight, 150);
+            this.style.height = newHeight + 'px';
+            this.style.overflowY = this.scrollHeight > 150 ? 'auto' : 'hidden';
         });
+
+        function appendMessageToUI(role, text, animate = true) {
+            const isUser = role === 'user';
+            const isError = role === 'error';
+            const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const nameLabel = isUser ? 'USER' : (isError ? 'SYSTEM ERROR' : 'SINTA');
+
+            const div = document.createElement('div');
+            div.className = `w-full ${animate ? 'animate-in fade-in slide-in-from-bottom-2 duration-300' : ''} mb-2`;
+
+            div.innerHTML = `
+			    <div class="w-full bg-slate-50 rounded-2xl p-4 shadow-sm border-none">
+			        <div class="flex justify-between items-center border-b border-slate-100 pb-1 mb-0.5">
+			            <span class="text-[10px] font-black text-indigo-600 uppercase tracking-widest">${nameLabel}</span>
+			            <span class="text-[10px] font-bold text-slate-300 uppercase">${timeStr}</span>
+			        </div>
+			        <div class="w-full prose-container prose prose-sm max-w-none text-slate-800 text-[15px] leading-relaxed font-medium">
+			            ${isError ? `<div class="text-red-600 text-xs font-mono whitespace-pre-wrap">${text}</div>` : marked.parse(text)}
+			        </div>
+			    </div>
+			`;
+
+            messagesArea.appendChild(div);
+            lucide.createIcons();
+            if (window.hljs) {
+                div.querySelectorAll('pre code').forEach(hljs.highlightElement);
+            }
+            if (animate) scrollBottom(true);
+            return div.querySelector('.prose-container');
+        }
+
+        async function streamText(element, text) {
+            let cursor = 0;
+            let currentDisplay = "";
+            
+            while (cursor < text.length) {
+                if (!isGenerating) break;
+                
+                cursor += STREAM_CHUNK_SIZE;
+                currentDisplay = text.substring(0, cursor);
+                
+                element.innerHTML = marked.parse(currentDisplay);
+                
+                scrollBottom(false); 
+                
+                await new Promise(resolve => setTimeout(resolve, STREAM_SPEED));
+            }
+            
+            element.innerHTML = marked.parse(text);
+            if (window.hljs) {
+                element.querySelectorAll('pre code').forEach(hljs.highlightElement);
+            }
+            lucide.createIcons();
+            scrollBottom(true);
+        }
+
+        function showTyping() {
+		    const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+		    typingBubble = document.createElement('div');
+		    typingBubble.className = "w-full animate-in fade-in slide-in-from-bottom-2 duration-300 mb-2";
+		    typingBubble.innerHTML = `
+		        <div class="w-full bg-slate-50 rounded-2xl p-4 shadow-sm border-none">
+		            <div class="flex justify-between items-center border-b border-slate-100 pb-1 mb-0.5">
+		                <span class="text-[10px] font-black text-indigo-600 uppercase tracking-widest">SINTA</span>
+		                <span class="text-[10px] font-bold text-slate-300 uppercase">${timeStr}</span>
+		            </div>
+		            <div class="flex items-baseline">
+		                <span class="text-[14px] leading-relaxed font-medium italic text-gray-600 thinking-text">sedang mikir</span>
+		            </div>
+		        </div>
+		    `;
+		    messagesArea.appendChild(typingBubble);
+		    scrollBottom(true);
+		}
+
+        function hideTyping() {
+            if (typingBubble) {
+                typingBubble.remove();
+                typingBubble = null;
+            }
+        }
+
+        function setGeneratingState(state) {
+		    isGenerating = state;
+		    if (state) {
+		        sendBtn.innerHTML = '<i data-lucide="square" class="w-5 h-5 text-red-600" fill="currentColor"></i>';
+		        sendBtn.classList.remove('bg-gray-800', 'hover:bg-gray-900', 'text-white');
+		        sendBtn.classList.add('bg-gray-100', 'hover:bg-gray-100');
+		    } else {
+		        sendBtn.innerHTML = '<i data-lucide="arrow-right" class="w-5 h-5 text-white"></i>';
+		        sendBtn.classList.remove('bg-gray-100', 'hover:bg-gray-200');
+		        sendBtn.classList.add('bg-gray-800', 'hover:bg-gray-900', 'text-white');
+		    }
+		    lucide.createIcons();
+		}
+
+        async function sendMessage(e) {
+            e.preventDefault();
+
+            if (isGenerating) {
+                if (abortController) abortController.abort();
+                setGeneratingState(false);
+                return;
+            }
+
+            const prompt = userInput.value.trim();
+            if (!prompt) return;
+
+            userInput.value = '';
+            userInput.style.height = 'auto';
+            userInput.disabled = true;
+            setGeneratingState(true);
+            abortController = new AbortController();
+
+            chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(chatHistory));
+
+            appendMessageToUI('user', prompt);
+            showTyping();
+
+            try {
+                const response = await fetch(`${PROXY_URL}?model=${MODEL_NAME}&action=generateContent`, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                    },
+                    signal: abortController.signal,
+                    body: JSON.stringify({
+                        contents: chatHistory,
+                        generationConfig: { temperature: 1, maxOutputTokens: 65536 }
+                    })
+                });
+
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error?.message || `HTTP ${response.status}`);
+
+                const parts = data.candidates?.[0]?.content?.parts || [];
+                let finalResponse = "";
+                parts.forEach(part => { if (part.text && !part.thought) finalResponse += part.text; });
+
+                hideTyping();
+                
+                if (finalResponse) {
+                    const aiContainer = appendMessageToUI('model', "");
+                    await streamText(aiContainer, finalResponse);
+                    
+                    if (isGenerating) { 
+                        chatHistory.push({ role: "model", parts: [{ text: finalResponse }] });
+                        localStorage.setItem(STORAGE_KEY, JSON.stringify(chatHistory));
+                    }
+                }
+
+            } catch (error) {
+                hideTyping();
+                if (error.name !== 'AbortError') {
+                    appendMessageToUI('error', `ERROR:\n${error.message}`);
+                }
+            } finally {
+                setGeneratingState(false);
+                userInput.disabled = false;
+                abortController = null;
+                userInput.focus();
+            }
+        }
+
+        chatForm.addEventListener('submit', sendMessage);
+        
+        clearBtn.addEventListener('click', () => {
+            if (confirm("Hapus semua riwayat percakapan?")) {
+                chatHistory = [];
+                localStorage.removeItem(STORAGE_KEY);
+                messagesArea.innerHTML = '';
+            }
+        });
+		
+		document.addEventListener('touchstart', function (event) {
+		    if (event.touches.length > 1) {
+		        event.preventDefault();
+		    }
+		}, { passive: false });
+		
+		let lastTouchEnd = 0;
+		document.addEventListener('touchend', function (event) {
+		    const now = (new Date()).getTime();
+		    if (now - lastTouchEnd <= 300) {
+		        event.preventDefault();
+		    }
+		    lastTouchEnd = now;
+		}, false);
+		
+		document.addEventListener('gesturestart', function (event) {
+		    event.preventDefault();
+		});
+
+        init();
     </script>
-
 </body>
 </html>
