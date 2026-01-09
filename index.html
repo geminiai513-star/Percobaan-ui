@@ -21,11 +21,11 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono&display=swap');
         
         body {
-    font-family: 'Inter', sans-serif;
-    overscroll-behavior: none;
-    touch-action: pan-x pan-y;
-    -webkit-text-size-adjust: 100%;
-}
+		    font-family: 'Inter', sans-serif;
+		    overscroll-behavior: none;
+		    touch-action: pan-x pan-y;
+		    -webkit-text-size-adjust: 100%;
+		}
 		
 		code {
 		    font-family: 'JetBrains Mono', monospace;
@@ -238,11 +238,12 @@
 		}
 
         userInput.addEventListener('input', function() {
-            this.style.height = 'auto';
-            const newHeight = Math.min(this.scrollHeight, 150);
-            this.style.height = newHeight + 'px';
-            this.style.overflowY = this.scrollHeight > 150 ? 'auto' : 'hidden';
-        });
+		    this.style.height = 'auto';
+		    const newHeight = Math.min(this.scrollHeight, 150);
+		    this.style.height = newHeight + 'px';
+		    this.style.overflowY = this.scrollHeight > 150 ? 'auto' : 'hidden';
+		    window.scrollTo(0, 0);
+		});
 
         function appendMessageToUI(role, text, animate = true) {
             const isUser = role === 'user';
