@@ -30,7 +30,6 @@
         }
 
         .app-container {
-            height: 100dvh;
             display: grid;
             grid-template-rows: 72px 1fr auto;
             grid-template-areas: 
@@ -85,7 +84,7 @@
         }
 
         .prose ul, .prose ol {
-		    padding-left: 1.5rem;
+		    padding-left: 1.75rem;
 		    margin-left: 0;
 		    margin-bottom: 0.75rem;
 		    list-style-position: outside;
@@ -181,8 +180,8 @@
 		    </div>
 		</main>
 		
-		<footer class="bg-white pb-[calc(0.5rem+env(safe-area-inset-bottom))] md:pb-6 w-full border-t border-slate-50">
-		    <div class="content-width px-4 md:px-8 py-2">
+		<footer class="bg-white w-full border-t border-slate-50">
+		    <div class="content-width px-4 md:px-8 pt-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))]">
 		        <form id="chatForm" class="w-full flex items-center gap-3">
 		            <div class="relative flex-1 flex items-center bg-slate-50 rounded-[28px] px-2 py-1.5 transition-all focus-within:bg-slate-100">
 		                <textarea
@@ -234,16 +233,57 @@
         let isGenerating = false;
         let abortController = null;
 
-        function scrollBottom(smooth = true) {
-            if (!chatContainer) return;
-            const isAtBottom = chatContainer.scrollHeight - chatContainer.scrollTop <= chatContainer.clientHeight + 100;
-            if (isAtBottom || !smooth) {
-                chatContainer.scrollTo({
-                    top: chatContainer.scrollHeight,
-                    behavior: smooth ? 'smooth' : 'auto'
-                });
-            }
-        }
+        function scrollBottom(force = false) {
+    if (!chatContainer) return;
+    const threshold = 150; 
+    const isNearBottom = chatContainer.scrollHeight - chatContainer.scrollTop <= chatContainer.clientHeight + threshold;
+
+    if (force || isNearBottom) {
+        chatContainer.scrollTo({
+            top: chatContainer.scrollHeight,
+            behavior: force ? 'auto' : 'smooth'
+        });
+    }
+}
+
+async function streamText(element, text) {
+    let cursor = 0;
+    while (cursor < text.length) {
+        if (!isGenerating) break;
+        cursor += STREAM_CHUNK_SIZE;
+        const currentDisplay = text.substring(0, cursor);
+        element.innerHTML = marked.parse(currentDisplay);
+        
+        scrollBottom(true);
+        
+        await new Promise(resolve => setTimeout(resolve, STREAM_SPEED));
+    }
+    element.innerHTML = marked.parse(text);
+    if (window.hljs) {
+        element.querySelectorAll('pre code').forEach(hljs.highlightElement);
+    }
+    lucide.createIcons();
+    scrollBottom(true);
+}
+
+function showTyping() {
+    const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    typingBubble = document.createElement('div');
+    typingBubble.className = "w-full animate-in fade-in slide-in-from-bottom-2 duration-300 mb-2";
+    typingBubble.innerHTML = `
+        <div class="w-full bg-slate-50 rounded-2xl p-4 shadow-sm border-none">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-1 mb-0.5">
+                <span class="text-[10px] font-black text-indigo-600 uppercase tracking-widest">SINTA</span>
+                <span class="text-[10px] font-bold text-slate-300 uppercase">${timeStr}</span>
+            </div>
+            <div class="flex items-baseline">
+                <span class="text-[14px] leading-relaxed font-medium italic text-gray-600 thinking-text">sedang mikir</span>
+            </div>
+        </div>
+    `;
+    messagesArea.appendChild(typingBubble);
+    scrollBottom(true);
+}
 
         function renderHistory() {
             messagesArea.innerHTML = '';
@@ -301,45 +341,6 @@
             }
             if (animate) scrollBottom(true);
             return div.querySelector('.prose-container');
-        }
-
-        async function streamText(element, text) {
-            let cursor = 0;
-            while (cursor < text.length) {
-                if (!isGenerating) break;
-                cursor += STREAM_CHUNK_SIZE;
-                const currentDisplay = text.substring(0, cursor);
-                element.innerHTML = marked.parse(currentDisplay);
-                if (cursor % (STREAM_CHUNK_SIZE * 3) === 0) {
-                    scrollBottom(false);
-                }
-                await new Promise(resolve => setTimeout(resolve, STREAM_SPEED));
-            }
-            element.innerHTML = marked.parse(text);
-            if (window.hljs) {
-                element.querySelectorAll('pre code').forEach(hljs.highlightElement);
-            }
-            lucide.createIcons();
-            scrollBottom(true);
-        }
-
-        function showTyping() {
-            const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            typingBubble = document.createElement('div');
-            typingBubble.className = "w-full animate-in fade-in slide-in-from-bottom-2 duration-300 mb-2";
-            typingBubble.innerHTML = `
-                <div class="w-full bg-slate-50 rounded-2xl p-4 shadow-sm border-none">
-                    <div class="flex justify-between items-center border-b border-slate-100 pb-1 mb-0.5">
-                        <span class="text-[10px] font-black text-indigo-600 uppercase tracking-widest">SINTA</span>
-                        <span class="text-[10px] font-bold text-slate-300 uppercase">${timeStr}</span>
-                    </div>
-                    <div class="flex items-baseline">
-                        <span class="text-[14px] leading-relaxed font-medium italic text-gray-600 thinking-text">sedang mikir</span>
-                    </div>
-                </div>
-            `;
-            messagesArea.appendChild(typingBubble);
-            scrollBottom(true);
         }
 
         function hideTyping() {
