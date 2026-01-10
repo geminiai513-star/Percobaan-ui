@@ -63,20 +63,17 @@ footer {
     flex: 0 0 auto;
     background-color: #ffffff;
     z-index: 100;
-    padding-bottom: env(safe-area-inset-bottom, 0px);
+    /* Kita ganti nilai otomatis safe-area dengan angka tetap yang sangat kecil */
+    padding-bottom: 12px; 
+    border-top: none;
 }
 
 .footer-content {
     width: 100%;
     max-width: 48rem;
     margin: 0 auto;
-    padding: 0.4rem 1rem;
-}
-
-@media (min-width: 768px) {
-    .footer-content {
-        padding: 0.5rem 2rem;
-    }
+    /* Padding atas dan bawah diseimbangkan agar simetris */
+    padding: 12px 1rem; 
 }
 
 #userInput {
@@ -258,7 +255,7 @@ footer {
 		<footer>
     <div class="footer-content">
         <form id="chatForm" class="w-full">
-            <div class="relative flex items-center bg-slate-50 rounded-[24px] px-2 py-0.5">
+            <div class="relative flex items-center bg-slate-50 rounded-[24px] px-2 py-1.5">
                 <textarea
                     id="userInput"
                     placeholder="Tulis pesan..."
@@ -268,7 +265,7 @@ footer {
                 <button
                     type="submit"
                     id="sendBtn"
-                    class="p-2.5 bg-slate-800 text-white rounded-full hover:bg-slate-900 transition-all active:scale-95 shrink-0 flex items-center justify-center min-w-[40px] h-[40px]"
+                    class="p-2.5 bg-slate-800 text-white rounded-full hover:bg-slate-900 shadow-sm transition-all active:scale-95 shrink-0 flex items-center justify-center min-w-[40px] h-[40px]"
                 >
                     <i data-lucide="arrow-right" class="w-5 h-5"></i>
                 </button>
