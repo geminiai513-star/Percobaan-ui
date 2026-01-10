@@ -30,18 +30,25 @@
         }
 
         .app-container {
-            display: grid;
-            grid-template-rows: 72px 1fr auto;
-            grid-template-areas: "header" "main" "footer";
-            overflow: hidden;
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ffffff;
-            display: none;
-        }
+    display: grid;
+    grid-template-rows: 72px 1fr auto;
+    grid-template-areas: "header" "main" "footer";
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100dvh;
+    background-color: #ffffff;
+    display: none;
+}
+
+#chatContainer {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    overflow-anchor: auto;
+}
 
         #loginScreen {
             position: fixed;
@@ -64,12 +71,6 @@
             -webkit-user-select: none;
             z-index: 30;
         }
-
-        #chatContainer {
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    overflow-anchor: auto;
-}
 
         code { font-family: 'JetBrains Mono', monospace; }
 
