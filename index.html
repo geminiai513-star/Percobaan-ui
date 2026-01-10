@@ -272,7 +272,7 @@
 		<footer>
 		    <div class="footer-content">
 		        <form id="chatForm" class="w-full">
-		            <div class="relative flex items-center bg-slate-50 rounded-[24px] px-2 py-1.5">
+		            <div id="inputWrapper" class="relative flex items-center bg-slate-50 rounded-full px-2 py-1.5 transition-all duration-200">
 		                <textarea
 		                    id="userInput"
 		                    placeholder="Tulis pesan..."
@@ -418,6 +418,16 @@
 		    this.style.height = 'auto';
 		    const newHeight = Math.min(this.scrollHeight, 150);
 		    this.style.height = newHeight + 'px';
+		    
+		    const wrapper = document.getElementById('inputWrapper');
+		    if (this.scrollHeight > 45) {
+		        wrapper.classList.remove('rounded-full');
+		        wrapper.classList.add('rounded-[24px]');
+		    } else {
+		        wrapper.classList.remove('rounded-[24px]');
+		        wrapper.classList.add('rounded-full');
+		    }
+		    
 		    this.style.overflowY = this.scrollHeight > 150 ? 'auto' : 'hidden';
 		});
 
