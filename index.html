@@ -20,27 +20,26 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono&display=swap');
         
         html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
             overflow: hidden;
             position: fixed;
-            width: 100%;
-            height: 100%;
-            overscroll-behavior: none;
-            -webkit-text-size-adjust: 100%;
+            background-color: #ffffff;
             font-family: 'Inter', sans-serif;
+            -webkit-text-size-adjust: 100%;
+            overscroll-behavior: none;
         }
 
         .app-container {
-            display: grid;
-            grid-template-rows: 72px 1fr auto;
-            grid-template-areas: "header" "main" "footer";
-            overflow: hidden;
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ffffff;
+            inset: 0;
             display: none;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff;
         }
 
         #loginScreen {
@@ -54,22 +53,33 @@
             padding: 2rem;
         }
 
-        header { grid-area: header; }
-        main { grid-area: main; }
-        footer { grid-area: footer; }
-
-        header, footer {
-            touch-action: none;
-            user-select: none;
-            -webkit-user-select: none;
+        header {
+            flex: 0 0 72px;
+            background: white;
+            border-bottom: 1px solid #f1f5f9;
             z-index: 30;
+            display: flex;
+            align-items: center;
+            padding: 0 1rem;
+        }
+
+        main {
+            flex: 1 1 auto;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            background-color: #ffffff;
+            overscroll-behavior-y: contain;
+        }
+
+        footer {
+            flex: 0 0 auto;
+            background-color: #ffffff;
+            border-top: 1px solid #f1f5f9;
+            padding-bottom: env(safe-area-inset-bottom, 0px);
         }
 
         #chatContainer {
-		    overflow-y: auto;
-		    -webkit-overflow-scrolling: touch;
 		    overflow-anchor: auto;
-            overscroll-behavior-y: contain;
 		}
 
         code { font-family: 'JetBrains Mono', monospace; }
@@ -141,7 +151,7 @@
             width: 100%;
             max-width: 48rem;
             margin: 0 auto;
-            padding: 0.5rem 1rem calc(0.5rem + env(safe-area-inset-bottom));
+            padding: 0.75rem 1rem;
         }
     </style>
 </head>
@@ -150,7 +160,7 @@
     <div id="loginScreen" class="fixed inset-0 bg-white z-[100] flex items-center justify-center p-6">
 	    <div class="w-full max-w-[360px] bg-slate-50 rounded-[32px] p-8 flex flex-col items-center border-none">
 	        <div class="mb-8 flex items-center justify-center">
-	            <i data-lucide="lock" class="w-8 h-8 text-indigo-600"></i>
+	            <i data-lucide="lock" class="w-10 h-10 text-indigo-600"></i>
 	        </div>
 	        <form id="loginForm" class="w-full space-y-4">
 	            <input 
@@ -158,6 +168,7 @@
 	                id="emailInput" 
 	                placeholder="Email" 
 	                required 
+                    onblur="window.scrollTo(0,0)"
 	                class="w-full px-5 py-4 bg-white rounded-2xl text-sm font-semibold border-none outline-none focus:ring-0"
 	            >
 	            <input 
@@ -165,6 +176,7 @@
 	                id="passwordInput" 
 	                placeholder="Password" 
 	                required 
+                    onblur="window.scrollTo(0,0)"
 	                class="w-full px-5 py-4 bg-white rounded-2xl text-sm font-semibold border-none outline-none focus:ring-0"
 	            >
 	            <button 
@@ -180,8 +192,8 @@
 	</div>
 
     <div id="appInterface" class="app-container">
-        <header class="border-b border-slate-100 bg-white w-full px-4 md:px-8">
-		    <div class="h-full flex justify-between items-center">
+        <header class="w-full md:px-8">
+		    <div class="w-full flex justify-between items-center">
 		        <div class="flex items-center gap-3">
 		            <div class="bg-indigo-600 p-2 rounded-xl">
 		                <i data-lucide="brain" class="text-white w-5 h-5"></i>
@@ -201,13 +213,13 @@
 		    </div>
 		</header>
 
-		<main id="chatContainer" class="custom-scroll bg-white">
-		    <div class="content-width pt-4 md:pt-8 pb-0">
-		        <div id="messagesArea" class="space-y-4 pb-8"></div>
+		<main id="chatContainer" class="custom-scroll">
+		    <div class="content-width pt-4 md:pt-8 pb-8">
+		        <div id="messagesArea" class="space-y-4"></div>
 		    </div>
 		</main>
 		
-		<footer class="bg-white w-full border-t border-slate-50">
+		<footer>
 		    <div class="footer-content">
 		        <form id="chatForm" class="w-full flex items-center gap-3">
 		            <div class="relative flex-1 flex items-center bg-slate-50 rounded-[28px] px-2 py-1.5">
@@ -215,6 +227,7 @@
 		                    id="userInput"
 		                    placeholder="Tulis pesan..."
 		                    rows="1"
+                            onblur="window.scrollTo(0,0)"
 		                    class="w-full bg-transparent border-none py-3 px-4 focus:ring-0 text-sm font-semibold resize-none overflow-hidden placeholder:text-slate-400"
 		                ></textarea>
 		                <button
@@ -246,8 +259,6 @@
         const appInterface = document.getElementById('appInterface');
         const loginForm = document.getElementById('loginForm');
         const loginError = document.getElementById('loginError');
-        const emailInput = document.getElementById('emailInput');
-        const passwordInput = document.getElementById('passwordInput');
         
         const chatForm = document.getElementById('chatForm');
         const userInput = document.getElementById('userInput');
@@ -285,8 +296,8 @@
 
         function showApp() {
             loginScreen.style.display = 'none';
-            appInterface.style.display = 'grid';
-            setTimeout(() => scrollBottom(false), 100);
+            appInterface.style.display = 'flex';
+            setTimeout(() => scrollBottom(true), 100);
         }
 
         loginForm.addEventListener('submit', async (e) => {
@@ -311,14 +322,20 @@
 
         function scrollBottom(force = false) {
             if (!chatContainer) return;
-            const threshold = 150;
-            const isNearBottom = chatContainer.scrollHeight - chatContainer.scrollTop <= chatContainer.clientHeight + threshold;
-
-            if (force || isNearBottom) {
+            if (force) {
                 chatContainer.scrollTo({
                     top: chatContainer.scrollHeight,
-                    behavior: force ? 'auto' : 'smooth'
+                    behavior: 'smooth'
                 });
+            } else {
+                const threshold = 150;
+                const isNearBottom = chatContainer.scrollHeight - chatContainer.scrollTop <= chatContainer.clientHeight + threshold;
+                if (isNearBottom) {
+                    chatContainer.scrollTo({
+                        top: chatContainer.scrollHeight,
+                        behavior: 'smooth'
+                    });
+                }
             }
         }
 
@@ -336,12 +353,6 @@
 		    this.style.height = newHeight + 'px';
 		    this.style.overflowY = this.scrollHeight > 150 ? 'auto' : 'hidden';
 		});
-		
-        [emailInput, passwordInput, userInput].forEach(el => {
-            el.addEventListener('blur', () => {
-                window.scrollTo(0, 0);
-            });
-        });
 
         function appendMessageToUI(role, text, animate = true) {
             const isUser = role === 'user';
