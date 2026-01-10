@@ -16,9 +16,9 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono&display=swap');
-        
+	
         html, body {
             margin: 0;
             padding: 0;
@@ -70,30 +70,42 @@
         }
 
         footer {
-            flex: 0 0 auto;
-            background-color: #ffffff;
-            border-top: 1px solid #f1f5f9;
-            padding-bottom: 0px;
-            z-index: 100;
-			padding-bottom: env(safe-area-inset-bottom, 12px);
-        }
+		    flex: 0 0 auto;
+		    background-color: #ffffff;
+		    border-top: none;
+		    padding-bottom: 0px;
+		    z-index: 100;
+		    padding-bottom: env(safe-area-inset-bottom, 12px);
+		}
 		
 		.footer-content {
 		    width: 100%;
 		    max-width: 48rem;
 		    margin: 0 auto;
-		    padding: 10px 1rem;
+		    padding: 24px 1rem 4px 1rem;
 		}
 
         code { font-family: 'JetBrains Mono', monospace; }
 
         .prose pre {
-            background: #f3f4f6 !important;
-            padding: 1rem !important;
-            border-radius: 1rem !important;
-            margin: 0.75rem 0;
-            overflow-x: auto;
-        }
+		    background: #f3f4f6 !important;
+		    padding: 1rem !important;
+		    border-radius: 1rem !important;
+		    margin: 0.75rem 0;
+		    overflow-x: auto;
+		    
+		}
+		
+		.prose pre code {
+		    background: transparent !important;
+		    padding: 0 !important;
+		}
+		
+		.prose code {
+		    color: #1f2937;
+		    font-size: 0.8rem;
+			font-weight: 400;
+		}
 
         .prose ul, .prose ol {
 		    padding-left: 1.5rem;
@@ -113,6 +125,10 @@
             border: 1px solid #e5e7eb;
             padding: 0.5rem 0.75rem;
         }
+		
+		.prose p {
+		    margin-bottom: 0.5rem;
+		}
 
         .custom-scroll::-webkit-scrollbar { width: 5px; }
         .custom-scroll::-webkit-scrollbar-thumb {
@@ -147,13 +163,6 @@
         .thinking-text::after {
             content: '';
             animation: dots 1.5s steps(4, end) infinite;
-        }
-
-        .footer-content {
-            width: 100%;
-            max-width: 48rem;
-            margin: 0 auto;
-            padding: 4px 1rem 8px 1rem;
         }
     </style>
 </head>
@@ -387,10 +396,10 @@
             div.innerHTML = `
                 <div class="w-full bg-slate-50 rounded-2xl p-4 shadow-sm border-none">
                     <div class="flex justify-between items-center border-b border-slate-100 pb-1 mb-0.5">
-                        <span class="text-[10px] font-black text-indigo-600 uppercase tracking-widest">${nameLabel}</span>
-                        <span class="text-[10px] font-bold text-slate-300 uppercase">${timeStr}</span>
+                        <span class="text-[11px] font-black text-indigo-600 uppercase tracking-widest">${nameLabel}</span>
+                        <span class="text-[11px] font-bold text-slate-300 uppercase">${timeStr}</span>
                     </div>
-                    <div class="w-full prose-container prose prose-sm max-w-none text-slate-800 text-[15px] leading-relaxed font-medium">
+                    <div class="w-full prose-container prose prose-sm max-w-none text-slate-600 text-[15px] leading-relaxed font-semibold">
                         ${isError ? `<div class="text-red-600 text-xs font-mono whitespace-pre-wrap">${text}</div>` : marked.parse(text)}
                     </div>
                 </div>
