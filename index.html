@@ -30,25 +30,18 @@
         }
 
         .app-container {
-    display: grid;
-    grid-template-rows: 72px 1fr auto;
-    grid-template-areas: "header" "main" "footer";
-    overflow: hidden;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 100dvh;
-    background-color: #ffffff;
-    display: none;
-}
-
-#chatContainer {
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior-y: contain;
-    overflow-anchor: auto;
-}
+            display: grid;
+            grid-template-rows: 72px 1fr auto;
+            grid-template-areas: "header" "main" "footer";
+            overflow: hidden;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ffffff;
+            display: none;
+        }
 
         #loginScreen {
             position: fixed;
@@ -71,6 +64,13 @@
             -webkit-user-select: none;
             z-index: 30;
         }
+
+        #chatContainer {
+		    overflow-y: auto;
+		    overscroll-behavior-y: contain;
+		    -webkit-overflow-scrolling: touch;
+		    overflow-anchor: auto;
+		}
 
         code { font-family: 'JetBrains Mono', monospace; }
 
@@ -149,9 +149,9 @@
 
     <div id="loginScreen" class="fixed inset-0 bg-white z-[100] flex items-center justify-center p-6">
 	    <div class="w-full max-w-[360px] bg-slate-50 rounded-[32px] p-8 flex flex-col items-center border-none">
-	        <div class="mb-8 flex items-center justify-center">
-			    <i data-lucide="lock" class="w-10 h-10 text-indigo-600"></i>
-			</div>
+	        <div class="bg-indigo-600 p-4 rounded-2xl mb-8 flex items-center justify-center shadow-sm">
+	            <i data-lucide="lock" class="w-8 h-8 text-white"></i>
+	        </div>
 	        <form id="loginForm" class="w-full space-y-4">
 	            <input 
 	                type="email" 
@@ -246,8 +246,6 @@
         const appInterface = document.getElementById('appInterface');
         const loginForm = document.getElementById('loginForm');
         const loginError = document.getElementById('loginError');
-		const emailInput = document.getElementById('emailInput');
-		const passwordInput = document.getElementById('passwordInput');
         
         const chatForm = document.getElementById('chatForm');
         const userInput = document.getElementById('userInput');
@@ -338,14 +336,6 @@
 		});
 		
 		userInput.addEventListener('blur', () => {
-		    window.scrollTo(0, 0);
-		});
-		
-		emailInput.addEventListener('blur', () => {
-		    window.scrollTo(0, 0);
-		});
-		
-		passwordInput.addEventListener('blur', () => {
 		    window.scrollTo(0, 0);
 		});
 
