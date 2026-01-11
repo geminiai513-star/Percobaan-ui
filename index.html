@@ -1,490 +1,566 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>SINTA - Thinking AI</title>
+	<meta charset="UTF-8">
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+	<title>SINTA - Thinking AI</title>
 	<meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="theme-color" content="#ffffff">
-    <meta name="apple-mobile-web-app-title" content="AURA">
-    <link rel="apple-touch-icon" href="icon/icon-512.png">
-    <link rel="icon" type="image/png" href="icon/icon-512.png">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
-    <style>
-	
-        html, body {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            width: 100%;
-            overflow: hidden;
-            position: fixed;
-            background-color: #ffffff;
-            font-family: 'Inter', sans-serif;
-            -webkit-text-size-adjust: none;
-            touch-action: manipulation;
-        }
+	<meta name="apple-mobile-web-app-status-bar-style" content="default">
+	<meta name="theme-color" content="#ffffff">
+	<meta name="apple-mobile-web-app-title" content="AURA">
+	<link rel="apple-touch-icon" href="icon/icon-512.png">
+	<link rel="icon" type="image/png" href="icon/icon-512.png">
+	<script src="https://cdn.tailwindcss.com"></script>
+	<script src="https://unpkg.com/lucide@latest"></script>
+	<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono&display=swap"
+		rel="stylesheet">
+	<style>
+		html,
+		body {
+			margin: 0;
+			padding: 0;
+			height: 100%;
+			width: 100%;
+			overflow: hidden;
+			position: fixed;
+			background-color: #ffffff;
+			font-family: 'Inter', sans-serif;
+			-webkit-text-size-adjust: none;
+			touch-action: manipulation;
+		}
 
 		#appInterface {
-		    width: 100%;
-		    height: 100%;
-		    position: absolute;
-		    top: 0;
-		    left: 0;
-		    display: none;
-		    flex-direction: column;
-		    background-color: #ffffff;
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			top: 0;
+			left: 0;
+			display: none;
+			flex-direction: column;
+			background-color: #ffffff;
 		}
-		
+
 		header {
-		    flex: 0 0 auto;
-		    background: white;
-		    border-bottom: 1px solid #f1f5f9;
-		    padding-top: env(safe-area-inset-top, 0px);
-		    z-index: 100;
+			flex: 0 0 auto;
+			background: white;
+			border-bottom: 1px solid #f1f5f9;
+			padding-top: env(safe-area-inset-top, 0px);
+			z-index: 100;
 		}
-		
+
 		main {
-		    flex: 1 1 auto;
-		    overflow-y: auto;
-		    -webkit-overflow-scrolling: touch;
-		    background-color: #ffffff;
-		    position: relative;
+			flex: 1 1 auto;
+			overflow-y: auto;
+			-webkit-overflow-scrolling: touch;
+			background-color: #ffffff;
+			position: relative;
 		}
-		
+
 		footer {
-		    flex: 0 0 auto;
-		    background-color: #ffffff;
-		    z-index: 100;
-		    padding-bottom: 12px; 
-		    border-top: none;
+			flex: 0 0 auto;
+			background-color: #ffffff;
+			z-index: 100;
+			padding-bottom: 12px;
+			border-top: none;
 		}
-		
+
 		.footer-content {
-		    width: 100%;
-		    max-width: 48rem;
-		    margin: 0 auto;
-		    padding: 12px 1rem; 
+			width: 100%;
+			max-width: 48rem;
+			margin: 0 auto;
+			padding: 12px 1rem;
 		}
-		
+
 		#userInput {
-		    width: 100%;
-		    background: transparent;
-		    border: none;
-		    outline: none;
-		    resize: none;
-		    padding: 12px 8px;
-		    font-size: 15px;
-		    font-weight: 600;
-		    color: #1f2937;
-		    line-height: 20px;
-		    max-height: 150px;
-		    display: block;
+			width: 100%;
+			background: transparent;
+			border: none;
+			outline: none;
+			resize: none;
+			padding: 12px 8px;
+			font-size: 15px;
+			font-weight: 500;
+			color: #1f2937;
+			line-height: 20px;
+			max-height: 150px;
+			display: block;
 		}
-		
+
 		#userInput::placeholder {
-		    font-size: 15px;
-		    color: #94a3b8;
+			font-size: 15px;
+			color: #94a3b8;
 		}
 
-       #loginScreen {
-    position: fixed;
-    inset: 0;
-    background: white;
-    z-index: 100;
-    display: none; 
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-}
-
-        code { font-family: 'JetBrains Mono', monospace; }
-
-        .prose pre {
-		    background: #f3f4f6 !important;
-		    padding: 1rem !important;
-		    border-radius: 1rem !important;
-		    margin: 0.75rem 0;
-		    overflow-x: auto;
-		    
+		#loginScreen {
+			position: fixed;
+			inset: 0;
+			background: white;
+			z-index: 100;
+			display: none;
+			align-items: center;
+			justify-content: center;
+			padding: 2rem;
 		}
-		
+
+		code {
+			font-family: 'JetBrains Mono', monospace;
+		}
+
+		.prose pre {
+			background: #f3f4f6 !important;
+			padding: 1rem !important;
+			border-radius: 1rem !important;
+			margin: 0.75rem 0;
+			overflow-x: auto;
+
+		}
+
+		.prose-container {
+			overflow-x: auto;
+		}
+
+		.prose table {
+			display: block;
+			width: 100%;
+			overflow-x: auto;
+			white-space: nowrap;
+			border-collapse: collapse;
+			margin: 0.75rem 0;
+		}
+
 		.prose code {
-		    background-color: #e5e7eb !important;
-		    color: #1f2937 !important;
-		    padding: 3px 6px !important;
-		    border-radius: 6px !important;
-		    font-weight: 500 !important;
-		    font-size: 0.9em !important;
+			background-color: #e5e7eb !important;
+			color: #1f2937 !important;
+			padding: 3px 6px !important;
+			border-radius: 6px !important;
+			font-weight: 500 !important;
+			font-size: 0.9em !important;
 		}
-		
+
 		.prose pre code {
-		    background-color: transparent !important;
-		    padding: 0 !important;
-		    font-weight: 400 !important;
+			background-color: transparent !important;
+			padding: 0 !important;
+			font-weight: 400 !important;
 		}
 
-        .prose ul, .prose ol {
-		    padding-left: 1.5rem;
-		    margin-bottom: 0.75rem;
+		.prose ul,
+		.prose ol {
+			padding-left: 1.5rem;
+			margin-bottom: 0.75rem;
 		}
-		
-		.prose ul { list-style-type: disc; }
-		.prose ol { list-style-type: decimal; }
 
-        .prose table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 0.75rem 0;
-        }
+		.prose ul {
+			list-style-type: disc;
+		}
 
-        .prose th, .prose td {
-            border: 1px solid #e5e7eb;
-            padding: 0.5rem 0.75rem;
-        }
-		
+		.prose ol {
+			list-style-type: decimal;
+		}
+
+		.prose th,
+		.prose td {
+			border: 1px solid #e5e7eb;
+			padding: 0.5rem 0.75rem;
+		}
+
 		.prose p {
-		    margin-bottom: 0.5rem;
+			margin-bottom: 0.5rem;
 		}
 
-        .custom-scroll::-webkit-scrollbar { width: 5px; }
-        .custom-scroll::-webkit-scrollbar-thumb {
-            background: #e5e7eb;
-            border-radius: 10px;
-        }
-
-        .content-width {
-            width: 100%;
-            max-width: 48rem;
-            margin: 0 auto;
-            padding: 0 1rem;
-        }
-
-        @media (min-width: 768px) {
-            .content-width { padding: 0 2rem; }
-        }
-
-        textarea:focus, input:focus {
-            outline: none !important;
-            box-shadow: none !important;
-            border: none !important;
-        }
-
-    @keyframes appearance {
-		    0%, 100% { opacity: 0.3; transform: scale(0.8); }
-		    50% { opacity: 1; transform: scale(1); }
+		/* Hide scrollbar for Chrome, Safari and Opera */
+		::-webkit-scrollbar {
+			display: none;
+			width: 0;
+			height: 0;
+			background: transparent;
 		}
-		
+
+		/* Hide scrollbar for IE, Edge and Firefox */
+		html,
+		body,
+		* {
+			-ms-overflow-style: none;
+			/* IE and Edge */
+			scrollbar-width: none;
+			/* Firefox */
+		}
+
+		.custom-scroll {
+			scrollbar-width: none;
+			-ms-overflow-style: none;
+		}
+
+		.content-width {
+			width: 100%;
+			max-width: 48rem;
+			margin: 0 auto;
+			padding: 0 1rem;
+		}
+
+		@media (min-width: 768px) {
+			.content-width {
+				padding: 0 2rem;
+			}
+		}
+
+		textarea:focus,
+		input:focus {
+			outline: none !important;
+			box-shadow: none !important;
+			border: none !important;
+		}
+
+		@keyframes appearance {
+
+			0%,
+			100% {
+				opacity: 0.3;
+				transform: scale(0.8);
+			}
+
+			50% {
+				opacity: 1;
+				transform: scale(1);
+			}
+		}
+
 		.typing-indicator {
-		    display: flex;
-		    align-items: center;
-		    gap: 4px;
-		    height: 22px;
-		    margin-top: 2px;
+			display: flex;
+			align-items: center;
+			gap: 4px;
+			height: 22px;
+			margin-top: 2px;
 			padding-left: 2px
 		}
-		
+
 		.typing-dot {
-		    width: 5px;
-		    height: 5px;
-		    background-color: #94a3b8;
-		    border-radius: 50%;
-		    animation: appearance 1.4s infinite ease-in-out;
+			width: 5px;
+			height: 5px;
+			background-color: #94a3b8;
+			border-radius: 50%;
+			animation: appearance 1.4s infinite ease-in-out;
 		}
-		
-		.typing-dot:nth-child(1) { animation-delay: 0s; }
-		.typing-dot:nth-child(2) { animation-delay: 0.2s; }
-		.typing-dot:nth-child(3) { animation-delay: 0.4s; }
-		
-    </style>
+
+		.typing-dot:nth-child(1) {
+			animation-delay: 0s;
+		}
+
+		.typing-dot:nth-child(2) {
+			animation-delay: 0.2s;
+		}
+
+		.typing-dot:nth-child(3) {
+			animation-delay: 0.4s;
+		}
+	</style>
 </head>
+
 <body class="text-slate-900">
 
-   <div id="loginScreen" class="fixed inset-0 bg-white z-[100] flex items-center justify-center p-6">
-	    <div class="w-full max-w-[360px] bg-white rounded-[32px] px-4 py-8 flex flex-col items-center shadow-[0_8px_30px_rgb(0,0,0,0.08)]">
-	        <div class="mb-8 flex items-center justify-center">
-	            <i data-lucide="lock" class="w-10 h-10 text-slate-900"></i>
-	        </div>
-	        <form id="loginForm" class="w-full space-y-4">
-	            <input 
-	                type="email" 
-	                id="emailInput" 
-	                placeholder="Email" 
-	                required 
-	                onblur="window.scrollTo(0,0)"
-	                class="w-full px-5 py-4 bg-gray-50 rounded-2xl text-sm font-semibold border-none outline-none focus:ring-0"
-	            >
-	            <input 
-	                type="password" 
-	                id="passwordInput" 
-	                placeholder="Password" 
-	                required 
-	                onblur="window.scrollTo(0,0)"
-	                class="w-full px-5 py-4 bg-gray-50 rounded-2xl text-sm font-semibold border-none outline-none focus:ring-0"
-	            >
-	            <button 
-	                type="submit" 
-	                id="loginBtn" 
-	                class="w-full py-4 bg-black text-white rounded-2xl font-bold text-sm active:scale-95 transition-all mt-2 uppercase"
-	            >
-	                Masuk
-	            </button>
-	        </form>
-	        <div id="loginError" class="text-red-500 text-[10px] mt-6 font-bold hidden text-center uppercase"></div>
-	    </div>
+	<div id="loginScreen" class="fixed inset-0 bg-white z-[100] flex items-center justify-center p-6">
+		<div
+			class="w-full max-w-[360px] bg-white rounded-[32px] px-4 py-8 flex flex-col items-center shadow-[0_8px_30px_rgb(0,0,0,0.08)]">
+			<div class="mb-8 flex items-center justify-center">
+				<i data-lucide="lock" class="w-10 h-10 text-slate-900"></i>
+			</div>
+			<form id="loginForm" class="w-full space-y-4">
+				<input type="email" id="emailInput" placeholder="Email" required onblur="window.scrollTo(0,0)"
+					class="w-full px-5 py-4 bg-gray-50 rounded-2xl text-sm font-semibold border-none outline-none focus:ring-0">
+				<input type="password" id="passwordInput" placeholder="Password" required onblur="window.scrollTo(0,0)"
+					class="w-full px-5 py-4 bg-gray-50 rounded-2xl text-sm font-semibold border-none outline-none focus:ring-0">
+				<button type="submit" id="loginBtn"
+					class="w-full py-4 bg-black text-white rounded-2xl font-bold text-sm active:scale-95 transition-all mt-2 uppercase">
+					Masuk
+				</button>
+			</form>
+			<div id="loginError" class="text-red-500 text-[10px] mt-6 font-bold hidden text-center uppercase"></div>
+		</div>
 	</div>
 
-    <div id="appInterface">
-        <header class="h-16 px-4 md:px-8 flex items-center">
-		    <div class="w-full flex justify-between items-center">
-		        <div class="flex items-center gap-3">
-		            <div class="bg-indigo-600 p-2 rounded-xl">
-		                <i data-lucide="brain" class="text-white w-5 h-5"></i>
-		            </div>
-		            <div>
-		                <h1 class="font-extrabold text-lg tracking-tight leading-none uppercase text-indigo-600">SINTA</h1>
-		            </div>
-		        </div>
-		        <div class="flex items-center gap-1">
-		            <button id="clearBtn" class="p-2.5 hover:bg-slate-50 text-slate-400 rounded-xl transition-all active:scale-95">
-		                <i data-lucide="rotate-ccw" class="w-5 h-5"></i>
-		            </button>
-		            <button id="logOutBtn" class="p-2.5 hover:bg-red-50 text-red-400 rounded-xl transition-all active:scale-95">
-		                <i data-lucide="log-out" class="w-5 h-5"></i>
-		            </button>
-		        </div>
-		    </div>
+	<div id="appInterface">
+		<header class="h-16 px-4 md:px-8 flex items-center">
+			<div class="w-full flex justify-between items-center">
+				<div class="flex items-center gap-3">
+					<div class="bg-indigo-600 p-2 rounded-xl">
+						<i data-lucide="brain" class="text-white w-5 h-5"></i>
+					</div>
+					<div>
+						<h1 class="font-extrabold text-lg tracking-tight leading-none uppercase text-indigo-600">SINTA
+						</h1>
+					</div>
+				</div>
+				<div class="flex items-center gap-1">
+					<button id="clearBtn"
+						class="p-2.5 hover:bg-slate-50 text-slate-400 rounded-xl transition-all active:scale-95">
+						<i data-lucide="rotate-ccw" class="w-5 h-5"></i>
+					</button>
+					<button id="logOutBtn"
+						class="p-2.5 hover:bg-red-50 text-red-400 rounded-xl transition-all active:scale-95">
+						<i data-lucide="log-out" class="w-5 h-5"></i>
+					</button>
+				</div>
+			</div>
 		</header>
 
 		<main id="chatContainer" class="custom-scroll">
-		    <div class="content-width pt-4 md:pt-8 pb-8">
-		        <div id="messagesArea" class="space-y-4"></div>
-		    </div>
+			<div class="content-width pt-4 md:pt-8 pb-8">
+				<div id="messagesArea" class="space-y-4"></div>
+			</div>
 		</main>
-		
+
 		<footer>
-		    <div class="footer-content">
-		        <form id="chatForm" class="w-full">
-		            <div id="inputWrapper" class="relative flex items-center bg-slate-50 rounded-full px-2 py-1.5 transition-all duration-200">
-		                <textarea
-		                    id="userInput"
-		                    placeholder="Tulis pesan..."
-		                    rows="1"
-		                    onblur="window.scrollTo(0,0)"
-		                ></textarea>
-		                <button
-		                    type="submit"
-		                    id="sendBtn"
-		                    class="p-2.5 bg-slate-800 text-white rounded-full hover:bg-slate-900 shadow-sm transition-all active:scale-95 shrink-0 flex items-center justify-center min-w-[40px] h-[40px]"
-		                >
-		                    <i data-lucide="arrow-right" class="w-5 h-5"></i>
-		                </button>
-		            </div>
-		        </form>
-		    </div>
+			<div class="footer-content">
+				<form id="chatForm" class="w-full">
+					<div id="inputWrapper"
+						class="relative flex items-center bg-slate-50 rounded-full px-2 py-1.5 transition-all duration-200">
+						<button type="button" id="uploadBtn"
+							class="p-2 text-slate-400 hover:text-slate-600 transition-colors shrink-0 mr-1">
+							<i data-lucide="plus" class="w-5 h-5"></i>
+						</button>
+						<textarea id="userInput" placeholder="Tulis pesan..." rows="1"
+							onblur="window.scrollTo(0,0)"></textarea>
+						<button type="submit" id="sendBtn"
+							class="p-2.5 bg-slate-800 text-white rounded-full hover:bg-slate-900 shadow-sm transition-all active:scale-95 shrink-0 flex items-center justify-center min-w-[40px] h-[40px]">
+							<i data-lucide="arrow-right" class="w-5 h-5"></i>
+						</button>
+					</div>
+				</form>
+			</div>
 		</footer>
-    </div>
+	</div>
 
-    <script>
-        const SUPABASE_URL = "https://eofuiyhnyyxrapxilank.supabase.co";
-        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVvZnVpeWhueXl4cmFweGlsYW5rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU5Mzc3NTEsImV4cCI6MjA4MTUxMzc1MX0.aogUNcs5K2-q7h8cDHpgRwYN5dTO9sm2P2aHlKeUlvc";
-        const PROXY_URL = `${SUPABASE_URL}/functions/v1/ai-proxy-v2`;
-        const MODEL_NAME = "gemini-3-flash-preview";
-        const STORAGE_KEY = "sinta_chat_history";
-        
-        const STREAM_SPEED = 8; 
-        const STREAM_CHUNK_SIZE = 5; 
+	<script>
+		const SUPABASE_URL = "https://eofuiyhnyyxrapxilank.supabase.co";
+		const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVvZnVpeWhueXl4cmFweGlsYW5rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU5Mzc3NTEsImV4cCI6MjA4MTUxMzc1MX0.aogUNcs5K2-q7h8cDHpgRwYN5dTO9sm2P2aHlKeUlvc";
+		const PROXY_URL = `${SUPABASE_URL}/functions/v1/ai-proxy-v2`;
+		const MODEL_NAME = "gemini-3-flash-preview";
+		const STORAGE_KEY = "sinta_chat_history";
 
-        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+		const STREAM_SPEED = 8;
+		const STREAM_CHUNK_SIZE = 5;
 
-        const loginScreen = document.getElementById('loginScreen');
-        const appInterface = document.getElementById('appInterface');
-        const loginForm = document.getElementById('loginForm');
-        const loginError = document.getElementById('loginError');
-        
-        const chatForm = document.getElementById('chatForm');
-        const userInput = document.getElementById('userInput');
-        const chatContainer = document.getElementById('chatContainer');
-        const messagesArea = document.getElementById('messagesArea');
-        const clearBtn = document.getElementById('clearBtn');
-        const sendBtn = document.getElementById('sendBtn');
+		const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        let chatHistory = [];
-        let typingBubble = null;
-        let isGenerating = false;
-        let abortController = null;
+		const loginScreen = document.getElementById('loginScreen');
+		const appInterface = document.getElementById('appInterface');
+		const loginForm = document.getElementById('loginForm');
+		const loginError = document.getElementById('loginError');
 
-        lucide.createIcons();
+		const chatForm = document.getElementById('chatForm');
+		const userInput = document.getElementById('userInput');
+		const chatContainer = document.getElementById('chatContainer');
+		const messagesArea = document.getElementById('messagesArea');
+		const clearBtn = document.getElementById('clearBtn');
+		const sendBtn = document.getElementById('sendBtn');
 
-        marked.setOptions({
-            gfm: true,
-            breaks: true,
-            headerIds: false,
-            mangle: false
-        });
+		let chatHistory = [];
+		let typingBubble = null;
+		let isGenerating = false;
+		let abortController = null;
 
-        async function init() {
-		    const { data: { session } } = await _supabase.auth.getSession();
-		    
-		    const savedHistory = localStorage.getItem(STORAGE_KEY);
-		    if (savedHistory) {
-		        chatHistory = JSON.parse(savedHistory);
-		        renderHistory();
-		    }
-		
-		    if (session) {
-		        showApp();
-		    } else {
-		        loginScreen.style.display = 'flex';
-		    }
-		
-		    const preventStick = () => {
-		        const top = chatContainer.scrollTop;
-		        const totalScroll = chatContainer.scrollHeight;
-		        const currentScroll = top + chatContainer.offsetHeight;
-		
-		        if (top === 0) {
-		            chatContainer.scrollTop = 1;
-		        } else if (currentScroll === totalScroll) {
-		            chatContainer.scrollTop = top - 1;
-		        }
-		    };
-		
-		    chatContainer.addEventListener('scroll', preventStick);
-		    chatContainer.addEventListener('touchstart', preventStick);
+		lucide.createIcons();
+
+		marked.setOptions({
+			gfm: true,
+			breaks: true,
+			headerIds: false,
+			mangle: false
+		});
+
+		async function init() {
+			const { data: { session } } = await _supabase.auth.getSession();
+
+			const savedHistory = localStorage.getItem(STORAGE_KEY);
+			if (savedHistory) {
+				chatHistory = JSON.parse(savedHistory);
+				renderHistory();
+			}
+
+			if (session) {
+				showApp();
+			} else {
+				loginScreen.style.display = 'flex';
+			}
+
+			const preventStick = () => {
+				const top = chatContainer.scrollTop;
+				const totalScroll = chatContainer.scrollHeight;
+				const currentScroll = top + chatContainer.offsetHeight;
+
+				if (top === 0) {
+					chatContainer.scrollTop = 1;
+				} else if (currentScroll === totalScroll) {
+					chatContainer.scrollTop = top - 1;
+				}
+			};
+
+			chatContainer.addEventListener('scroll', preventStick);
+			chatContainer.addEventListener('touchstart', preventStick);
 		}
-		
+
 		function showApp() {
-		    loginScreen.style.display = 'none';
-		    appInterface.style.display = 'flex';
-		    
-		    requestAnimationFrame(() => {
-		        chatContainer.scrollTop = chatContainer.scrollHeight;
-		        requestAnimationFrame(() => {
-		            chatContainer.scrollTop = chatContainer.scrollHeight;
-		        });
-		    });
+			loginScreen.style.display = 'none';
+			appInterface.style.display = 'flex';
+
+			requestAnimationFrame(() => {
+				chatContainer.scrollTop = chatContainer.scrollHeight;
+				requestAnimationFrame(() => {
+					chatContainer.scrollTop = chatContainer.scrollHeight;
+				});
+			});
 		}
-		
+
 		function scrollBottom(force = false, behavior = 'auto') {
-		    if (!chatContainer) return;
-		    
-		    if (behavior === 'auto') {
-		        chatContainer.scrollTop = chatContainer.scrollHeight;
-		    } else {
-		        chatContainer.scrollTo({
-		            top: chatContainer.scrollHeight,
-		            behavior: behavior
-		        });
-		    }
+			if (!chatContainer) return;
+
+			if (behavior === 'auto') {
+				chatContainer.scrollTop = chatContainer.scrollHeight;
+			} else {
+				chatContainer.scrollTo({
+					top: chatContainer.scrollHeight,
+					behavior: behavior
+				});
+			}
 		}
 
-        loginForm.addEventListener('submit', async (e) => {
-		    e.preventDefault();
-		    const btn = document.getElementById('loginBtn');
-		    btn.disabled = true;
-		    loginError.classList.add('hidden');
-		
-		    const { error } = await _supabase.auth.signInWithPassword({
-		        email: emailInput.value,
-		        password: passwordInput.value
-		    });
-		
-		    if (error) {
-		        loginError.innerText = error.message.toUpperCase();
-		        loginError.classList.remove('hidden');
-		        btn.disabled = false;
-		    } else {
-		        showApp();
-		    }
+		loginForm.addEventListener('submit', async (e) => {
+			e.preventDefault();
+			const btn = document.getElementById('loginBtn');
+			btn.disabled = true;
+			loginError.classList.add('hidden');
+
+			const { error } = await _supabase.auth.signInWithPassword({
+				email: emailInput.value,
+				password: passwordInput.value
+			});
+
+			if (error) {
+				loginError.innerText = error.message.toUpperCase();
+				loginError.classList.remove('hidden');
+				btn.disabled = false;
+			} else {
+				showApp();
+			}
 		});
 
-        function renderHistory() {
-            messagesArea.innerHTML = '';
-            chatHistory.forEach(msg => {
-                const role = msg.role === 'user' ? 'user' : 'model';
-                appendMessageToUI(role, msg.parts[0].text, false);
-            });
-        }
+		function renderHistory() {
+			messagesArea.innerHTML = '';
+			chatHistory.forEach(msg => {
+				const role = msg.role === 'user' ? 'user' : 'model';
+				appendMessageToUI(role, msg.parts[0].text, false);
+			});
+		}
 
-        userInput.addEventListener('input', function() {
-		    this.style.height = 'auto';
-		    const newHeight = Math.min(this.scrollHeight, 150);
-		    this.style.height = newHeight + 'px';
-		    
-		    const wrapper = document.getElementById('inputWrapper');
-		    if (this.scrollHeight > 45) {
-		        wrapper.classList.remove('rounded-full');
-		        wrapper.classList.add('rounded-[24px]');
-		    } else {
-		        wrapper.classList.remove('rounded-[24px]');
-		        wrapper.classList.add('rounded-full');
-		    }
-		    
-		    this.style.overflowY = this.scrollHeight > 150 ? 'auto' : 'hidden';
+		userInput.addEventListener('input', function () {
+			this.style.height = 'auto';
+			const newHeight = Math.min(this.scrollHeight, 150);
+			this.style.height = newHeight + 'px';
+
+			const wrapper = document.getElementById('inputWrapper');
+			if (this.scrollHeight > 45) {
+				wrapper.classList.remove('rounded-full');
+				wrapper.classList.add('rounded-[24px]');
+			} else {
+				wrapper.classList.remove('rounded-[24px]');
+				wrapper.classList.add('rounded-full');
+			}
+
+			this.style.overflowY = this.scrollHeight > 150 ? 'auto' : 'hidden';
 		});
 
-        userInput.addEventListener('focus', () => {
-            setTimeout(() => scrollBottom(true, 'auto'), 100);
-        });
+		userInput.addEventListener('focus', () => {
+			setTimeout(() => scrollBottom(true, 'auto'), 100);
+		});
 
-        function appendMessageToUI(role, text, animate = true) {
-            const isUser = role === 'user';
-            const isError = role === 'error';
-            const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            const nameLabel = isUser ? 'USER' : (isError ? 'SYSTEM ERROR' : 'SINTA');
+		userInput.addEventListener('keydown', function (e) {
+			if (e.key === 'Enter' && !e.shiftKey) {
+				e.preventDefault();
+				if (!isGenerating && this.value.trim()) {
+					sendMessage();
+				}
+			}
+		});
 
-            const div = document.createElement('div');
-            div.className = `w-full ${animate ? 'animate-in fade-in slide-in-from-bottom-2 duration-300' : ''} mb-2`;
+		function appendMessageToUI(role, text, animate = true) {
+			const isUser = role === 'user';
+			const isError = role === 'error';
+			const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+			const nameLabel = isUser ? 'USER' : (isError ? 'SYSTEM ERROR' : 'SINTA');
 
-            div.innerHTML = `
-                <div class="w-full bg-slate-50 rounded-2xl p-4 shadow-sm border-none">
+			const div = document.createElement('div');
+			div.className = `w-full ${animate ? 'animate-in fade-in slide-in-from-bottom-2 duration-300' : ''} mb-2`;
+
+			div.innerHTML = `
+                <div class="w-full bg-slate-50 rounded-2xl p-4 shadow-sm border-none group relative">
                     <div class="flex justify-between items-center border-b border-slate-100 pb-1 mb-0.5">
                         <span class="text-[11px] font-black text-indigo-600 uppercase tracking-widest">${nameLabel}</span>
                         <span class="text-[11px] font-bold text-slate-300 uppercase">${timeStr}</span>
                     </div>
-                    <div class="w-full prose-container prose prose-sm max-w-none text-slate-600 text-[15px] leading-relaxed font-semibold">
+                    <div class="w-full prose-container prose prose-sm max-w-none text-slate-600 text-[15px] leading-relaxed font-medium">
                         ${isError ? `<div class="text-red-600 text-xs font-mono whitespace-pre-wrap">${text}</div>` : marked.parse(text)}
                     </div>
+                    ${!isUser && !isError ? `
+                        <button class="copy-btn absolute bottom-2 right-2 p-1 text-slate-400 hover:text-slate-600 rounded-md opacity-0 group-hover:opacity-100 transition-all active:scale-95" title="Salin pesan">
+                            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                        </button>
+                    ` : ''}
                 </div>
             `;
 
-            messagesArea.appendChild(div);
-            lucide.createIcons();
-            if (window.hljs) {
-                div.querySelectorAll('pre code').forEach(hljs.highlightElement);
-            }
-            if (animate) scrollBottom(true, 'auto');
-            return div.querySelector('.prose-container');
-        }
+			messagesArea.appendChild(div);
+			lucide.createIcons();
 
-        async function streamText(element, text) {
-            let cursor = 0;
-            while (cursor < text.length) {
-                if (!isGenerating) break;
-                cursor += STREAM_CHUNK_SIZE;
-                element.innerHTML = marked.parse(text.substring(0, cursor));
-                scrollBottom(true, 'auto');
-                await new Promise(resolve => setTimeout(resolve, STREAM_SPEED));
-            }
-            element.innerHTML = marked.parse(text);
-            if (window.hljs) element.querySelectorAll('pre code').forEach(hljs.highlightElement);
-            lucide.createIcons();
-            scrollBottom(true, 'auto');
-        }
+			if (!isUser && !isError) {
+				const copyBtn = div.querySelector('.copy-btn');
+				if (copyBtn) {
+					copyBtn.addEventListener('click', () => {
+						const contentToCopy = copyBtn.getAttribute('data-content') || text;
+						navigator.clipboard.writeText(contentToCopy).then(() => {
+							copyBtn.innerHTML = '<i data-lucide="check" class="w-3.5 h-3.5 text-green-500"></i>';
+							lucide.createIcons();
+							setTimeout(() => {
+								copyBtn.innerHTML = '<i data-lucide="copy" class="w-3.5 h-3.5"></i>';
+								lucide.createIcons();
+							}, 2000);
+						});
+					});
+				}
+			}
 
-        function showTyping() {
-		    const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-		    typingBubble = document.createElement('div');
-		    typingBubble.className = "w-full animate-in fade-in slide-in-from-bottom-2 duration-300 mb-2";
-		    typingBubble.innerHTML = `
+			if (window.hljs) {
+				div.querySelectorAll('pre code').forEach(hljs.highlightElement);
+			}
+			if (animate) scrollBottom(true, 'auto');
+			return div.querySelector('.prose-container');
+		}
+
+		async function streamText(element, text) {
+			let cursor = 0;
+			while (cursor < text.length) {
+				if (!isGenerating) break;
+				cursor += STREAM_CHUNK_SIZE;
+				element.innerHTML = marked.parse(text.substring(0, cursor));
+				scrollBottom(true, 'auto');
+				await new Promise(resolve => setTimeout(resolve, STREAM_SPEED));
+			}
+			element.innerHTML = marked.parse(text);
+			if (window.hljs) element.querySelectorAll('pre code').forEach(hljs.highlightElement);
+			lucide.createIcons();
+			scrollBottom(true, 'auto');
+		}
+
+		function showTyping() {
+			const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+			typingBubble = document.createElement('div');
+			typingBubble.className = "w-full animate-in fade-in slide-in-from-bottom-2 duration-300 mb-2";
+			typingBubble.innerHTML = `
 		        <div class="w-full bg-slate-50 rounded-2xl p-4 shadow-sm border-none">
 		            <div class="flex justify-between items-center border-b border-slate-100 pb-1 mb-1">
 		                <span class="text-[11px] font-black text-indigo-600 uppercase tracking-widest">SINTA</span>
@@ -497,139 +573,146 @@
 		            </div>
 		        </div>
 		    `;
-		    messagesArea.appendChild(typingBubble);
-		    scrollBottom(true, 'auto');
+			messagesArea.appendChild(typingBubble);
+			scrollBottom(true, 'auto');
 		}
 
-        function hideTyping() {
-            if (typingBubble) {
-                typingBubble.remove();
-                typingBubble = null;
-            }
-        }
-
-        function setGeneratingState(state) {
-		    isGenerating = state;
-		    if (state) {
-		        sendBtn.innerHTML = '<i data-lucide="square" class="w-4 h-4 text-slate-500" fill="currentColor"></i>';
-		        sendBtn.className = 'p-2.5 bg-slate-100 text-slate-500 rounded-full shrink-0 flex items-center justify-center min-w-[40px] h-[40px]';
-		    } else {
-		        sendBtn.innerHTML = '<i data-lucide="arrow-right" class="w-5 h-5 text-white"></i>';
-		        sendBtn.className = 'p-2.5 bg-slate-800 text-white rounded-full hover:bg-slate-900 shrink-0 flex items-center justify-center min-w-[40px] h-[40px]';
-		    }
-		    lucide.createIcons();
+		function hideTyping() {
+			if (typingBubble) {
+				typingBubble.remove();
+				typingBubble = null;
+			}
 		}
 
-        async function sendMessage(e) {
-		    if (e) e.preventDefault();
-		    if (isGenerating) {
-		        if (abortController) abortController.abort();
-		        setGeneratingState(false);
-		        return;
-		    }
-		    const prompt = userInput.value.trim();
-		    if (!prompt) return;
-		    userInput.blur();
-		    userInput.value = '';
-		    userInput.style.height = 'auto';
-		    userInput.disabled = true;
-		    setGeneratingState(true);
-		    abortController = new AbortController();
-		    chatHistory.push({ role: "user", parts: [{ text: prompt }] });
-		    localStorage.setItem(STORAGE_KEY, JSON.stringify(chatHistory));
-		    appendMessageToUI('user', prompt);
-		    showTyping();
-		    try {
-		        const response = await fetch(PROXY_URL + `?model=${MODEL_NAME}&action=generateContent`, {
-		            method: 'POST',
-		            headers: { 
-		                'Content-Type': 'application/json',
-		                'apikey': SUPABASE_KEY,
-		                'Authorization': `Bearer ${SUPABASE_KEY}`
-		            },
-		            signal: abortController.signal,
-		            body: JSON.stringify({
-		                contents: chatHistory,
-		                tools: [{ google_search: {} }],
-		                generationConfig: { temperature: 1, maxOutputTokens: 65536 }
-		            })
-		        });
-		        const data = await response.json();
-		        if (!response.ok) throw new Error(data.error?.message || `HTTP ${response.status}`);
-		        const parts = data.candidates?.[0]?.content?.parts || [];
-		        let finalResponse = "";
-		        parts.forEach(part => { if (part.text && !part.thought) finalResponse += part.text; });
-		        hideTyping();
-		        if (finalResponse) {
-		            const aiContainer = appendMessageToUI('model', "");
-		            await streamText(aiContainer, finalResponse);
-		            if (isGenerating) { 
-		                chatHistory.push({ role: "model", parts: [{ text: finalResponse }] });
-		                localStorage.setItem(STORAGE_KEY, JSON.stringify(chatHistory));
-		            }
-		        }
-		    } catch (error) {
-		        hideTyping();
-		        if (error.name !== 'AbortError') appendMessageToUI('error', `ERROR:\n${error.message}`);
-		    } finally {
-		        setGeneratingState(false);
-		        userInput.disabled = false;
-		        abortController = null;
-		    }
+		function setGeneratingState(state) {
+			isGenerating = state;
+			if (state) {
+				sendBtn.innerHTML = '<i data-lucide="square" class="w-4 h-4 text-slate-500" fill="currentColor"></i>';
+				sendBtn.className = 'p-2.5 bg-slate-100 text-slate-500 rounded-full shrink-0 flex items-center justify-center min-w-[40px] h-[40px]';
+			} else {
+				sendBtn.innerHTML = '<i data-lucide="arrow-right" class="w-5 h-5 text-white"></i>';
+				sendBtn.className = 'p-2.5 bg-slate-800 text-white rounded-full hover:bg-slate-900 shrink-0 flex items-center justify-center min-w-[40px] h-[40px]';
+			}
+			lucide.createIcons();
 		}
 
-        sendBtn.addEventListener('pointerdown', (e) => {
-		    if (userInput.value.trim() && !isGenerating) {
-		        e.preventDefault();
-		        sendMessage(e);
-		    }
+		async function sendMessage(e) {
+			if (e) e.preventDefault();
+			if (isGenerating) {
+				if (abortController) abortController.abort();
+				setGeneratingState(false);
+				return;
+			}
+			const prompt = userInput.value.trim();
+			if (!prompt) return;
+			userInput.blur();
+			userInput.value = '';
+			userInput.style.height = 'auto';
+			userInput.disabled = true;
+			setGeneratingState(true);
+			abortController = new AbortController();
+			chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+			localStorage.setItem(STORAGE_KEY, JSON.stringify(chatHistory));
+			appendMessageToUI('user', prompt);
+			showTyping();
+			try {
+				const response = await fetch(PROXY_URL + `?model=${MODEL_NAME}&action=generateContent`, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						'apikey': SUPABASE_KEY,
+						'Authorization': `Bearer ${SUPABASE_KEY}`
+					},
+					signal: abortController.signal,
+					body: JSON.stringify({
+						contents: chatHistory,
+						tools: [{ google_search: {} }],
+						generationConfig: { temperature: 1, maxOutputTokens: 65536 }
+					})
+				});
+				const data = await response.json();
+				if (!response.ok) throw new Error(data.error?.message || `HTTP ${response.status}`);
+				const parts = data.candidates?.[0]?.content?.parts || [];
+				let finalResponse = "";
+				parts.forEach(part => { if (part.text && !part.thought) finalResponse += part.text; });
+				hideTyping();
+				if (finalResponse) {
+					const aiContainer = appendMessageToUI('model', "");
+					await streamText(aiContainer, finalResponse);
+
+					const copyBtn = aiContainer.closest('.group').querySelector('.copy-btn');
+					if (copyBtn) {
+						copyBtn.setAttribute('data-content', finalResponse);
+					}
+
+					if (isGenerating) {
+						chatHistory.push({ role: "model", parts: [{ text: finalResponse }] });
+						localStorage.setItem(STORAGE_KEY, JSON.stringify(chatHistory));
+					}
+				}
+			} catch (error) {
+				hideTyping();
+				if (error.name !== 'AbortError') appendMessageToUI('error', `ERROR:\n${error.message}`);
+			} finally {
+				setGeneratingState(false);
+				userInput.disabled = false;
+				abortController = null;
+			}
+		}
+
+		sendBtn.addEventListener('pointerdown', (e) => {
+			if (userInput.value.trim() && !isGenerating) {
+				e.preventDefault();
+				sendMessage(e);
+			}
 		});
-		
+
 		chatForm.addEventListener('submit', (e) => {
-		    e.preventDefault();
-		    if (!isGenerating) sendMessage(e);
+			e.preventDefault();
+			if (!isGenerating) sendMessage(e);
 		});
-        
-        clearBtn.addEventListener('click', () => {
-            if (confirm("Hapus semua riwayat percakapan?")) {
-                chatHistory = [];
-                localStorage.removeItem(STORAGE_KEY);
-                messagesArea.innerHTML = '';
-            }
-        });
-		
+
+		clearBtn.addEventListener('click', () => {
+			if (confirm("Hapus semua riwayat percakapan?")) {
+				chatHistory = [];
+				localStorage.removeItem(STORAGE_KEY);
+				messagesArea.innerHTML = '';
+			}
+		});
+
 		const logOutBtn = document.getElementById('logOutBtn');
 
 		logOutBtn.addEventListener('click', async () => {
-		    if (confirm("Keluar dari akun?")) {
-		        const { error } = await _supabase.auth.signOut();
-		        if (!error) {
-		            localStorage.removeItem(STORAGE_KEY);
-		            location.reload(); 
-		        }
-		    }
-		});
-		
-		document.addEventListener('touchstart', function (event) {
-		    if (event.touches.length > 1) {
-		        event.preventDefault();
-		    }
-		}, { passive: false });
-		
-		let lastTouchEnd = 0;
-		document.addEventListener('touchend', function (event) {
-		    const now = (new Date()).getTime();
-		    if (now - lastTouchEnd <= 300) {
-		        event.preventDefault();
-		    }
-		    lastTouchEnd = now;
-		}, false);
-		
-		document.addEventListener('gesturestart', function (event) {
-		    event.preventDefault();
+			if (confirm("Keluar dari akun?")) {
+				const { error } = await _supabase.auth.signOut();
+				if (!error) {
+					localStorage.removeItem(STORAGE_KEY);
+					location.reload();
+				}
+			}
 		});
 
-        init();
-    </script>
+		document.addEventListener('touchstart', function (event) {
+			if (event.touches.length > 1) {
+				event.preventDefault();
+			}
+		}, { passive: false });
+
+		let lastTouchEnd = 0;
+		document.addEventListener('touchend', function (event) {
+			const now = (new Date()).getTime();
+			if (now - lastTouchEnd <= 300) {
+				event.preventDefault();
+			}
+			lastTouchEnd = now;
+		}, false);
+
+		document.addEventListener('gesturestart', function (event) {
+			event.preventDefault();
+		});
+
+		init();
+	</script>
 </body>
+
 </html>
