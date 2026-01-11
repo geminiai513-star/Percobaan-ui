@@ -536,7 +536,7 @@
 			this.style.height = newHeight + 'px';
 
 			const wrapper = document.getElementById('inputWrapper');
-			if (this.scrollHeight > 42) { // Adjusted threshold for instant change
+			if (this.scrollHeight > 50) { // Adjusted threshold for instant change
 				wrapper.classList.remove('rounded-full');
 				wrapper.classList.add('rounded-[24px]');
 			} else {
