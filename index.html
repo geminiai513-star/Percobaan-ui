@@ -759,11 +759,11 @@
 
     const { data: { session } } = await _supabase.auth.getSession();
     if (!session) {
-        appendMessageToUI('error', 'Silakan login terlebih dahulu.');
+        appendMessageToUI('error', 'Silakan login kembali.');
         return;
     }
-    const token = session.access_token;
 
+    const userToken = session.access_token;
     const imageMatch = rawInput.match(/\[image\]\s*([\s\S]*?)\s*\[\/image\]/i);
 
     userInput.blur();
@@ -801,7 +801,8 @@
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'apikey': SUPABASE_KEY,
+                'Authorization': `Bearer ${userToken}`
             },
             signal: abortController.signal,
             body: JSON.stringify({
@@ -813,10 +814,8 @@
                 generationConfig: { temperature: 1, maxOutputTokens: 65536 }
             })
         });
-        
         const data = await response.json();
         if (!response.ok) throw new Error(data.error?.message || `HTTP ${response.status}`);
-        
         const parts = data.candidates?.[0]?.content?.parts || [];
         let finalResponse = "";
         parts.forEach(part => { if (part.text && !part.thought) finalResponse += part.text; });
@@ -857,8 +856,9 @@
 
 		async function generateImage(prompt, targetContainer = null) {
     const { data: { session } } = await _supabase.auth.getSession();
-    const token = session?.access_token;
+    if (!session) return;
     
+    const userToken = session.access_token;
     let loaderId = `loader-${Date.now()}`;
     if (targetContainer) {
         const loaderHTML = `
@@ -882,7 +882,8 @@
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${userToken}`
         },
         signal: abortController.signal,
         body: JSON.stringify({
