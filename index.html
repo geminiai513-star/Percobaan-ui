@@ -1057,8 +1057,8 @@
 			chatHistory = [];
 			messagesArea.innerHTML = '';
 			localStorage.setItem(ACTIVE_SESSION_KEY, currentSessionId);
-			saveCurrentSession();
-			loadSidebarHistory();
+			// Removed auto-save. Will save only on first message.
+			loadSidebarHistory(); // Reload to reflect changes (e.g. if previous one was deleted)
 		}
 
 		function loadSession(id) {
@@ -1131,10 +1131,14 @@
 				const newSessions = sessions.filter(s => s.id !== id);
 				saveAllSessions(newSessions);
 
+				loadSidebarHistory(); // Refresh list immediately
+
+				if (newSessions.length === 0) {
+					toggleSidebar(false);
+				}
+
 				if (id === currentSessionId) {
-					startNewSession();
-				} else {
-					loadSidebarHistory();
+					startNewSession(); // Start fresh (empty UI, not saved yet)
 				}
 			}
 		}
