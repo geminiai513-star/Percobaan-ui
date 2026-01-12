@@ -843,19 +843,6 @@
 					if (isGenerating) {
 						chatHistory.push({ role: "model", parts: [{ text: textToDisplay }] });
 						saveCurrentSession();
-						const historyLen = chatHistory.length;
-
-						if (historyLen >= 4 && historyLen % 2 === 0) {
-							console.log("Triggering Auto Title Generation... Len:", historyLen);
-
-							generateAutoTitle(chatHistory).then(newTitle => {
-								console.log("New Title Candidate:", newTitle);
-								if (newTitle) {
-									updateSessionTitle(currentSessionId, newTitle);
-								}
-							});
-						}
-
 						if (imagePrompt) {
 							await generateImage(imagePrompt, aiContainer);
 						}
@@ -868,77 +855,6 @@
 				setGeneratingState(false);
 				userInput.disabled = false;
 				abortController = null;
-			}
-		}
-
-		async function generateAutoTitle(rawHistory) {
-			const { data: { session } } = await _supabase.auth.getSession();
-			if (!session) return null;
-			const textOnlyHistory = rawHistory.map(msg => ({
-				role: msg.role,
-				parts: [{ text: msg.parts.map(p => p.text || "").join(" ") }]
-			}));
-
-			const summaryPrompt = "BACA PERCAKAPAN DI ATAS. Buatlah 1 Judul Pendek (3-5 Kata) dalam Bahasa Indonesia. Langsung tulis judulnya. Jangan pakai tanda kutip.";
-			const model = "gemini-2.5-flash";
-
-			try {
-				console.log(`AutoTitle: Trying model ${model}...`);
-				const response = await fetch(PROXY_URL + `?model=${model}&action=generateContent`, {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-						'apikey': SUPABASE_KEY,
-						'Authorization': `Bearer ${session.access_token}`
-					},
-					body: JSON.stringify({
-						system_instruction: { parts: [{ text: "Kamu adalah pembuat judul otomatis. Output: Judul singkat saja." }] },
-						contents: [
-							...textOnlyHistory,
-							{ role: "user", parts: [{ text: summaryPrompt }] }
-						],
-						generationConfig: { maxOutputTokens: 1024, temperature: 1.0 }
-					})
-				});
-
-				const data = await response.json();
-
-				if (!response.ok) {
-					console.error(`AutoTitle: Model ${model} failed:`, data);
-					return null;
-				}
-
-				const title = data.candidates?.[0]?.content?.parts?.[0]?.text;
-				if (!title) {
-					console.warn(`AutoTitle: Model ${model} returned no title`);
-					return null;
-				}
-
-				console.log(`AutoTitle: Success with ${model}! Result:`, title);
-
-				let cleanTitle = title.trim()
-					.replace(/^["']|["']$/g, '')
-					.replace(/\*\*/g, '')
-					.replace(/^Judul:\s*/i, '')
-					.replace(/\n/g, ' ')
-					.trim();
-
-				if (cleanTitle.length > 50) cleanTitle = cleanTitle.substring(0, 50);
-				return cleanTitle;
-
-			} catch (e) {
-				console.error(`AutoTitle: Exception with ${model}:`, e);
-				return null;
-			}
-		}
-
-		function updateSessionTitle(id, newTitle) {
-			const sessions = getAllSessions();
-			const sessionIndex = sessions.findIndex(s => s.id === id);
-			if (sessionIndex !== -1) {
-				sessions[sessionIndex].title = newTitle;
-				saveAllSessions(sessions);
-				loadSidebarHistory();
 			}
 		}
 
@@ -1304,11 +1220,13 @@
 
 						const itemId = session.id;
 						item.innerHTML = `
+                            <!-- Delete Button (Background) -->
                             <div class="absolute inset-y-0 right-0 w-[60px] bg-red-500 flex items-center justify-center text-white cursor-pointer z-0" 
                                 onclick="deleteSession('${itemId}', event)">
                                 <i data-lucide="trash-2" class="w-4 h-4"></i>
                             </div>
 
+                            <!-- Content (Foreground) -->
                             <div class="w-full h-full bg-white absolute top-0 left-0 z-10 flex items-center px-3 transition-transform duration-200 ease-out"
                                 id="swipe-content-${itemId}"
                                 onclick="handleSwipeClick('${itemId}')"
@@ -1412,7 +1330,6 @@
 
 			const currentTransform = swipeCurrentEl.style.transform;
 			const translateX = parseInt(currentTransform.replace('translateX(', '').replace('px)', '') || '0');
-
 			if (translateX < -30) {
 				swipeCurrentEl.style.transform = 'translateX(-60px)';
 				swipeOpenId = swipeCurrentEl.id.replace('swipe-content-', '');
@@ -1430,6 +1347,7 @@
 				dragThresholdMet = false;
 				return;
 			}
+
 			const el = document.getElementById(`swipe-content-${id}`);
 			if (swipeOpenId === id) {
 				el.style.transform = 'translateX(0)';
