@@ -754,16 +754,16 @@
         setGeneratingState(false);
         return;
     }
-    const rawInput = userInput.value.trim();
-    if (!rawInput) return;
 
-    const sessionData = await _supabase.auth.getSession();
-    const session = sessionData.data.session;
-
-    if (!session) {
-        appendMessageToUI('error', 'Sesi tidak ditemukan. Silakan login kembali.');
+    const { data: { session }, error: sessionError } = await _supabase.auth.getSession();
+    
+    if (sessionError || !session) {
+        appendMessageToUI('error', 'Sesi login tidak valid. Silakan logout dan login kembali.');
         return;
     }
+
+    const rawInput = userInput.value.trim();
+    if (!rawInput) return;
 
     const imageMatch = rawInput.match(/\[image\]\s*([\s\S]*?)\s*\[\/image\]/i);
 
@@ -798,6 +798,7 @@
     saveCurrentSession();
     appendMessageToUI('user', rawInput);
     showTyping();
+
     try {
         const response = await fetch(PROXY_URL + `?model=${MODEL_NAME}&action=generateContent`, {
             method: 'POST',
@@ -816,8 +817,14 @@
                 generationConfig: { temperature: 1, maxOutputTokens: 65536 }
             })
         });
+
+        if (response.status === 401) {
+            throw new Error('Sesi tidak terverifikasi oleh server (401). Cobalah login ulang.');
+        }
+
         const data = await response.json();
         if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`);
+        
         const parts = data.candidates?.[0]?.content?.parts || [];
         let finalResponse = "";
         parts.forEach(part => { if (part.text && !part.thought) finalResponse += part.text; });
@@ -825,36 +832,28 @@
         hideTyping();
 
         if (finalResponse) {
-            const imageMatch = finalResponse.match(/\[image\](.*?)\[\/image\]/s);
+            const imgCheck = finalResponse.match(/\[image\](.*?)\[\/image\]/s);
             let textToDisplay = finalResponse;
             let imagePrompt = null;
 
-            if (imageMatch) {
-                imagePrompt = imageMatch[1].trim();
+            if (imgCheck) {
+                imagePrompt = imgCheck[1].trim();
                 textToDisplay = finalResponse.replace(/\[image\](.*?)\[\/image\]/s, "").trim();
-                if (!textToDisplay) textToDisplay = "Sedang membuat gambar...";
+                if (!textToDisplay) textToDisplay = "Sedang menyiapkan gambar...";
             }
 
             const aiContainer = appendMessageToUI('model', "");
             await streamText(aiContainer, textToDisplay);
 
-            const copyBtn = aiContainer.closest('.group').querySelector('.copy-btn');
-            if (copyBtn) {
-                copyBtn.setAttribute('data-content', textToDisplay);
-            }
-
             if (isGenerating) {
                 chatHistory.push({ role: "model", parts: [{ text: textToDisplay }] });
                 saveCurrentSession();
-
-                if (imagePrompt) {
-                    await generateImage(imagePrompt, aiContainer);
-                }
+                if (imagePrompt) await generateImage(imagePrompt, aiContainer);
             }
         }
     } catch (error) {
         hideTyping();
-        if (error.name !== 'AbortError') appendMessageToUI('error', `ERROR: ${error.message}`);
+        if (error.name !== 'AbortError') appendMessageToUI('error', `SYSTEM ERROR: ${error.message}`);
     } finally {
         setGeneratingState(false);
         userInput.disabled = false;
