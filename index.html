@@ -757,9 +757,9 @@
     const rawInput = userInput.value.trim();
     if (!rawInput) return;
 
-    const { data: { session }, error: sessionError } = await _supabase.auth.getSession();
-    if (!session || sessionError) {
-        appendMessageToUI('error', 'Sesi login tidak ditemukan atau kedaluwarsa. Silakan login kembali.');
+    const { data: { session } } = await _supabase.auth.getSession();
+    if (!session) {
+        appendMessageToUI('error', 'Silakan login terlebih dahulu.');
         return;
     }
     const token = session.access_token;
@@ -813,8 +813,10 @@
                 generationConfig: { temperature: 1, maxOutputTokens: 65536 }
             })
         });
+        
         const data = await response.json();
         if (!response.ok) throw new Error(data.error?.message || `HTTP ${response.status}`);
+        
         const parts = data.candidates?.[0]?.content?.parts || [];
         let finalResponse = "";
         parts.forEach(part => { if (part.text && !part.thought) finalResponse += part.text; });
@@ -835,15 +837,9 @@
             const aiContainer = appendMessageToUI('model', "");
             await streamText(aiContainer, textToDisplay);
 
-            const copyBtn = aiContainer.closest('.group').querySelector('.copy-btn');
-            if (copyBtn) {
-                copyBtn.setAttribute('data-content', textToDisplay);
-            }
-
             if (isGenerating) {
                 chatHistory.push({ role: "model", parts: [{ text: textToDisplay }] });
                 saveCurrentSession();
-
                 if (imagePrompt) {
                     await generateImage(imagePrompt, aiContainer);
                 }
