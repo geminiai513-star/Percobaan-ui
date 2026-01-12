@@ -206,12 +206,6 @@
 			padding: 0 1rem;
 		}
 
-		@media (min-width: 768px) {
-			.content-width {
-				padding: 0 2rem;
-			}
-		}
-
 		textarea:focus,
 		input:focus {
 			outline: none !important;
@@ -280,11 +274,11 @@
 					<i data-lucide="user" class="w-4 h-4"></i>
 				</div>
 				<div class="flex-1 min-w-0">
-					<p id="sidebarEmail" class="text-[14px] font-bold text-slate-700 truncate font-sans">
+					<p id="sidebarEmail" class="text-sm font-bold text-slate-700 truncate font-sans">
 						user@example.com</p>
 					<div class="flex items-center gap-1.5 mt-0.5">
 						<div class="w-1.5 h-1.5 rounded-full bg-green-500"></div>
-						<p class="text-[10px] font-medium text-slate-400">Online</p>
+						<p class="text-xs font-medium text-slate-400">Online</p>
 					</div>
 				</div>
 			</div>
@@ -307,13 +301,13 @@
 					<path d="M8 12h8" />
 					<path d="M12 8v8" />
 				</svg>
-				<span class="font-bold text-[14px] tracking-wide">Percakapan Baru</span>
+				<span class="font-bold text-sm tracking-wide">Percakapan Baru</span>
 			</button>
 			<button id="sidebarLogoutBtn"
 				class="w-full flex items-center justify-start gap-3 px-3 py-2 text-slate-500 hover:text-red-500 transition-all group">
 				<i data-lucide="log-out" stroke-width="2.5"
 					class="w-[18px] h-[18px] text-slate-400 group-hover:text-red-500 transition-colors"></i>
-				<span class="font-bold text-[14px] tracking-wide">Keluar</span>
+				<span class="font-bold text-sm tracking-wide">Keluar</span>
 			</button>
 		</div>
 	</div>
@@ -321,7 +315,7 @@
 
 	<div id="loginScreen" class="fixed inset-0 bg-white z-[100] flex items-center justify-center p-6">
 		<div
-			class="w-full max-w-[360px] bg-white rounded-[32px] px-4 py-8 flex flex-col items-center shadow-[0_8px_30px_rgb(0,0,0,0.08)]">
+			class="w-full max-w-[360px] bg-white rounded-[32px] px-8 py-8 flex flex-col items-center shadow-[0_8px_30px_rgb(0,0,0,0.08)]">
 			<div class="mb-8 flex items-center justify-center">
 				<i data-lucide="lock" class="w-10 h-10 text-slate-900"></i>
 			</div>
@@ -335,7 +329,7 @@
 					Masuk
 				</button>
 			</form>
-			<div id="loginError" class="text-red-500 text-[10px] mt-6 font-bold hidden text-center uppercase"></div>
+			<div id="loginError" class="text-red-500 text-sm mt-6 font-bold hidden text-center uppercase"></div>
 		</div>
 	</div>
 
@@ -376,7 +370,7 @@
 							<i data-lucide="plus" class="w-6 h-6"></i>
 						</button>
 						<textarea id="userInput" placeholder="Tulis pesan..." rows="1"
-							class="flex-1 w-full bg-transparent border-none outline-none resize-none px-2 text-[15px] font-medium text-slate-900 leading-[24px] max-h-[150px] block placeholder:text-slate-400"
+							class="flex-1 w-full bg-transparent border-none outline-none resize-none px-2 text-base font-medium text-slate-900 leading-[24px] max-h-[150px] block placeholder:text-slate-400"
 							onblur="window.scrollTo(0,0)"></textarea>
 						<button type="submit" id="sendBtn"
 							class="p-2 text-slate-800 hover:text-indigo-600 transition-colors shrink-0">
@@ -634,7 +628,7 @@
                         <span class="text-[11px] font-black ${nameColorClass} uppercase tracking-widest">${nameLabel}</span>
                         <span class="text-[11px] font-bold text-slate-300 uppercase">${timeStr}</span>
                     </div>
-                    <div class="w-full prose-container prose prose-sm max-w-none text-slate-600 text-[15px] leading-relaxed font-medium">
+                    <div class="w-full prose-container prose prose-sm max-w-none text-slate-600 text-base leading-relaxed font-medium">
                         ${isError ? `<div class="text-red-600 text-xs font-mono whitespace-pre-wrap">${text}</div>` : (isRawHtml ? text : marked.parse(text))}
                     </div>
                     ${!isUser && !isError ? `
@@ -754,147 +748,115 @@
 
 
 		async function sendMessage(e) {
-			if (e) e.preventDefault();
-			if (isGenerating) {
-				if (abortController) abortController.abort();
-				setGeneratingState(false);
-				return;
-			}
-			const rawInput = userInput.value.trim();
-			if (!rawInput) return;
-
-			const imageMatch = rawInput.match(/\[image\]\s*([\s\S]*?)\s*\[\/image\]/i);
-
-			userInput.blur();
-			userInput.value = '';
-			userInput.style.height = 'auto';
-			userInput.disabled = true;
-			setGeneratingState(true);
-			abortController = new AbortController();
-
-			if (imageMatch) {
-				const imagePrompt = imageMatch[1].trim();
-				chatHistory.push({ role: "user", parts: [{ text: rawInput }] });
-				saveCurrentSession();
-				appendMessageToUI('user', rawInput);
-				showTyping();
-
-				try {
-					await generateImage(imagePrompt);
-				} catch (error) {
-					hideTyping();
-					appendMessageToUI('error', `IMAGE ERROR:\n${error.message}`);
-				} finally {
-					setGeneratingState(false);
-					userInput.disabled = false;
-					abortController = null;
-				}
-				return;
-			}
-
-			chatHistory.push({ role: "user", parts: [{ text: rawInput }] });
-			saveCurrentSession();
-			appendMessageToUI('user', rawInput);
-			showTyping();
-			try {
-				const response = await fetch(PROXY_URL + `?model=${MODEL_NAME}&action=generateContent`, {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-						'apikey': SUPABASE_KEY,
-						'Authorization': `Bearer ${SUPABASE_KEY}`
-					},
-					signal: abortController.signal,
-					body: JSON.stringify({
-						system_instruction: {
-							parts: [{ text: "Anda adalah SINTA, asisten AI yang cerdas dan kreatif. Anda memiliki kemampuan untuk MENGE-GENERATE GAMBAR. Jika pengguna meminta gambar, visualisasi, atau lukisan, JANGAN menolak. Sebaliknya, buatlah prompt gambar yang deskriptif dan bungkus dengan tag [image]...[/image]. Contoh: User: 'Buatkan gambar kucing', Anda Jawab: 'Tentu, ini gambar kucingnya:\n[image] kucing lucu realistis, bulu halus, pencahayaan sinematik [/image]'. JANGAN gunakan blok kode untuk tag ini." }]
-						},
-						contents: chatHistory,
-						tools: [{ google_search: {} }],
-						generationConfig: { temperature: 1, maxOutputTokens: 65536 }
-					})
-				});
-				const data = await response.json();
-				if (!response.ok) throw new Error(data.error?.message || `HTTP ${response.status}`);
-				const parts = data.candidates?.[0]?.content?.parts || [];
-				let finalResponse = "";
-				parts.forEach(part => { if (part.text && !part.thought) finalResponse += part.text; });
-
-				hideTyping();
-
-				if (finalResponse) {
-					const imageMatch = finalResponse.match(/\[image\](.*?)\[\/image\]/s);
-					let textToDisplay = finalResponse;
-					let imagePrompt = null;
-
-					if (imageMatch) {
-						imagePrompt = imageMatch[1].trim();
-						textToDisplay = finalResponse.replace(/\[image\](.*?)\[\/image\]/s, "").trim();
-						if (!textToDisplay) textToDisplay = "Sedang membuat gambar...";
-					}
-
-					const aiContainer = appendMessageToUI('model', "");
-					await streamText(aiContainer, textToDisplay);
-
-					const copyBtn = aiContainer.closest('.group').querySelector('.copy-btn');
-					if (copyBtn) {
-						copyBtn.setAttribute('data-content', textToDisplay);
-					}
-
-					if (isGenerating) {
-						chatHistory.push({ role: "model", parts: [{ text: textToDisplay }] });
-						saveCurrentSession();
-
-						if (imagePrompt) {
-							await generateImage(imagePrompt, aiContainer);
-						}
-					}
-				}
-			} catch (error) {
-				hideTyping();
-				if (error.name !== 'AbortError') appendMessageToUI('error', `ERROR:\n${error.message}`);
-			} finally {
-				setGeneratingState(false);
-				userInput.disabled = false;
-				abortController = null;
-			}
+		    if (e) e.preventDefault();
+		    if (isGenerating) {
+		        if (abortController) abortController.abort();
+		        setGeneratingState(false);
+		        return;
+		    }
+		    const rawInput = userInput.value.trim();
+		    if (!rawInput) return;
+		
+		    const imageMatch = rawInput.match(/\[image\]\s*([\s\S]*?)\s*\[\/image\]/i);
+		
+		    userInput.blur();
+		    userInput.value = '';
+		    userInput.style.height = 'auto';
+		    userInput.disabled = true;
+		    setGeneratingState(true);
+		    abortController = new AbortController();
+		
+		    const { data: { session } } = await _supabase.auth.getSession();
+		
+		    if (imageMatch) {
+		        chatHistory.push({ role: "user", parts: [{ text: rawInput }] });
+		        saveCurrentSession();
+		        appendMessageToUI('user', rawInput);
+		        showTyping();
+		        try {
+		            await generateImage(imageMatch[1].trim());
+		        } catch (error) {
+		            hideTyping();
+		            appendMessageToUI('error', `IMAGE ERROR: ${error.message}`);
+		        } finally {
+		            setGeneratingState(false);
+		            userInput.disabled = false;
+		            abortController = null;
+		        }
+		        return;
+		    }
+		
+		    chatHistory.push({ role: "user", parts: [{ text: rawInput }] });
+		    saveCurrentSession();
+		    appendMessageToUI('user', rawInput);
+		    showTyping();
+		    try {
+		        const response = await fetch(PROXY_URL + `?model=${MODEL_NAME}&action=generateContent`, {
+		            method: 'POST',
+		            headers: {
+		                'Content-Type': 'application/json',
+		                'apikey': SUPABASE_KEY,
+		                'Authorization': `Bearer ${session?.access_token}`
+		            },
+		            signal: abortController.signal,
+		            body: JSON.stringify({
+		                system_instruction: {
+		                    parts: [{ text: "Anda adalah SINTA..." }]
+		                },
+		                contents: chatHistory,
+		                tools: [{ google_search: {} }],
+		                generationConfig: { temperature: 1, maxOutputTokens: 65536 }
+		            })
+		        });
+		        const data = await response.json();
+		        if (!response.ok) throw new Error(data.error?.message || `HTTP ${response.status}`);
+		        const parts = data.candidates?.[0]?.content?.parts || [];
+		        let finalResponse = "";
+		        parts.forEach(part => { if (part.text && !part.thought) finalResponse += part.text; });
+		
+		        hideTyping();
+		
+		        if (finalResponse) {
+		            const aiContainer = appendMessageToUI('model', "");
+		            await streamText(aiContainer, finalResponse);
+		            if (isGenerating) {
+		                chatHistory.push({ role: "model", parts: [{ text: finalResponse }] });
+		                saveCurrentSession();
+		            }
+		        }
+		    } catch (error) {
+		        hideTyping();
+		        if (error.name !== 'AbortError') appendMessageToUI('error', `ERROR: ${error.message}`);
+		    } finally {
+		        setGeneratingState(false);
+		        userInput.disabled = false;
+		        abortController = null;
+		    }
 		}
 
 		async function generateImage(prompt, targetContainer = null) {
-			let loaderId = `loader-${Date.now()}`;
-			if (targetContainer) {
-				const loaderHTML = `
-					<div id="${loaderId}" class="mt-2 flex items-center gap-1 text-slate-400 text-xs font-medium animate-in fade-in duration-300">
-						<span>Membuat Gambar</span>
-						<div class="flex gap-0.5 items-center pt-1">
-							<span class="w-1 h-1 bg-slate-400 rounded-full animate-bounce"></span>
-							<span class="w-1 h-1 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></span>
-							<span class="w-1 h-1 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></span>
-						</div>
-					</div>
-				`;
-				targetContainer.insertAdjacentHTML('beforeend', loaderHTML);
-				lucide.createIcons();
-				scrollBottom(true, 'auto');
-			} else {
-				showTyping();
-			}
-
-			const response = await fetch(PROXY_URL + `?model=${IMAGE_MODEL_NAME}&action=generateContent`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					'apikey': SUPABASE_KEY,
-					'Authorization': `Bearer ${SUPABASE_KEY}`
-				},
-				signal: abortController.signal,
-				body: JSON.stringify({
-					contents: [{ role: "user", parts: [{ text: prompt }] }],
-					generationConfig: {
-						response_modalities: ["IMAGE"]
-					}
-				})
-			});
+		    let loaderId = `loader-${Date.now()}`;
+		    const { data: { session } } = await _supabase.auth.getSession();
+		
+		    if (targetContainer) {
+		        targetContainer.insertAdjacentHTML('beforeend', `<div id="${loaderId}">Membuat Gambar...</div>`);
+		    } else {
+		        showTyping();
+		    }
+		
+		    const response = await fetch(PROXY_URL + `?model=${IMAGE_MODEL_NAME}&action=generateContent`, {
+		        method: 'POST',
+		        headers: {
+		            'Content-Type': 'application/json',
+		            'apikey': SUPABASE_KEY,
+		            'Authorization': `Bearer ${session?.access_token}`
+		        },
+		        signal: abortController.signal,
+		        body: JSON.stringify({
+		            contents: [{ role: "user", parts: [{ text: prompt }] }],
+		            generationConfig: { response_modalities: ["IMAGE"] }
+		        })
+		    });
 
 			const data = await response.json();
 			if (!response.ok) throw new Error(data.error?.message || `HTTP ${response.status} - ${JSON.stringify(data)}`);
@@ -1223,7 +1185,7 @@
 						const itemId = session.id;
 						item.innerHTML = `
                                 <div class="flex items-center w-full relative px-3 transition-colors cursor-pointer" id="item-con-${itemId}" onclick="handleContainerClick('${itemId}', event)">
-                                    <button onclick="handleNameClick('${itemId}', event)" class="flex-1 text-left py-1.5 text-[14px] font-medium truncate transition-colors ${isActive ? 'text-indigo-600 font-bold' : 'text-slate-500 hover:text-slate-900'}">
+                                    <button onclick="handleNameClick('${itemId}', event)" class="flex-1 text-left py-1.5 text-sm font-medium truncate transition-colors ${isActive ? 'text-indigo-600 font-bold' : 'text-slate-500 hover:text-slate-900'}">
                                         ${session.title}
                                     </button>
                                     
