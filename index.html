@@ -339,10 +339,10 @@
 			<div class="w-full flex justify-between items-center">
 				<div class="flex items-center gap-3">
 					<div class="flex flex-col">
-						<h1 class="font-extrabold text-2xl tracking-tight leading-none text-indigo-600"
+						<h1 class="font-black text-xl tracking-tight leading-none text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-cyan-500 to-cyan-400"
 							style="font-family: 'Outfit', sans-serif;">ALISA</h1>
 						<span
-							class="text-[10px] font-semibold text-slate-400 leading-tight tracking-wide mt-0.5">Asisten
+							class="text-[11px] font-semibold text-slate-400 leading-tight tracking-wide mt-0.5">Asisten
 							Layanan Integritas dan Sistem Akuntabilitas</span>
 					</div>
 				</div>
@@ -830,26 +830,39 @@
 				hideTyping();
 
 				if (finalResponse) {
-					const imageMatch = finalResponse.match(/\[image\](.*?)\[\/image\]/s);
-					let textToDisplay = finalResponse;
-					let imagePrompt = null;
+					if (finalResponse) {
+						// Regex Global untuk menangkap semua tag [image]...[/image]
+						const imgRegex = /\[image\]([\s\S]*?)\[\/image\]/gi;
+						let match;
+						let imagePrompt = null;
+						let cleanText = finalResponse;
 
-					if (imageMatch) {
-						imagePrompt = imageMatch[1].trim();
-						textToDisplay = finalResponse.replace(/\[image\](.*?)\[\/image\]/s, "").trim();
-						if (!textToDisplay) textToDisplay = "Sedang membuat gambar...";
-					}
+						// Ambil prompt dari match pertama yang valid
+						while ((match = imgRegex.exec(finalResponse)) !== null) {
+							if (!imagePrompt) {
+								imagePrompt = match[1].trim(); // Ambil prompt pertama
+							}
+							// Hapus tag dari text untuk ditampilkan
+							cleanText = cleanText.replace(match[0], "").trim();
+						}
 
-					const aiContainer = appendMessageToUI('model', "");
-					await streamText(aiContainer, textToDisplay);
+						let textToDisplay = cleanText;
+						if (!textToDisplay && imagePrompt) {
+							textToDisplay = "Sedang membuat gambar...";
+						}
 
-					if (isGenerating) {
-						// Only save text if it's NOT the temporary loading message
-						const initialText = textToDisplay === "Sedang membuat gambar..." ? "" : textToDisplay;
-						chatHistory.push({ role: "model", parts: [{ text: initialText }] });
-						saveCurrentSession();
-						if (imagePrompt) {
-							await generateImage(imagePrompt, aiContainer);
+						const aiContainer = appendMessageToUI('model', "");
+						await streamText(aiContainer, textToDisplay);
+
+						if (isGenerating) {
+							// Only save text if it's NOT the temporary loading message
+							const initialText = textToDisplay === "Sedang membuat gambar..." ? "" : textToDisplay;
+							chatHistory.push({ role: "model", parts: [{ text: initialText }] });
+							saveCurrentSession();
+
+							if (imagePrompt) {
+								await generateImage(imagePrompt, aiContainer);
+							}
 						}
 					}
 				}
