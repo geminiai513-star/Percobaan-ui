@@ -3,8 +3,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<meta name="viewport"
-		content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	<title>ALISA AI</title>
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -80,18 +79,15 @@
 		}
 
 		#appInterface {
-    width: 100%;
-    height: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: none;
-    flex-direction: column;
-    background-color: #ffffff;
-    overflow: hidden;
-}
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			top: 0;
+			left: 0;
+			display: none;
+			flex-direction: column;
+			background-color: #ffffff;
+		}
 
 		header {
 			flex: 0 0 auto;
@@ -1658,29 +1654,6 @@
 				swipeOpenId = null;
 			}
 		});
-		
-		const forceResetLayout = () => {
-    window.scrollTo(0, 0);
-    document.body.scrollTop = 0;
-    
-    appInterface.style.height = '100.1%';
-    
-    setTimeout(() => {
-        appInterface.style.height = '100%';
-        window.dispatchEvent(new Event('resize'));
-        window.scrollTo(0, 0);
-    }, 150);
-};
-
-document.addEventListener('webkitfullscreenchange', () => {
-    if (!document.webkitIsFullScreen) {
-        setTimeout(forceResetLayout, 300);
-    }
-}, false);
-
-window.addEventListener('orientationchange', () => {
-    setTimeout(forceResetLayout, 200);
-});
 
 		init();
 	</script>
