@@ -735,7 +735,13 @@
 			if (window.hljs) {
 				div.querySelectorAll('pre code').forEach(hljs.highlightElement);
 			}
-			if (animate) scrollBottom(true, 'auto');
+			if (animate) {
+				scrollBottom(true, 'auto');
+				// Hapus class animasi setelah selesai agar tidak mengganggu stacking context (seperti fullscreen video)
+				setTimeout(() => {
+					div.classList.remove('animate-in', 'fade-in', 'slide-in-from-bottom-2', 'duration-300');
+				}, 500);
+			}
 
 			resolveIdbImages(div, animate);
 
