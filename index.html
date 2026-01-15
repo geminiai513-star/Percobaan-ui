@@ -80,15 +80,18 @@
 		}
 
 		#appInterface {
-		    width: 100%;
-		    height: 100%;
-		    position: fixed;
-		    top: 0;
-		    left: 0;
-		    display: none;
-		    flex-direction: column;
-		    background-color: #ffffff;
-		}
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: none;
+    flex-direction: column;
+    background-color: #ffffff;
+    overflow: hidden;
+}
 
 		header {
 			flex: 0 0 auto;
@@ -1656,15 +1659,23 @@
 			}
 		});
 		
-		const handleFullscreenExit = () => {
-		    if (!document.webkitIsFullScreen && !document.fullscreenElement) {
-		        window.scrollTo(0, 0);
-		        document.body.scrollTop = 0;
-		    }
-		};
-		
-		document.addEventListener('webkitfullscreenchange', handleFullscreenExit, false);
-		document.addEventListener('fullscreenchange', handleFullscreenExit, false);
+		const fixLayout = () => {
+    window.scrollTo(0, 0);
+    document.body.scrollTop = 0;
+    document.documentElement.style.height = '99.9%';
+    setTimeout(() => {
+        document.documentElement.style.height = '100%';
+        window.scrollTo(0, 0);
+    }, 150);
+};
+
+document.addEventListener('webkitfullscreenchange', () => {
+    if (!document.webkitIsFullScreen) {
+        setTimeout(fixLayout, 250);
+    }
+}, false);
+
+window.addEventListener('resize', fixLayout);
 
 		init();
 	</script>
