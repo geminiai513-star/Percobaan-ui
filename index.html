@@ -22,11 +22,13 @@
 		href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono&family=Outfit:wght@400..900&display=swap"
 		rel="stylesheet">
 	<style>
+		/* Fix for iOS PWA height issues */
 		html,
 		body {
 			margin: 0;
 			padding: 0;
-			height: 100%;
+			height: 100dvh;
+			/* Use dynamic viewport height */
 			width: 100%;
 			overflow: hidden;
 			position: fixed;
@@ -41,6 +43,7 @@
 			-webkit-tap-highlight-color: transparent;
 			-webkit-touch-callout: none;
 		}
+
 
 		/* Global disable drag and selection */
 		*,
@@ -81,7 +84,8 @@
 
 		#appInterface {
 			width: 100%;
-			height: 100%;
+			height: 100dvh;
+			/* Match body height */
 			position: absolute;
 			top: 0;
 			left: 0;
@@ -89,6 +93,7 @@
 			flex-direction: column;
 			background-color: #ffffff;
 		}
+
 
 		header {
 			flex: 0 0 auto;
@@ -1842,6 +1847,29 @@
 		});
 
 		init();
+	</script>
+	<script>
+		// Fix for iOS PWA layout shift on regular resize/fullscreen change
+		function resetScroll() {
+			window.scrollTo(0, 0);
+			document.body.scrollTop = 0;
+			document.documentElement.scrollTop = 0;
+		}
+
+		window.addEventListener('resize', resetScroll);
+		window.addEventListener('orientationchange', () => {
+			setTimeout(resetScroll, 100);
+			setTimeout(resetScroll, 500);
+		});
+
+		// Specific fix for exiting fullscreen
+		document.addEventListener('webkitfullscreenchange', () => {
+			if (!document.webkitIsFullScreen) {
+				resetScroll();
+				// Force a slight reflow to correct fixed elements
+				document.body.style.height = '100dvh'; // Re-apply
+			}
+		});
 	</script>
 </body>
 
