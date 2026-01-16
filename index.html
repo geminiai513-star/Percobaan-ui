@@ -392,18 +392,25 @@
 
 	<div id="appInterface">
 		<header class="h-16 px-4 md:px-8 flex items-center">
-			<div class="w-full flex justify-between items-center">
-				<div class="flex items-center gap-3">
-					<img src="icon/icon.png" alt="Logo" class="w-10 h-10 object-contain">
-
-				</div>
-				<div class="flex items-center gap-1">
-					<button id="menuBtn"
-						class="p-2.5 hover:bg-slate-50 text-slate-400 rounded-xl transition-all active:scale-95 ml-1">
-						<i data-lucide="menu" class="w-6 h-6"></i>
-					</button>
-				</div>
-			</div>
+		    <div class="w-full flex justify-between items-center">
+		        <div class="flex items-center gap-3">
+		            <img src="icon/icon.png" alt="Logo" class="w-10 h-10 object-contain">
+		        </div>
+		        <div class="flex items-center gap-1">
+		            <button id="voiceBtn"
+		                class="p-2.5 hover:bg-slate-50 text-slate-400 rounded-xl transition-all active:scale-95">
+		                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-audio-lines"><path d="M2 10v3"/><path d="M6 6v11"/><path d="M10 3v18"/><path d="M14 8v7"/><path d="M18 5v13"/><path d="M22 10v3"/></svg>
+		            </button>
+		            <button id="settingsBtn"
+		                class="p-2.5 hover:bg-slate-50 text-slate-400 rounded-xl transition-all active:scale-95">
+		                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings-2"><path d="M14 17H5"/><path d="M19 7h-9"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg>
+		            </button>
+		            <button id="menuBtn"
+		                class="p-2.5 hover:bg-slate-50 text-slate-400 rounded-xl transition-all active:scale-95 ml-1">
+		                <i data-lucide="menu" class="w-6 h-6"></i>
+		            </button>
+		        </div>
+		    </div>
 		</header>
 
 		<main id="chatContainer" class="custom-scroll">
@@ -434,13 +441,85 @@
 		    </div>
 		</footer>
 	</div>
-
+	<div id="adminScreen" class="fixed inset-0 bg-white z-[200] hidden flex-col">
+	    <header class="h-16 px-4 md:px-8 flex items-center border-b border-slate-100 shrink-0 relative">
+	        <div class="flex items-center z-10">
+	            <button id="backFromAdmin" class="p-2 -ml-2 text-slate-400 hover:text-slate-600 transition-all active:scale-90">
+	                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left"><path d="m15 18-6-6 6-6"/></svg>
+	            </button>
+	        </div>
+	        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+	            <h2 class="text-sm font-black text-slate-800 uppercase tracking-widest">Admin Control</h2>
+	        </div>
+	    </header>
+	
+	    <main class="flex-1 overflow-y-auto bg-white custom-scroll">
+		    <div class="content-width py-6 space-y-4">
+		        
+		        <div class="w-full bg-slate-50 rounded-2xl p-5 shadow-sm border-none" id="model-dropdown">
+				    <div class="mb-4">
+				        <span class="text-xs font-black text-slate-500 uppercase tracking-widest">Model AI</span>
+				    </div>
+				    <div class="relative">
+				        <button type="button" id="dropdown-trigger" class="w-full bg-white rounded-xl px-5 py-3 text-[15px] font-bold text-slate-700 shadow-sm flex items-center justify-between outline-none">
+				            <span id="selected-model-text">Gemini 3 Flash</span>
+				            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform duration-200" id="dropdown-icon"></i>
+				        </button>
+				        <div id="dropdown-menu" class="hidden absolute left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl border border-slate-100 p-2 z-[210]">
+				            <div class="flex flex-col">
+				                <div class="dropdown-option py-3 px-4 rounded-xl hover:bg-slate-50 cursor-pointer text-sm font-medium text-slate-800" data-value="gemini-3-flash-preview">Gemini 3 Flash</div>
+				                <div class="dropdown-option py-3 px-4 rounded-xl hover:bg-slate-50 cursor-pointer text-sm font-medium text-slate-800" data-value="gemini-3-pro-preview">Gemini 3 Pro</div>
+				                <div class="dropdown-option py-3 px-4 rounded-xl hover:bg-slate-50 cursor-pointer text-sm font-medium text-slate-800" data-value="gemini-3-deep-think-preview">Gemini 3 Deep Think</div>
+				            </div>
+				        </div>
+				    </div>
+				</div>
+		
+		        <div class="w-full bg-slate-50 rounded-2xl p-5 shadow-sm border-none">
+		            <div class="mb-6">
+		                <span class="text-xs font-black text-slate-500 uppercase tracking-widest">Parameter AI</span>
+		            </div>
+		            <div class="space-y-6">
+		                <div>
+		                    <div class="flex justify-between items-center mb-2">
+		                        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Temperature</span>
+		                        <span id="label-temp" class="text-[11px] font-black text-slate-600">1.0</span>
+		                    </div>
+		                    <input type="range" id="settings-temp" min="0" max="2" step="0.1" class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-600">
+		                </div>
+		
+		                <div>
+		                    <div class="flex justify-between items-center mb-2">
+		                        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Max Tokens</span>
+		                        <span id="label-tokens" class="text-[11px] font-black text-slate-600">65536</span>
+		                    </div>
+		                    <input type="range" id="settings-tokens" min="1024" max="128000" step="1024" class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-600">
+		                </div>
+		
+		                <div>
+		                    <div class="flex justify-between items-center mb-2">
+		                        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Thinking Budget</span>
+		                        <span id="label-thinking" class="text-[11px] font-black text-slate-600">MEDIUM</span>
+		                    </div>
+		                    <input type="range" id="settings-thinking" min="1" max="3" step="1" class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-600">
+		                </div>
+		            </div>
+		        </div>
+		
+		        <div class="w-full bg-slate-50 rounded-2xl p-5 shadow-sm border-none">
+		            <div class="mb-4">
+		                <span class="text-xs font-black text-slate-500 uppercase tracking-widest">System Prompt</span>
+		            </div>
+		            <textarea id="systemPromptInput" rows="4" class="w-full bg-white rounded-xl px-4 py-3 text-[15px] leading-relaxed font-medium text-slate-600 outline-none focus:ring-1 focus:ring-slate-200 transition-all resize-none"></textarea>
+		        </div>
+		    </div>
+		</main>
+	</div>
 	<script>
 		const SUPABASE_URL = "https://wluwdfbvkyafscotpils.supabase.co";
 		const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndsdXdkZmJ2a3lhZnNjb3RwaWxzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxMjgwNjIsImV4cCI6MjA4MzcwNDA2Mn0.RpCI9gd2v8_K6aEp2rKLTv3OWf952kTWkdlxo8NfozU";
 		const PROXY_URL = `${SUPABASE_URL}/functions/v1/gemini-proxy`;
 		const YOUTUBE_PROXY_URL = `${SUPABASE_URL}/functions/v1/youtube-proxy`;
-		const MODEL_NAME = "gemini-3-flash-preview";
 		const IMAGE_MODEL_NAME = "gemini-2.5-flash-image";
 		const STORAGE_KEY = "sinta_chat_sessions";
 		const ACTIVE_SESSION_KEY = "sinta_active_session_id";
@@ -484,6 +563,221 @@
 		const DB_VERSION = 1;
 		const STORE_NAME = "images";
 		let dbInstance = null;
+		
+		const settingsBtn = document.getElementById('settingsBtn');
+		const adminScreen = document.getElementById('adminScreen');
+		const backFromAdmin = document.getElementById('backFromAdmin');
+		const thinkingMap = { "1": 4000, "2": 16000, "3": 32000 };
+		let currentSelectedModel = localStorage.getItem('alisa_model') || "gemini-3-flash-preview";
+		
+		function saveAdminSettings() {
+		    localStorage.setItem('alisa_model', currentSelectedModel);
+		    localStorage.setItem('alisa_thinking', document.getElementById('settings-thinking').value);
+		    localStorage.setItem('alisa_prompt', document.getElementById('systemPromptInput').value);
+		    localStorage.setItem('alisa_temp', document.getElementById('settings-temp').value);
+		    localStorage.setItem('alisa_tokens', document.getElementById('settings-tokens').value);
+		}
+		
+		if (settingsBtn && adminScreen) {
+		    settingsBtn.addEventListener('click', () => {
+		        adminScreen.classList.remove('hidden');
+		        adminScreen.classList.add('flex');
+		    });
+		}
+		
+		if (backFromAdmin && adminScreen) {
+		    backFromAdmin.addEventListener('click', () => {
+		        adminScreen.classList.add('hidden');
+		        adminScreen.classList.remove('flex');
+		        saveAdminSettings();
+		    });
+		}
+		
+		document.querySelectorAll('.dropdown-option').forEach(option => {
+		    option.addEventListener('click', function() {
+		        currentSelectedModel = this.getAttribute('data-value');
+		        document.getElementById('selected-model-text').innerText = this.innerText;
+		        document.getElementById('dropdown-menu').classList.add('hidden');
+		        document.getElementById('dropdown-icon').style.transform = 'rotate(0deg)';
+		        saveAdminSettings();
+		    });
+		});
+		
+		document.getElementById('dropdown-trigger').addEventListener('click', () => {
+		    const menu = document.getElementById('dropdown-menu');
+		    const icon = document.getElementById('dropdown-icon');
+		    const isHidden = menu.classList.toggle('hidden');
+		    icon.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(180deg)';
+		});
+		
+		window.addEventListener('click', (e) => {
+		    const menu = document.getElementById('dropdown-menu');
+		    const icon = document.getElementById('dropdown-icon');
+		    if (!e.target.closest('#model-dropdown')) {
+		        menu.classList.add('hidden');
+		        icon.style.transform = 'rotate(0deg)';
+		    }
+		});
+		
+		document.getElementById('settings-thinking').addEventListener('input', function() {
+		    const labels = ["LOW", "MEDIUM", "HIGH"];
+		    document.getElementById('label-thinking').innerText = labels[this.value - 1];
+		    saveAdminSettings();
+		});
+		
+		document.getElementById('settings-temp').addEventListener('input', function() {
+		    document.getElementById('label-temp').innerText = this.value;
+		    saveAdminSettings();
+		});
+		
+		document.getElementById('settings-tokens').addEventListener('input', function() {
+		    document.getElementById('label-tokens').innerText = this.value;
+		    saveAdminSettings();
+		});
+						
+		async function sendMessage(e) {
+		    if (e) e.preventDefault();
+		    if (isGenerating) {
+		        if (abortController) abortController.abort();
+		        setGeneratingState(false);
+		        return;
+		    }
+		
+		    const rawInput = userInput.value.trim();
+		    if (!rawInput && pendingFiles.length === 0) return;
+		
+		    const dynamicMainPrompt = document.getElementById('systemPromptInput').value || MAIN_SYSTEM_PROMPT;
+		    const sliderVal = document.getElementById('settings-thinking').value;
+		    const currentBudget = thinkingMap[sliderVal] || 16000;
+		    const currentTemp = parseFloat(document.getElementById('settings-temp').value) || 1.0;
+		    const currentMaxTokens = parseInt(document.getElementById('settings-tokens').value) || 65536;
+		
+		    const { data: { session } } = await _supabase.auth.getSession();
+		    if (!session) return;
+		    const userToken = session.access_token;
+		
+		    userInput.blur();
+		    userInput.value = '';
+		    userInput.style.height = 'auto';
+		    userInput.disabled = true;
+		    setGeneratingState(true);
+		    abortController = new AbortController();
+		
+		    let apiParts = [];
+		    let textContext = "";
+		    const filesToProcess = [...pendingFiles];
+		    pendingFiles = [];
+		    renderPreviews();
+		
+		    for (const f of filesToProcess) {
+		        const ext = f.name.split('.').pop().toLowerCase();
+		        if (f.mime.startsWith('image/') || f.mime === 'application/pdf') {
+		            apiParts.push({ inline_data: { mime_type: f.mime, data: f.base64 } });
+		        } else {
+		            textContext += await (['docx', 'xlsx', 'xls', 'pptx'].includes(ext) ? extractTextFromOffice(f) : readCodeFile(f));
+		        }
+		    }
+		
+		    const finalPrompt = rawInput + (textContext ? "\n\nKONTEKS DOKUMEN:\n" + textContext : "");
+		    const userMessageParts = apiParts.length > 0 ? [...apiParts, { text: finalPrompt }] : [{ text: finalPrompt }];
+		    
+		    chatHistory.push({ role: "user", parts: userMessageParts });
+		    appendMessageToUI('user', rawInput || "Menganalisis lampiran...");
+		    saveCurrentSession();
+		    showTyping();
+		
+		    const combinedSystemInstruction = `${dynamicMainPrompt}\n\n${IMAGE_GEN_PROMPT}\n\n${VIDEO_GEN_PROMPT}`;
+		
+		    try {
+		        const payload = {
+		            system_instruction: { parts: [{ text: combinedSystemInstruction }] },
+		            contents: chatHistory,
+		            tools: [{ google_search: {} }],
+		            generation_config: { 
+		                temperature: currentTemp,
+		                max_output_tokens: currentMaxTokens 
+		            }
+		        };
+		
+		        if (currentSelectedModel.includes('think')) {
+		            payload.thinking_config = { include_thoughts: true, thinking_budget_tokens: currentBudget };
+		        }
+		
+		        const response = await fetch(PROXY_URL + `?model=${currentSelectedModel}&action=generateContent`, {
+		            method: 'POST',
+		            headers: {
+		                'Content-Type': 'application/json',
+		                'apikey': SUPABASE_KEY,
+		                'Authorization': `Bearer ${userToken}`
+		            },
+		            signal: abortController.signal,
+		            body: JSON.stringify(payload)
+		        });
+		
+		        const data = await response.json();
+		        if (!response.ok) throw new Error(data.error?.message || `HTTP ${response.status}`);
+		        
+		        const parts = data.candidates?.[0]?.content?.parts || [];
+		        let finalResponse = "";
+		        parts.forEach(part => { if (part.text && !part.thought) finalResponse += part.text; });
+		        
+		        hideTyping();
+		        
+		        if (finalResponse) {
+		            const mediaSplitRegex = /(\[image\][\s\S]*?\[\/image\]|\[youtube\][\s\S]*?\[\/youtube\])/gi;
+		            const resParts = finalResponse.split(mediaSplitRegex);
+		            const aiContainerTop = appendMessageToUI('model', "");
+		            let currentProseEl = aiContainerTop;
+		            const messageBody = aiContainerTop.parentElement;
+		            let proseUsed = false;
+		            
+		            chatHistory.push({ role: "model", parts: [{ text: "" }] });
+		            
+		            for (let i = 0; i < resParts.length; i++) {
+		                if (!isGenerating) break;
+		                const part = resParts[i];
+		                if (!part.trim()) continue;
+		                
+		                const imgMatch = part.match(/\[image\]([\s\S]*?)\[\/image\]/i);
+		                const vidMatch = part.match(/\[youtube\]([\s\S]*?)\[\/youtube\]/i);
+		                
+		                if (imgMatch) {
+		                    const mediaDiv = document.createElement('div');
+		                    mediaDiv.className = "media-container w-full flex flex-col";
+		                    messageBody.appendChild(mediaDiv);
+		                    await generateImage(imgMatch[1].trim(), mediaDiv);
+		                } else if (vidMatch) {
+		                    const mediaDiv = document.createElement('div');
+		                    mediaDiv.className = "media-container w-full flex flex-col";
+		                    messageBody.appendChild(mediaDiv);
+		                    await generateYoutubeVideo(vidMatch[1].trim(), mediaDiv);
+		                } else {
+		                    if (i > 0) {
+		                        const div = document.createElement('div');
+		                        div.className = "w-full prose-container prose max-w-none text-slate-600 text-[15px] leading-relaxed font-medium";
+		                        messageBody.appendChild(div);
+		                        currentProseEl = div;
+		                    }
+		                    const streamedText = await streamText(currentProseEl, part);
+		                    if (streamedText) {
+		                        proseUsed = true;
+		                        const lastMsg = chatHistory[chatHistory.length - 1];
+		                        lastMsg.parts[0].text += (lastMsg.parts[0].text ? "\n\n" : "") + streamedText;
+		                        saveCurrentSession();
+		                    }
+		                }
+		            }
+		            if (!proseUsed && aiContainerTop) aiContainerTop.remove();
+		        }
+		    } catch (error) {
+		        hideTyping();
+		        if (error.name !== 'AbortError') appendMessageToUI('error', `ERROR: ${error.message}`);
+		    } finally {
+		        setGeneratingState(false);
+		        userInput.disabled = false;
+		        abortController = null;
+		    }
+		}
 
 		function initDB() {
 			return new Promise((resolve, reject) => {
@@ -547,40 +841,51 @@
 		});
 
 		async function init() {
-			const { data: { session } } = await _supabase.auth.getSession();
-
-			const savedActiveID = localStorage.getItem(ACTIVE_SESSION_KEY);
-			if (savedActiveID) {
-				currentSessionId = savedActiveID;
-				loadSession(currentSessionId);
-			} else {
-				startNewSession();
-			}
-
-			loadSidebarHistory();
-
-			if (session) {
-				if (session.user && session.user.email) {
-					sidebarEmail.innerText = session.user.email;
-				}
-				showApp();
-			} else {
-				loginScreen.style.display = 'flex';
-			}
-
-			const preventStick = () => {
-				const top = chatContainer.scrollTop;
-				const totalScroll = chatContainer.scrollHeight;
-				const currentScroll = top + chatContainer.offsetHeight;
-
-				if (top === 0) {
-					chatContainer.scrollTop = 1;
-				} else if (currentScroll >= totalScroll) {
-					chatContainer.scrollTop = top - 1;
-				}
-			};
-			chatContainer.addEventListener('touchstart', preventStick, { passive: true });
-
+		    const { data: { session } } = await _supabase.auth.getSession();
+		
+		    const savedLevel = localStorage.getItem('alisa_thinking') || "2";
+		    const savedPrompt = localStorage.getItem('alisa_prompt') || MAIN_SYSTEM_PROMPT;
+		    const savedModel = localStorage.getItem('alisa_model') || "gemini-3-flash-preview";
+		    const savedTemp = localStorage.getItem('alisa_temp') || "1.0";
+		    const savedTokens = localStorage.getItem('alisa_tokens') || "65536";
+		
+		    document.getElementById('settings-thinking').value = savedLevel;
+		    document.getElementById('label-thinking').innerText = ["LOW", "MEDIUM", "HIGH"][savedLevel - 1];
+		    document.getElementById('systemPromptInput').value = savedPrompt;
+		    document.getElementById('settings-temp').value = savedTemp;
+		    document.getElementById('label-temp').innerText = savedTemp;
+		    document.getElementById('settings-tokens').value = savedTokens;
+		    document.getElementById('label-tokens').innerText = savedTokens;
+		    
+		    currentSelectedModel = savedModel;
+		    const modelOption = document.querySelector(`[data-value="${savedModel}"]`);
+		    if (modelOption) document.getElementById('selected-model-text').innerText = modelOption.innerText;
+		
+		    const savedActiveID = localStorage.getItem(ACTIVE_SESSION_KEY);
+		    if (savedActiveID) {
+		        currentSessionId = savedActiveID;
+		        loadSession(currentSessionId);
+		    } else {
+		        startNewSession();
+		    }
+		    
+		    loadSidebarHistory();
+		
+		    if (session) {
+		        if (session.user && session.user.email) sidebarEmail.innerText = session.user.email;
+		        showApp();
+		    } else {
+		        loginScreen.style.display = 'flex';
+		    }
+		
+		    const preventStick = () => {
+		        const top = chatContainer.scrollTop;
+		        const totalScroll = chatContainer.scrollHeight;
+		        const currentScroll = top + chatContainer.offsetHeight;
+		        if (top === 0) chatContainer.scrollTop = 1;
+		        else if (currentScroll >= totalScroll) chatContainer.scrollTop = top - 1;
+		    };
+		    chatContainer.addEventListener('touchstart', preventStick, { passive: true });
 		}
 
 		function showApp() {
@@ -1019,120 +1324,6 @@
 		function removeFile(index) {
 		    pendingFiles.splice(index, 1);
 		    renderPreviews();
-		}
-
-
-		async function sendMessage(e) {
-		    if (e) e.preventDefault();
-		    if (isGenerating) {
-		        if (abortController) abortController.abort();
-		        setGeneratingState(false);
-		        return;
-		    }
-		    const rawInput = userInput.value.trim();
-		    if (!rawInput && pendingFiles.length === 0) return;
-		    const { data: { session } } = await _supabase.auth.getSession();
-		    if (!session) return;
-		    const userToken = session.access_token;
-		    userInput.blur();
-		    userInput.value = '';
-		    userInput.style.height = 'auto';
-		    userInput.disabled = true;
-		    setGeneratingState(true);
-		    abortController = new AbortController();
-		    let apiParts = [];
-		    let textContext = "";
-		    const codeExts = ['js', 'css', 'java', 'html', 'xml', 'py', 'sql', 'ts', 'cpp', 'h', 'hpp', 'lua', 'swift'];
-		    const filesToProcess = [...pendingFiles];
-		    pendingFiles = [];
-		    renderPreviews();
-		    for (const f of filesToProcess) {
-		        const ext = f.name.split('.').pop().toLowerCase();
-		        if (f.mime.startsWith('image/') || f.mime === 'application/pdf') {
-		            apiParts.push({ inline_data: { mime_type: f.mime, data: f.base64 } });
-		        } else if (codeExts.includes(ext)) {
-		            textContext += await readCodeFile(f);
-		        } else {
-		            textContext += await extractTextFromOffice(f);
-		        }
-		    }
-		    const finalPrompt = rawInput + (textContext ? "\n\nKONTEKS DOKUMEN:\n" + textContext : "");
-		    const userMessageParts = apiParts.length > 0 ? [...apiParts, { text: finalPrompt }] : [{ text: finalPrompt }];
-		    chatHistory.push({ role: "user", parts: userMessageParts });
-		    appendMessageToUI('user', rawInput || "Menganalisis lampiran...");
-		    saveCurrentSession();
-		    showTyping();
-		    try {
-		        const response = await fetch(PROXY_URL + `?model=${MODEL_NAME}&action=generateContent`, {
-		            method: 'POST',
-		            headers: {
-		                'Content-Type': 'application/json',
-		                'apikey': SUPABASE_KEY,
-		                'Authorization': `Bearer ${userToken}`
-		            },
-		            signal: abortController.signal,
-		            body: JSON.stringify({
-		                system_instruction: {
-		                    parts: [{ text: `${MAIN_SYSTEM_PROMPT} ${IMAGE_GEN_PROMPT} ${VIDEO_GEN_PROMPT}` }]
-		                },
-		                contents: chatHistory,
-		                tools: [{ google_search: {} }],
-		                generationConfig: { temperature: 1, maxOutputTokens: 65536 }
-		            })
-		        });
-		        const data = await response.json();
-		        if (!response.ok) throw new Error(data.error?.message || `HTTP ${response.status}`);
-		        const parts = data.candidates?.[0]?.content?.parts || [];
-		        let finalResponse = "";
-		        parts.forEach(part => { if (part.text && !part.thought) finalResponse += part.text; });
-		        hideTyping();
-		        if (finalResponse) {
-		            const mediaSplitRegex = /(\[image\][\s\S]*?\[\/image\]|\[youtube\][\s\S]*?\[\/youtube\])/gi;
-		            const resParts = finalResponse.split(mediaSplitRegex);
-		            const aiContainerTop = appendMessageToUI('model', "");
-		            let currentProseEl = aiContainerTop;
-		            const messageBody = aiContainerTop.parentElement;
-		            chatHistory.push({ role: "model", parts: [{ text: "" }] });
-		            for (let i = 0; i < resParts.length; i++) {
-		                if (!isGenerating) break;
-		                const part = resParts[i];
-		                if (!part.trim()) continue;
-		                const imgMatch = part.match(/\[image\]([\s\S]*?)\[\/image\]/i);
-		                const vidMatch = part.match(/\[youtube\]([\s\S]*?)\[\/youtube\]/i);
-		                if (imgMatch) {
-		                    const mediaDiv = document.createElement('div');
-		                    mediaDiv.className = "media-container w-full flex flex-col";
-		                    messageBody.appendChild(mediaDiv);
-		                    await generateImage(imgMatch[1].trim(), mediaDiv);
-		                } else if (vidMatch) {
-		                    const mediaDiv = document.createElement('div');
-		                    mediaDiv.className = "media-container w-full flex flex-col";
-		                    messageBody.appendChild(mediaDiv);
-		                    await generateYoutubeVideo(vidMatch[1].trim(), mediaDiv);
-		                } else {
-		                    if (i > 0) {
-		                        const div = document.createElement('div');
-		                        div.className = "w-full prose-container prose max-w-none text-slate-600 text-[15px] leading-relaxed font-medium";
-		                        messageBody.appendChild(div);
-		                        currentProseEl = div;
-		                    }
-		                    const streamedText = await streamText(currentProseEl, part);
-		                    if (streamedText) {
-		                        const lastMsg = chatHistory[chatHistory.length - 1];
-		                        lastMsg.parts[0].text += (lastMsg.parts[0].text ? "\n\n" : "") + streamedText;
-		                        saveCurrentSession();
-		                    }
-		                }
-		            }
-		        }
-		    } catch (error) {
-		        hideTyping();
-		        if (error.name !== 'AbortError') appendMessageToUI('error', `ERROR: ${error.message}`);
-		    } finally {
-		        setGeneratingState(false);
-		        userInput.disabled = false;
-		        abortController = null;
-		    }
 		}
 
 		async function generateImage(prompt, targetContainer = null) {
@@ -1630,6 +1821,20 @@
 			});
 
 			lucide.createIcons();
+			
+			document.querySelectorAll('.dropdown-option').forEach(option => {
+			    option.addEventListener('click', function() {
+			        currentSelectedModel = this.getAttribute('data-value');
+			        document.getElementById('selected-model-text').innerText = this.innerText;
+			        document.getElementById('dropdown-menu').classList.add('hidden');
+			        document.getElementById('dropdown-icon').style.transform = 'rotate(0deg)';
+			    });
+			});
+		
+			document.getElementById('settings-thinking').addEventListener('input', function() {
+			    const labels = ["LOW", "MEDIUM", "HIGH"];
+			    document.getElementById('label-thinking').innerText = labels[this.value - 1];
+			});
 		}
 
 		function unify(e) { return e.changedTouches ? e.changedTouches[0] : e; }
