@@ -25,24 +25,43 @@
 		rel="stylesheet">
 	<style>
 		html,
-		body {
-			margin: 0;
-			padding: 0;
-			height: 100%;
-			width: 100%;
-			overflow: hidden;
-			position: fixed;
-			background-color: #ffffff;
-			font-family: 'Inter', sans-serif;
-			-webkit-text-size-adjust: none;
-			touch-action: manipulation;
-			-webkit-user-select: none;
-			-moz-user-select: none;
-			-ms-user-select: none;
-			user-select: none;
-			-webkit-tap-highlight-color: transparent;
-			-webkit-touch-callout: none;
-		}
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    background-color: #ffffff;
+    font-family: 'Inter', sans-serif;
+    -webkit-text-size-adjust: none;
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    position: fixed;
+}
+
+#appInterface {
+    width: 100%;
+    height: 100%;
+    display: none;
+    flex-direction: column;
+    background-color: #ffffff;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+main {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    background-color: #ffffff;
+    position: relative;
+    overscroll-behavior: contain;
+}
 
 		/* Global disable drag and selection */
 		*,
@@ -81,31 +100,12 @@
 			pointer-events: auto;
 		}
 
-		#appInterface {
-			width: 100%;
-			height: 100%;
-			position: absolute;
-			top: 0;
-			left: 0;
-			display: none;
-			flex-direction: column;
-			background-color: #ffffff;
-		}
-
 		header {
 			flex: 0 0 auto;
 			background: white;
 			border-bottom: 1px solid #f1f5f9;
 			padding-top: env(safe-area-inset-top, 0px);
 			z-index: 100;
-		}
-
-		main {
-			flex: 1 1 auto;
-			overflow-y: auto;
-			-webkit-overflow-scrolling: touch;
-			background-color: #ffffff;
-			position: relative;
 		}
 
 		footer {
@@ -533,7 +533,7 @@
 		}
 
 		lucide.createIcons();
-
+		
 		marked.setOptions({
 			gfm: true,
 			breaks: true,
@@ -655,8 +655,25 @@
 		});
 
 		userInput.addEventListener('focus', () => {
-			setTimeout(() => scrollBottom(true, 'auto'), 100);
-		});
+    setTimeout(() => {
+        scrollBottom(true, 'smooth');
+    }, 300);
+});
+
+userInput.addEventListener('blur', () => {
+    window.scrollTo(0, 0);
+    setTimeout(() => {
+        scrollBottom(true, 'smooth');
+    }, 100);
+});
+
+if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', () => {
+        if (document.activeElement.tagName === 'TEXTAREA') {
+            scrollBottom(true, 'auto');
+        }
+    });
+}
 
 		userInput.addEventListener('keydown', function (e) {
 			if (e.key === 'Enter' && !e.shiftKey) {
