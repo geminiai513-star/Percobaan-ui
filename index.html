@@ -322,18 +322,7 @@
 		    display: flex;
 		    align-items: center;
 		    justify-content: center;
-		}
-		.spinner-gray {
-		    width: 30px;
-		    height: 30px;
-		    border: 8px solid #f1f5f9;
-		    border-top: 8px solid #94a3b8;
-		    border-radius: 50%;
-		    animation: spin-loading 1s linear infinite;
-		}
-		@keyframes spin-loading {
-		    0% { transform: rotate(0deg); }
-		    100% { transform: rotate(360deg); }
+		    transition: opacity 0.4s ease-out, visibility 0.4s;
 		}
 	</style>
 </head>
@@ -342,7 +331,7 @@
 	
 	<!-- Loading Spiner -->
 	<div id="loadingOverlay">
-	    <div class="spinner-gray"></div>
+	    <img src="icon/icon.GIF" class="w-20 h-20 object-contain">
 	</div>
 	
 	<!-- Sidebar Overlay -->
@@ -488,7 +477,7 @@
 	                </div>
 	                <div class="space-y-4">
 	                    <div class="relative">
-	                        <button type="button" id="dropdown-trigger" class="w-full bg-slate-100 rounded-xl px-5 py-3 text-[15px] font-bold text-slate-700 shadow-sm flex items-center justify-between outline-none">
+	                        <button type="button" id="dropdown-trigger" class="w-full bg-gray-100 rounded-xl px-5 py-3 text-[15px] font-bold text-slate-700 shadow-sm flex items-center justify-between outline-none">
 	                            <span id="selected-model-text">Gemini 3 Flash</span>
 	                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform duration-200" id="dropdown-icon"></i>
 	                        </button>
@@ -505,7 +494,7 @@
 	                    </div>
 	
 	                    <div class="relative">
-	                        <button type="button" id="voice-trigger" class="w-full bg-slate-100 rounded-xl px-5 py-3 text-[15px] font-bold text-slate-700 shadow-sm flex items-center justify-between outline-none">
+	                        <button type="button" id="voice-trigger" class="w-full bg-gray-100 rounded-xl px-5 py-3 text-[15px] font-bold text-slate-700 shadow-sm flex items-center justify-between outline-none">
 	                            <span id="selected-voice-text">Kore (Default)</span>
 	                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform duration-200" id="voice-icon"></i>
 	                        </button>
@@ -557,10 +546,11 @@
 	                <div class="mb-4">
 	                    <span class="text-xs font-black text-slate-500 uppercase tracking-widest">System Prompt</span>
 	                </div>
-	                <textarea id="systemPromptInput" rows="4" onblur="window.scrollTo(0,0)" class="w-full bg-slate-100 rounded-xl px-4 py-3 text-[15px] leading-relaxed font-medium text-slate-600 outline-none focus:ring-1 focus:ring-slate-200 transition-all resize-none"></textarea>
+	                <textarea id="systemPromptInput" rows="4" onblur="window.scrollTo(0,0)" class="w-full bg-gray-100 rounded-xl px-4 py-3 text-[15px] leading-relaxed font-medium text-slate-600 outline-none focus:ring-1 focus:ring-slate-200 transition-all resize-none"></textarea>
 	            </div>
 	        </div>
 	    </main>
+	
 	    <footer class="bg-white shrink-0 h-6 mb-[env(safe-area-inset-bottom,0px)]"></footer>
 	</div>
 	
@@ -770,6 +760,13 @@
 		    const rawInput = userInput.value.trim();
 		    if (!rawInput && pendingFiles.length === 0) return;
 		
+		    const filesToProcess = [...pendingFiles];
+		    let fileMetadata = filesToProcess.map(f => ({ name: f.name, size: f.size }));
+		    let fileCardsHTML = "";
+		    filesToProcess.forEach(f => {
+		        fileCardsHTML += getFileCardHTML(f.name, f.size);
+		    });
+		
 		    const dynamicMainPrompt = document.getElementById('systemPromptInput').value || MAIN_SYSTEM_PROMPT;
 		    const sliderVal = document.getElementById('settings-thinking').value;
 		    const currentBudget = thinkingMap[sliderVal] || 16000;
@@ -789,7 +786,6 @@
 		
 		    let apiParts = [];
 		    let textContext = "";
-		    const filesToProcess = [...pendingFiles];
 		    pendingFiles = [];
 		    renderPreviews();
 		
@@ -806,10 +802,10 @@
 		    const finalPrompt = rawInput + (textContext ? "\n\nKONTEKS DOKUMEN:\n" + textContext : "");
 		    const userMessageParts = apiParts.length > 0 ? [...apiParts, { text: finalPrompt }] : [{ text: finalPrompt }];
 		    
-		    chatHistory.push({ role: "user", parts: userMessageParts });
-		    if (rawInput) {
-		        appendMessageToUI('user', rawInput);
-		    }
+		    chatHistory.push({ role: "user", parts: userMessageParts, fileMetadata: fileMetadata });
+		    
+		    appendMessageToUI('user', rawInput, true, false, fileCardsHTML);
+		    
 		    saveCurrentSession();
 		    showTyping();
 		
@@ -1025,11 +1021,73 @@
 		});
 
 		function renderHistory() {
-			messagesArea.innerHTML = '';
-			chatHistory.forEach(msg => {
-				const role = msg.role === 'user' ? 'user' : 'model';
-				appendMessageToUI(role, msg.parts[0].text, false);
-			});
+		    messagesArea.innerHTML = '';
+		    chatHistory.forEach(msg => {
+		        const role = msg.role === 'user' ? 'user' : 'model';
+		        let textToShow = "";
+		        let cardsHTML = "";
+		
+		        if (msg.role === 'user') {
+		            const textPart = msg.parts.find(p => p.text);
+		            if (textPart) {
+		                textToShow = textPart.text.split("\n\nKONTEKS DOKUMEN:")[0].trim();
+		            }
+		            if (msg.fileMetadata) {
+		                msg.fileMetadata.forEach(f => {
+		                    cardsHTML += getFileCardHTML(f.name, f.size);
+		                });
+		            }
+		        } else {
+		            textToShow = msg.parts[0].text;
+		        }
+		
+		        appendMessageToUI(role, textToShow, false, false, cardsHTML);
+		    });
+		}
+
+		function saveCurrentSession() {
+		    try {
+		        const sessions = getAllSessions();
+		        const existingIndex = sessions.findIndex(s => s.id === currentSessionId);
+		        const cleanedHistory = chatHistory.map(msg => ({
+		            role: msg.role,
+		            fileMetadata: msg.fileMetadata || null,
+		            parts: msg.parts.map(part => {
+		                if (part.inline_data || part.data) return { text: "" };
+		                return part;
+		            })
+		        }));
+		
+		        let title = "Percakapan Baru";
+		        const firstUserMsg = chatHistory.find(m => m.role === 'user');
+		        if (firstUserMsg && firstUserMsg.parts) {
+		            const textPart = firstUserMsg.parts.find(p => p.text);
+		            if (textPart) {
+		                let cleanTitle = textPart.text.split("\n\nKONTEKS DOKUMEN:")[0].trim();
+		                if (!cleanTitle) cleanTitle = "Lampiran Dokumen";
+		                title = cleanTitle.substring(0, 30) + (cleanTitle.length > 30 ? "..." : "");
+		            }
+		        }
+		        const sessionData = {
+		            id: currentSessionId,
+		            title: title,
+		            timestamp: Date.now(),
+		            history: cleanedHistory
+		        };
+		        if (existingIndex >= 0) {
+		            sessions[existingIndex] = sessionData;
+		        } else {
+		            sessions.unshift(sessionData);
+		        }
+		        localStorage.setItem(STORAGE_KEY, JSON.stringify(sessions));
+		        loadSidebarHistory();
+		    } catch (e) {
+		        const sessions = getAllSessions();
+		        if (sessions.length > 5) {
+		            sessions.pop();
+		            localStorage.setItem(STORAGE_KEY, JSON.stringify(sessions));
+		        }
+		    }
 		}
 
 		userInput.addEventListener('input', function () {
@@ -1096,81 +1154,56 @@
 		    }
 		});
 
-		function appendMessageToUI(role, text, animate = true, isRawHtml = false) {
-			const isUser = role === 'user';
-			const isError = role === 'error';
-			const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-			const nameLabel = isUser ? 'ANDA' : (isError ? 'SYSTEM ERROR' : 'ALISA');
-			const nameColorClass = isUser ? 'text-slate-600' : (isError ? 'text-red-600' : 'text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500');
+		function getFileCardHTML(name, size) {
+		    const ext = name.split('.').pop().toLowerCase();
+		    const visual = getFileIcon(ext);
+		    return `
+		        <div class="bg-gray-100 rounded-2xl p-3 flex items-center gap-2 relative w-full min-h-[64px] border-none animate-in fade-in slide-in-from-bottom-1">
+		            <div class="w-10 h-10 flex-none flex items-center justify-center overflow-hidden shrink-0">${visual}</div>
+		            <div class="flex-1 flex flex-col justify-center min-w-0 h-10">
+		                <p class="text-[12px] font-bold text-gray-700 truncate leading-none mb-1 m-0 p-0">${name}</p>
+		                <p class="text-[10px] text-gray-400 font-medium leading-none m-0 p-0">${size}</p>
+		            </div>
+		        </div>`;
+		}
 
-			const div = document.createElement('div');
-			div.className = `w-full ${animate ? 'animate-in fade-in slide-in-from-bottom-2 duration-300' : ''} mb-2`;
-
-			div.innerHTML = `
-                <div class="w-full bg-slate-50 rounded-2xl p-4 ${!isUser && !isError ? 'pb-6' : ''} shadow-sm border-none group relative">
-                    <div class="flex justify-between items-center border-b border-slate-100 pb-1 mb-0.5">
-                        <span class="text-xs font-black ${nameColorClass} uppercase tracking-widest">${nameLabel}</span>
-                        <span class="text-xs font-bold text-slate-300 uppercase">${timeStr}</span>
-                    </div>
-                    <div class="w-full prose-container prose max-w-none text-slate-600 text-[15px] leading-relaxed font-medium">
-                        ${isError ? `<div class="text-red-600 text-xs font-mono whitespace-pre-wrap">${text}</div>` : (isRawHtml ? text : parseMessageText(text))}
-					</div>
-					<div class="media-container w-full mt-2 empty:hidden gap-3 flex flex-col"></div>
-					<div class="prose-container-bottom w-full prose prose-container max-w-none text-slate-600 text-[15px] leading-relaxed font-medium mt-4 empty:hidden"></div>
-						${!isUser && !isError ? `
-                        <button class="copy-btn absolute bottom-2 right-2 p-1 text-slate-400 hover:text-slate-600 rounded-md opacity-0 group-hover:opacity-100 transition-opacity" title="Salin pesan">
-                            <i data-lucide="copy" class="w-3 h-3"></i>
-                        </button>
-                    ` : ''}
-                </div>
-            `;
-
-			messagesArea.appendChild(div);
-			lucide.createIcons();
-
-			if (!isUser && !isError) {
-				const copyBtn = div.querySelector('.copy-btn');
-				if (copyBtn) {
-					copyBtn.addEventListener('click', () => {
-						const contentToCopy = div.querySelector('.prose-container').innerText;
-						navigator.clipboard.writeText(contentToCopy).then(() => {
-							copyBtn.innerHTML = '<i data-lucide="check" class="w-3 h-3 text-green-500"></i>';
-							lucide.createIcons();
-							setTimeout(() => {
-								copyBtn.innerHTML = '<i data-lucide="copy" class="w-3 h-3"></i>';
-								lucide.createIcons();
-							}, 2000);
-						}).catch(err => {
-							console.error('Failed to copy: ', err);
-							const textArea = document.createElement("textarea");
-							textArea.value = contentToCopy;
-							document.body.appendChild(textArea);
-							textArea.select();
-							try {
-								document.execCommand('copy');
-								copyBtn.innerHTML = '<i data-lucide="check" class="w-3 h-3 text-green-500"></i>';
-								lucide.createIcons();
-								setTimeout(() => {
-									copyBtn.innerHTML = '<i data-lucide="copy" class="w-3 h-3"></i>';
-									lucide.createIcons();
-								}, 2000);
-							} catch (err) {
-								console.error('Fallback copy failed', err);
-							}
-							document.body.removeChild(textArea);
-						});
-					});
-				}
-			}
-
-			if (window.hljs) {
-				div.querySelectorAll('pre code').forEach(hljs.highlightElement);
-			}
-			if (animate) scrollBottom(true, 'auto');
-
-			resolveIdbImages(div, animate);
-
-			return div.querySelector('.prose-container');
+		function appendMessageToUI(role, text, animate = true, isRawHtml = false, fileCardsHTML = "") {
+		    const isUser = role === 'user';
+		    const isError = role === 'error';
+		    const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+		    const nameLabel = isUser ? 'ANDA' : (isError ? 'SYSTEM ERROR' : 'ALISA');
+		    const nameColorClass = isUser ? 'text-slate-600' : (isError ? 'text-red-600' : 'text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500');
+		
+		    const div = document.createElement('div');
+		    div.className = `w-full ${animate ? 'animate-in fade-in slide-in-from-bottom-2 duration-300' : ''} mb-2`;
+		
+		    div.innerHTML = `
+		        <div class="w-full bg-slate-50 rounded-2xl p-4 ${!isUser && !isError ? 'pb-6' : ''} shadow-sm border-none group relative">
+		            <div class="flex justify-between items-center border-b border-slate-100 pb-1 mb-0.5">
+		                <span class="text-xs font-black ${nameColorClass} uppercase tracking-widest">${nameLabel}</span>
+		                <span class="text-xs font-bold text-slate-300 uppercase">${timeStr}</span>
+		            </div>
+		            <div class="w-full prose-container prose max-w-none text-slate-600 text-[15px] leading-relaxed font-medium">
+		                ${isError ? `<div class="text-red-600 text-xs font-mono whitespace-pre-wrap">${text}</div>` : (isRawHtml ? text : parseMessageText(text))}
+		            </div>
+		            <div class="user-file-cards grid grid-cols-2 md:grid-cols-4 gap-2 empty:hidden mt-3">${fileCardsHTML}</div>
+		            <div class="media-container w-full mt-2 empty:hidden gap-3 flex flex-col"></div>
+		            <div class="prose-container-bottom w-full prose prose-container max-w-none text-slate-600 text-[15px] leading-relaxed font-medium mt-4 empty:hidden"></div>
+		            ${!isUser && !isError ? `
+		                <button class="copy-btn absolute bottom-2 right-2 p-1 text-slate-400 hover:text-slate-600 rounded-md opacity-0 group-hover:opacity-100 transition-opacity" title="Salin pesan">
+		                    <i data-lucide="copy" class="w-3 h-3"></i>
+		                </button>
+		            ` : ''}
+		        </div>
+		    `;
+		
+		    messagesArea.appendChild(div);
+		    lucide.createIcons();
+		    if (window.hljs) div.querySelectorAll('pre code').forEach(hljs.highlightElement);
+		    if (animate) scrollBottom(true, 'auto');
+		    resolveIdbImages(div, animate);
+		
+		    return div.querySelector('.prose-container');
 		}
 
 		function resolveIdbImages(container, animate = false) {
@@ -1316,7 +1349,14 @@
 		        'cpp': 'cpp-file-icon.svg',
 		        'h': 'cpp-file-icon.svg',
 		        'hpp': 'cpp-file-icon.svg',
-		        'swift': 'swift-file-icon.svg'
+		        'swift': 'swift-file-icon.svg',
+		        'jpg': 'image-file-icon.svg',
+		        'jpeg': 'image-file-icon.svg',
+		        'png': 'image-file-icon.svg',
+		        'gif': 'image-file-icon.svg',
+		        'webp': 'image-file-icon.svg',
+		        'heic': 'image-file-icon.svg',
+		        'heif': 'image-file-icon.svg'
 		    };
 		    const iconFile = icons[extension] || 'default-file-icon.svg';
 		    return `<img src="icon/${iconFile}" class="w-7 h-7 object-contain">`;
@@ -1738,49 +1778,6 @@
 			} else {
 				startNewSession();
 			}
-		}
-
-		function saveCurrentSession() {
-		    try {
-		        const sessions = getAllSessions();
-		        const existingIndex = sessions.findIndex(s => s.id === currentSessionId);
-		        const cleanedHistory = chatHistory.map(msg => ({
-				    role: msg.role,
-				    parts: msg.parts.map(part => {
-				        if (part.inline_data || part.data) {
-				            return { text: "" };
-				        }
-				        return part;
-				    })
-				}));
-		        let title = "Percakapan Baru";
-		        const firstUserMsg = chatHistory.find(m => m.role === 'user');
-		        if (firstUserMsg && firstUserMsg.parts) {
-		            const textPart = firstUserMsg.parts.find(p => p.text);
-		            if (textPart) {
-		                title = textPart.text.substring(0, 30) + (textPart.text.length > 30 ? "..." : "");
-		            }
-		        }
-		        const sessionData = {
-		            id: currentSessionId,
-		            title: title,
-		            timestamp: Date.now(),
-		            history: cleanedHistory
-		        };
-		        if (existingIndex >= 0) {
-		            sessions[existingIndex] = sessionData;
-		        } else {
-		            sessions.unshift(sessionData);
-		        }
-		        localStorage.setItem(STORAGE_KEY, JSON.stringify(sessions));
-		        loadSidebarHistory();
-		    } catch (e) {
-		        const sessions = getAllSessions();
-		        if (sessions.length > 5) {
-		            sessions.pop();
-		            localStorage.setItem(STORAGE_KEY, JSON.stringify(sessions));
-		        }
-		    }
 		}
 
 		async function deleteSession(id, event) {
@@ -2479,15 +2476,21 @@
 		        if (loadingOverlay) loadingOverlay.remove();
 		        loginScreen.style.display = 'flex';
 		    } else {
+		        if (session.user && session.user.email) sidebarEmail.innerText = session.user.email;
+		        
 		        setTimeout(() => {
 		            if (loadingOverlay) {
-		                loadingOverlay.style.transition = 'opacity 0.5s ease';
 		                loadingOverlay.style.opacity = '0';
-		                setTimeout(() => loadingOverlay.remove(), 500);
+		                loadingOverlay.style.visibility = 'hidden';
+		                
+		                setTimeout(() => {
+		                    showApp();
+		                    loadingOverlay.remove();
+		                }, 500);
+		            } else {
+		                showApp();
 		            }
-		            if (session.user && session.user.email) sidebarEmail.innerText = session.user.email;
-		            showApp();
-		        }, 3000);
+		        }, 2000);
 		    }
 		
 		    const savedLevel = localStorage.getItem('alisa_thinking') || "2";
@@ -2525,14 +2528,14 @@
 		    }
 		
 		    document.getElementById('voice-trigger').onclick = (e) => {
-			    e.stopPropagation();
-			    const menu = document.getElementById('voice-menu');
-			    const icon = document.getElementById('voice-icon');
-			    const isHidden = menu.classList.toggle('hidden');
-			    if (icon) {
-			        icon.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(180deg)';
-			    }
-			};
+		        e.stopPropagation();
+		        const menu = document.getElementById('voice-menu');
+		        const icon = document.getElementById('voice-icon');
+		        const isHidden = menu.classList.toggle('hidden');
+		        if (icon) {
+		            icon.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(180deg)';
+		        }
+		    };
 		    
 		    document.querySelectorAll('.voice-option').forEach(opt => {
 		        opt.onclick = function(e) {
