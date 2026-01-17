@@ -1006,8 +1006,10 @@
 		        errorEl.innerText = err.message === "Invalid login credentials" ? "EMAIL ATAU PASSWORD SALAH" : err.message.toUpperCase();
 		        errorEl.classList.remove('hidden');
 		    } finally {
-		        btn.disabled = false;
-		        btn.innerHTML = originalText;
+		        setTimeout(() => {
+		            btn.disabled = false;
+		            btn.innerHTML = originalText;
+		        }, 2000); 
 		    }
 		});
 
