@@ -999,17 +999,18 @@
 		            email: emailInput.value,
 		            password: passwordInput.value
 		        });
+		
 		        if (error) throw error;
-		        sidebarEmail.innerText = emailInput.value;
-		        showApp();
+		
+		        setTimeout(() => {
+		            sidebarEmail.innerText = emailInput.value;
+		            showApp();
+		        }, 2000);
 		    } catch (err) {
 		        errorEl.innerText = err.message === "Invalid login credentials" ? "EMAIL ATAU PASSWORD SALAH" : err.message.toUpperCase();
 		        errorEl.classList.remove('hidden');
-		    } finally {
-		        setTimeout(() => {
-		            btn.disabled = false;
-		            btn.innerHTML = originalText;
-		        }, 2000); 
+		        btn.disabled = false;
+		        btn.innerHTML = originalText;
 		    }
 		});
 
