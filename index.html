@@ -481,7 +481,7 @@
 	    </header>
 	
 	    <main id="adminScroller" class="flex-1 overflow-y-auto bg-white custom-scroll">
-	        <div class="content-width pt-6 pb-10 space-y-4">
+	        <div class="content-width pt-4 md:pt-8 pb-8 space-y-4">
 	            <div class="w-full bg-slate-50 rounded-2xl p-5 shadow-sm border-none" id="model-dropdown">
 	                <div class="mb-4">
 	                    <span class="text-xs font-black text-slate-500 uppercase tracking-widest">Model AI</span>
@@ -561,10 +561,10 @@
 	            </div>
 	        </div>
 	    </main>
-	
-	    <footer class="bg-white shrink-0 border-none h-3 mb-[env(safe-area-inset-bottom,12px)]"></footer>
+	    <footer class="bg-white shrink-0 h-6 mb-[env(safe-area-inset-bottom,0px)]"></footer>
 	</div>
 	
+	<!-- VOICE SCREEN -->
 	<div id="voiceScreen" class="fixed inset-0 bg-white z-[250] hidden flex-col">
 	    <header class="h-16 px-4 md:px-8 flex items-center border-none shrink-0 relative">
 	        <div class="flex items-center z-10">
@@ -2118,14 +2118,24 @@
 		}
 				
 		async function initVoiceAudio() {
+		    if (voiceInCtx) await voiceInCtx.close();
+		    if (voiceOutCtx) await voiceOutCtx.close();
+		
 		    voiceInCtx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 16000 });
 		    voiceOutCtx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 24000 });
+		    
+		    await voiceInCtx.resume();
+		    await voiceOutCtx.resume();
 		    
 		    aiAnalyser = voiceOutCtx.createAnalyser();
 		    aiAnalyser.fftSize = 1024;
 		    aiAnalyser.connect(voiceOutCtx.destination);
 		    
 		    try {
+		        if (voiceStream) {
+		            voiceStream.getTracks().forEach(t => t.stop());
+		        }
+		        
 		        voiceStream = await navigator.mediaDevices.getUserMedia({ audio: true });
 		        const source = voiceInCtx.createMediaStreamSource(voiceStream);
 		        
@@ -2182,14 +2192,22 @@
 		}
 				
 		async function initVoiceSession() {
+		    if (voiceWs) {
+		        voiceWs.close();
+		        voiceWs = null;
+		    }
+		
 		    voiceNextTime = 0;
-		    voiceSessionId++;
 		    voiceInterrupted = false;
 		    isAISpeaking = false;
 		    activeVoiceSources = [];
+		    energyCounter = 0;
+		    voiceSessionId = Date.now();
 		
 		    const historyContext = chatHistory.map(h => `${h.role === 'model' ? 'ALISA' : 'User'}: ${h.parts[0].text}`).slice(-6).join('\n');
 		    const fullPrompt = `${document.getElementById('systemPromptInput').value || MAIN_SYSTEM_PROMPT}\n\nKonteks Percakapan:\n${historyContext}`;
+		
+		    await initVoiceAudio();
 		
 		    try {
 		        voiceWs = new WebSocket('wss://gemini-proxy-408925499207.asia-southeast2.run.app');
@@ -2227,8 +2245,13 @@
 		                }
 		            }
 		        };
+		
+		        voiceWs.onclose = () => {
+		            if (!document.getElementById('voiceScreen').classList.contains('hidden')) {
+		                console.log("Reconnecting voice...");
+		            }
+		        };
 		            
-		        await initVoiceAudio();
 		        startVoiceVisualizer();
 		        
 		    } catch (err) {
@@ -2293,16 +2316,35 @@
 		}
 		
 		function closeVoiceMode() {
-		    if (voiceWs) { voiceWs.onmessage = null; voiceWs.close(); voiceWs = null; }
-		    if (voiceStream) { voiceStream.getTracks().forEach(t => t.stop()); voiceStream = null; }
-		    if (voiceInCtx) { voiceInCtx.close(); voiceInCtx = null; }
-		    if (voiceOutCtx) { voiceOutCtx.close(); voiceOutCtx = null; }
+		    if (voiceWs) { 
+		        voiceWs.onmessage = null; 
+		        voiceWs.close(); 
+		        voiceWs = null; 
+		    }
+		    if (voiceStream) { 
+		        voiceStream.getTracks().forEach(t => t.stop()); 
+		        voiceStream = null; 
+		    }
+		    if (voiceInCtx) { 
+		        voiceInCtx.close(); 
+		        voiceInCtx = null; 
+		    }
+		    if (voiceOutCtx) { 
+		        voiceOutCtx.close(); 
+		        voiceOutCtx = null; 
+		    }
 		    stopVoiceCamera();
 		    clearInterval(voiceTimerInterval);
 		    isAISpeaking = false;
+		    voiceInterrupted = false;
 		    activeVoiceSources = [];
+		    energyCounter = 0;
+		    
 		    const screen = document.getElementById('voiceScreen');
-		    if (screen) { screen.classList.add('hidden'); screen.classList.remove('flex'); }
+		    if (screen) { 
+		        screen.classList.add('hidden'); 
+		        screen.classList.remove('flex'); 
+		    }
 		}
 		
 		async function switchCamera() {
