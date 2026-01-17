@@ -328,51 +328,44 @@
 		<div class="h-16 flex items-center px-4 border-b border-slate-50">
 			<div class="flex items-center gap-3 w-full">
 				<div
-					class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 font-bold shadow-sm shrink-0">
-					<i data-lucide="user" class="w-4 h-4"></i>
+					class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-600 font-bold shadow-sm shrink-0">
+					<i data-lucide="user" class="w-5 h-5"></i>
 				</div>
 				<div class="flex-1 min-w-0">
-					<p id="sidebarEmail" class="text-[15px] font-bold text-slate-600 truncate font-sans leading-tight">
-						user@example.com</p>
-					<div class="flex items-center gap-1.5 mt-0">
-						<div class="w-1.5 h-1.5 rounded-full bg-green-500"></div>
-						<p class="text-xs font-medium text-slate-400">Online</p>
-					</div>
+				    <p id="sidebarEmail" class="text-[14px] font-bold text-slate-600 truncate font-sans leading-tight">
+				        user@example.com</p>
 				</div>
 			</div>
 		</div>
 
 		<!-- History List -->
-		<div class="flex-1 overflow-y-auto custom-scroll p-3 pb-32 space-y-6" id="historyList">
-			<!-- Dynamic content will be loaded here -->
-		</div>
+		<div class="flex-1 overflow-y-auto custom-scroll p-3 pb-32 space-y-4" id="historyList"></div>
 
 		<!-- Bottom Controls -->
-		<div class="absolute bottom-0 left-0 right-0 px-3 pt-3 pb-6">
-			<div class="space-y-2">
-				<button id="newChatSidebarBtn"
-					class="w-full flex items-center justify-start gap-3 px-3 py-3 text-gray-700 bg-gray-50 rounded-xl transition-all group active:scale-[0.98]">
-					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-						stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
-						class="text-current transition-colors opacity-60 group-hover:opacity-100">
-						<path
-							d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" />
-						<path d="M8 12h8" />
-						<path d="M12 8v8" />
-					</svg>
-					<span class="font-bold text-[13px] tracking-wide">Percakapan Baru</span>
-				</button>
-				<button id="sidebarLogoutBtn"
-					class="w-full flex items-center justify-start gap-3 px-3 py-3 text-gray-500 bg-gray-50 rounded-xl transition-all group active:scale-[0.98] hover:text-red-600">
-					<i data-lucide="log-out" stroke-width="2.5"
-						class="w-[16px] h-[16px] text-current transition-colors opacity-60 group-hover:opacity-100"></i>
-					<span class="font-bold text-[13px] tracking-wide">Keluar</span>
-				</button>
-			</div>
+		<div class="absolute bottom-0 left-0 right-0 px-3 pt-3 pb-6 bg-white border-t border-slate-50">
+		    <div class="space-y-2">
+		        <button id="newChatSidebarBtn"
+		            class="w-full flex items-center justify-start gap-3 px-4 py-3 text-slate-700 bg-slate-50 rounded-xl transition-all group active:scale-[0.98]">
+		            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+		                stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+		                class="text-current transition-colors opacity-60 group-hover:opacity-100">
+		                <path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" />
+		                <path d="M8 12h8" />
+		                <path d="M12 8v8" />
+		            </svg>
+		            <span class="font-bold text-sm tracking-wide">Percakapan Baru</span>
+		        </button>
+		        <button id="sidebarLogoutBtn"
+		            class="w-full flex items-center justify-start gap-3 px-4 py-3 text-slate-500 bg-slate-50 rounded-xl transition-all group active:scale-[0.98] hover:text-red-600">
+		            <i data-lucide="log-out" stroke-width="2.5"
+		                class="w-[18px] h-[18px] text-current transition-colors opacity-60 group-hover:opacity-100"></i>
+		            <span class="font-bold text-sm tracking-wide">Keluar</span>
+		        </button>
+		    </div>
 		</div>
 	</div>
-
-
+	
+	<!-- Login Screen -->
 	<div id="loginScreen" class="fixed inset-0 bg-white z-[100] flex items-center justify-center p-6">
 		<div
 			class="w-full max-w-[360px] bg-white rounded-[32px] px-8 py-8 flex flex-col items-center shadow-[0_8px_30px_rgb(0,0,0,0.08)]">
@@ -444,6 +437,8 @@
 		    </div>
 		</footer>
 	</div>
+	
+	<!-- ADMIN SCREEN -->
 	<div id="adminScreen" class="fixed inset-0 bg-white z-[200] hidden flex-col">
 	    <header class="h-16 px-4 md:px-8 flex items-center border-b border-slate-100 shrink-0 relative">
 	        <div class="flex items-center z-10">
@@ -463,16 +458,37 @@
 				    <div class="mb-4">
 				        <span class="text-xs font-black text-slate-500 uppercase tracking-widest">Model AI</span>
 				    </div>
-				    <div class="relative">
-				        <button type="button" id="dropdown-trigger" class="w-full bg-white rounded-xl px-5 py-3 text-[15px] font-bold text-slate-700 shadow-sm flex items-center justify-between outline-none">
-				            <span id="selected-model-text">Gemini 3 Flash</span>
-				            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform duration-200" id="dropdown-icon"></i>
-				        </button>
-				        <div id="dropdown-menu" class="hidden absolute left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl border border-slate-100 p-2 z-[210]">
-				            <div class="flex flex-col">
-				                <div class="dropdown-option py-3 px-4 rounded-xl hover:bg-slate-50 cursor-pointer text-sm font-medium text-slate-800" data-value="gemini-3-flash-preview">Gemini 3 Flash</div>
-				                <div class="dropdown-option py-3 px-4 rounded-xl hover:bg-slate-50 cursor-pointer text-sm font-medium text-slate-800" data-value="gemini-3-pro-preview">Gemini 3 Pro</div>
-				                <div class="dropdown-option py-3 px-4 rounded-xl hover:bg-slate-50 cursor-pointer text-sm font-medium text-slate-800" data-value="gemini-3-deep-think-preview">Gemini 3 Deep Think</div>
+				    <div class="space-y-4">
+				        <div class="relative">
+				            <button type="button" id="dropdown-trigger" class="w-full bg-white rounded-xl px-5 py-3 text-[15px] font-bold text-slate-700 shadow-sm flex items-center justify-between outline-none">
+				                <span id="selected-model-text">Gemini 3 Flash</span>
+				                <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform duration-200" id="dropdown-icon"></i>
+				            </button>
+				            <div id="dropdown-menu" class="hidden absolute left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl border border-slate-100 p-2 z-[210]">
+				                <div class="flex flex-col">
+				                    <div class="dropdown-option py-3 px-4 rounded-xl hover:bg-slate-50 cursor-pointer text-sm font-medium text-slate-800" data-value="gemini-2.5-pro">Gemini 2.5 Pro</div>
+				                    <div class="dropdown-option py-3 px-4 rounded-xl hover:bg-slate-50 cursor-pointer text-sm font-medium text-slate-800" data-value="gemini-2.5-flash">Gemini 2.5 Flash</div>
+				                    <div class="dropdown-option py-3 px-4 rounded-xl hover:bg-slate-50 cursor-pointer text-sm font-medium text-slate-800" data-value="gemini-2.5-flash-lite">Gemini 2.5 Flash Lite</div>
+				                    <div class="dropdown-option py-3 px-4 rounded-xl hover:bg-slate-50 cursor-pointer text-sm font-medium text-slate-800" data-value="gemini-3-flash-preview">Gemini 3 Flash</div>
+				                    <div class="dropdown-option py-3 px-4 rounded-xl hover:bg-slate-50 cursor-pointer text-sm font-medium text-slate-800" data-value="gemini-3-pro-preview">Gemini 3 Pro</div>
+				                    <div class="dropdown-option py-3 px-4 rounded-xl hover:bg-slate-50 cursor-pointer text-sm font-medium text-slate-800" data-value="gemini-3-deep-think-preview">Gemini 3 Deep Think</div>
+				                </div>
+				            </div>
+				        </div>
+				
+				        <div class="relative">
+				            <button type="button" id="voice-trigger" class="w-full bg-white rounded-xl px-5 py-3 text-[15px] font-bold text-slate-700 shadow-sm flex items-center justify-between outline-none">
+				                <span id="selected-voice-text">Kore (Default)</span>
+				                <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform duration-200" id="voice-icon"></i>
+				            </button>
+				            <div id="voice-menu" class="hidden absolute left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl border border-slate-100 p-2 z-[210]">
+				                <div class="flex flex-col max-h-48 overflow-y-auto">
+				                    <div class="voice-option py-3 px-4 rounded-xl hover:bg-slate-50 cursor-pointer text-sm font-medium text-slate-800" data-value="Kore">Kore (Default)</div>
+				                    <div class="voice-option py-3 px-4 rounded-xl hover:bg-slate-50 cursor-pointer text-sm font-medium text-slate-800" data-value="Aoede">Aoede</div>
+				                    <div class="voice-option py-3 px-4 rounded-xl hover:bg-slate-50 cursor-pointer text-sm font-medium text-slate-800" data-value="Zephyr">Zephyr</div>
+				                    <div class="voice-option py-3 px-4 rounded-xl hover:bg-slate-50 cursor-pointer text-sm font-medium text-slate-800" data-value="Leda">Leda</div>
+				                    <div class="voice-option py-3 px-4 rounded-xl hover:bg-slate-50 cursor-pointer text-sm font-medium text-slate-800" data-value="Fenrir">Fenrir</div>
+				                </div>
 				            </div>
 				        </div>
 				    </div>
@@ -518,6 +534,48 @@
 		    </div>
 		</main>
 	</div>
+	
+	<div id="voiceScreen" class="fixed inset-0 bg-white z-[250] hidden flex-col">
+	    <header class="h-16 px-4 md:px-8 flex items-center border-none shrink-0 relative">
+	        <div class="flex items-center z-10">
+	            <button id="backFromVoice" class="p-2 -ml-2 text-slate-400 hover:text-slate-600 transition-all active:scale-90">
+	                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left"><path d="m15 18-6-6 6-6"/></svg>
+	            </button>
+	        </div>
+	        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+	            <h2 class="text-sm font-black text-slate-800 uppercase tracking-widest">Live Voice</h2>
+	        </div>
+	    </header>
+	
+	    <main class="flex-1 w-full max-w-3xl mx-auto px-4 py-0 flex flex-col items-center justify-center overflow-hidden relative">
+		    <div id="voice-visual-box" class="w-full h-full relative flex items-center justify-center overflow-hidden">
+		        <canvas id="voice-canvas" class="block"></canvas>
+		        <video id="voice-large-video" autoplay playsinline muted 
+		            class="hidden absolute inset-0 w-full h-full object-cover rounded-[2rem] shadow-xl bg-slate-900 border-none z-20">
+		        </video>
+		        <canvas id="voice-frame-canvas" style="display:none;"></canvas>
+		    </div>
+		</main>
+	
+	    <footer class="w-full shrink-0 bg-white">
+	        <div class="max-w-4xl mx-auto px-6 pb-8 pt-4 flex flex-col items-center gap-6">
+	            <div id="voice-timer" class="text-slate-300 font-mono text-xs tracking-[0.3em] font-bold">00:00:00</div>
+	            <div class="flex justify-center items-center gap-6 md:gap-10">
+	                <button id="switchCameraBtn" class="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center bg-slate-50 text-slate-500 rounded-full active:scale-90 transition-all border border-slate-100 shadow-sm shrink-0">
+	                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-switch-camera"><path d="M11 19H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h5"/><path d="M13 5h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-5"/><circle cx="12" cy="12" r="3"/><path d="m18 22-3-3 3-3"/><path d="m6 2 3 3-3 3"/></svg>
+	                </button>
+	
+	                <button id="endCallBtn" class="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center bg-red-50 text-red-500 rounded-full active:scale-90 transition-all border border-red-100 shadow-sm shrink-0">
+	                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-phone-off"><path d="M10.1 13.9a14 14 0 0 0 3.732 2.668 1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2 18 18 0 0 1-12.728-5.272"/><path d="M22 2 2 22"/><path d="M4.76 13.582A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 .244.473"/></svg>
+	                </button>
+	
+	                <button id="cameraToggleBtn" class="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center bg-slate-50 text-slate-500 rounded-full active:scale-90 transition-all border border-slate-100 shadow-sm shrink-0">
+	                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-camera"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z"/><circle cx="12" cy="13" r="3"/></svg>
+	                </button>
+	            </div>
+	        </div>
+	    </footer>
+	</div>
 	<script>
 		const SUPABASE_URL = "https://wluwdfbvkyafscotpils.supabase.co";
 		const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndsdXdkZmJ2a3lhZnNjb3RwaWxzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgxMjgwNjIsImV4cCI6MjA4MzcwNDA2Mn0.RpCI9gd2v8_K6aEp2rKLTv3OWf952kTWkdlxo8NfozU";
@@ -561,6 +619,12 @@
 		let abortController = null;
 		
 		let pendingFiles = [];
+		
+		let currentVoice = localStorage.getItem('alisa_voice') || 'Kore';
+		let voiceWs, voiceInCtx, voiceOutCtx, voiceAnalyser, aiAnalyser, voiceDataArray, voiceStream;
+		let isAISpeaking = false, voiceNextTime = 0, voiceSessionId = 0, voiceInterrupted = false;
+		let voiceTimerInterval, voiceCamStream, voiceCamInterval, isVoiceCamOn = false, facingMode = 'user';
+		let activeVoiceSources = [], energyCounter = 0;
 
 		const DB_NAME = "Sinta_Images_DB";
 		const DB_VERSION = 1;
@@ -637,6 +701,24 @@
 		    document.getElementById('label-tokens').innerText = this.value;
 		    saveAdminSettings();
 		});
+		
+		const voiceBtn = document.getElementById('voiceBtn');
+		const voiceScreen = document.getElementById('voiceScreen');
+		const backFromVoice = document.getElementById('backFromVoice');
+		
+		if (voiceBtn && voiceScreen) {
+		    voiceBtn.addEventListener('click', () => {
+		        voiceScreen.classList.remove('hidden');
+		        voiceScreen.classList.add('flex');
+		    });
+		}
+		
+		if (backFromVoice && voiceScreen) {
+		    backFromVoice.addEventListener('click', () => {
+		        voiceScreen.classList.add('hidden');
+		        voiceScreen.classList.remove('flex');
+		    });
+		}
 						
 		async function sendMessage(e) {
 		    if (e) e.preventDefault();
@@ -675,7 +757,8 @@
 		    for (const f of filesToProcess) {
 		        const ext = f.name.split('.').pop().toLowerCase();
 		        if (f.mime.startsWith('image/') || f.mime === 'application/pdf') {
-		            apiParts.push({ inline_data: { mime_type: f.mime, data: f.base64 } });
+		            const cleanBase64 = f.base64.includes(',') ? f.base64.split(',')[1] : f.base64;
+		            apiParts.push({ inline_data: { mime_type: f.mime, data: cleanBase64 } });
 		        } else {
 		            textContext += await (['docx', 'xlsx', 'xls', 'pptx'].includes(ext) ? extractTextFromOffice(f) : readCodeFile(f));
 		        }
@@ -685,18 +768,18 @@
 		    const userMessageParts = apiParts.length > 0 ? [...apiParts, { text: finalPrompt }] : [{ text: finalPrompt }];
 		    
 		    chatHistory.push({ role: "user", parts: userMessageParts });
-			if (rawInput) {
-			    appendMessageToUI('user', rawInput);
-			}
-			saveCurrentSession();
-			showTyping();
+		    if (rawInput) {
+		        appendMessageToUI('user', rawInput);
+		    }
+		    saveCurrentSession();
+		    showTyping();
 		
 		    const combinedSystemInstruction = `${dynamicMainPrompt}\n\n${IMAGE_GEN_PROMPT}\n\n${VIDEO_GEN_PROMPT}`;
 		
 		    try {
 		        const payload = {
 		            system_instruction: { parts: [{ text: combinedSystemInstruction }] },
-		            contents: chatHistory,
+		            contents: chatHistory.map(h => ({ role: h.role, parts: h.parts })),
 		            tools: [{ google_search: {} }],
 		            generation_config: { 
 		                temperature: currentTemp,
@@ -776,10 +859,9 @@
 		        }
 		    } catch (error) {
 		        hideTyping();
-		        if (!finalResponse) {
-				    appendMessageToUI('error', "AI tidak memberikan respons atau permintaan diblokir. Silakan coba lagi.");
-				    return;
-				}
+		        if (error.name !== 'AbortError') {
+		            appendMessageToUI('error', "Gagal menghubungi AI. Silakan coba lagi.");
+		        }
 		    } finally {
 		        setGeneratingState(false);
 		        userInput.disabled = false;
@@ -847,54 +929,6 @@
 			headerIds: false,
 			mangle: false
 		});
-
-		async function init() {
-		    const { data: { session } } = await _supabase.auth.getSession();
-		
-		    const savedLevel = localStorage.getItem('alisa_thinking') || "2";
-		    const savedPrompt = localStorage.getItem('alisa_prompt') || MAIN_SYSTEM_PROMPT;
-		    const savedModel = localStorage.getItem('alisa_model') || "gemini-3-flash-preview";
-		    const savedTemp = localStorage.getItem('alisa_temp') || "1.0";
-		    const savedTokens = localStorage.getItem('alisa_tokens') || "65536";
-		
-		    document.getElementById('settings-thinking').value = savedLevel;
-		    document.getElementById('label-thinking').innerText = ["LOW", "MEDIUM", "HIGH"][savedLevel - 1];
-		    document.getElementById('systemPromptInput').value = savedPrompt;
-		    document.getElementById('settings-temp').value = savedTemp;
-		    document.getElementById('label-temp').innerText = savedTemp;
-		    document.getElementById('settings-tokens').value = savedTokens;
-		    document.getElementById('label-tokens').innerText = savedTokens;
-		    
-		    currentSelectedModel = savedModel;
-		    const modelOption = document.querySelector(`[data-value="${savedModel}"]`);
-		    if (modelOption) document.getElementById('selected-model-text').innerText = modelOption.innerText;
-		
-		    const savedActiveID = localStorage.getItem(ACTIVE_SESSION_KEY);
-		    if (savedActiveID) {
-		        currentSessionId = savedActiveID;
-		        loadSession(currentSessionId);
-		    } else {
-		        startNewSession();
-		    }
-		    
-		    loadSidebarHistory();
-		
-		    if (session) {
-		        if (session.user && session.user.email) sidebarEmail.innerText = session.user.email;
-		        showApp();
-		    } else {
-		        loginScreen.style.display = 'flex';
-		    }
-		
-		    const preventStick = () => {
-		        const top = chatContainer.scrollTop;
-		        const totalScroll = chatContainer.scrollHeight;
-		        const currentScroll = top + chatContainer.offsetHeight;
-		        if (top === 0) chatContainer.scrollTop = 1;
-		        else if (currentScroll >= totalScroll) chatContainer.scrollTop = top - 1;
-		    };
-		    chatContainer.addEventListener('touchstart', preventStick, { passive: true });
-		}
 
 		function showApp() {
 			loginScreen.style.display = 'none';
@@ -997,6 +1031,27 @@
 				}
 			}
 		});
+		
+		window.addEventListener('resize', () => {
+		    const screen = document.getElementById('voiceScreen');
+		    const box = document.getElementById('voice-visual-box');
+		    
+		    if (screen && !screen.classList.contains('hidden')) {
+		        box.style.transition = 'none';
+		        box.style.opacity = '0';
+		        
+		        clearTimeout(window.voiceResizeTimeout);
+		        window.voiceResizeTimeout = setTimeout(() => {
+		            resizeVoiceCanvas();
+		            requestAnimationFrame(() => {
+		                requestAnimationFrame(() => {
+		                    box.style.transition = 'opacity 0.4s ease-in-out';
+		                    box.style.opacity = '1';
+		                });
+		            });
+		        }, 1100);
+		    }
+		});
 
 		function appendMessageToUI(role, text, animate = true, isRawHtml = false) {
 			const isUser = role === 'user';
@@ -1015,11 +1070,11 @@
                         <span class="text-xs font-bold text-slate-300 uppercase">${timeStr}</span>
                     </div>
                     <div class="w-full prose-container prose max-w-none text-slate-600 text-[15px] leading-relaxed font-medium">
-                        						${isError ? `<div class="text-red-600 text-xs font-mono whitespace-pre-wrap">${text}</div>` : (isRawHtml ? text : parseMessageText(text))}
+                        ${isError ? `<div class="text-red-600 text-xs font-mono whitespace-pre-wrap">${text}</div>` : (isRawHtml ? text : parseMessageText(text))}
 					</div>
 					<div class="media-container w-full mt-2 empty:hidden gap-3 flex flex-col"></div>
 					<div class="prose-container-bottom w-full prose prose-container max-w-none text-slate-600 text-[15px] leading-relaxed font-medium mt-4 empty:hidden"></div>
-					${!isUser && !isError ? `
+						${!isUser && !isError ? `
                         <button class="copy-btn absolute bottom-2 right-2 p-1 text-slate-400 hover:text-slate-600 rounded-md opacity-0 group-hover:opacity-100 transition-opacity" title="Salin pesan">
                             <i data-lucide="copy" class="w-3 h-3"></i>
                         </button>
@@ -1737,98 +1792,96 @@
 		let swipeOpenId = null;
 
 		function loadSidebarHistory() {
-			const sessions = getAllSessions();
-			sessions.sort((a, b) => b.timestamp - a.timestamp);
-
-			if (!historyListEl) return;
-			historyListEl.innerHTML = '';
-
-			if (sessions.length === 0) {
-				historyListEl.innerHTML = '<div class="text-center text-xs text-slate-400 mt-4">Belum ada riwayat.</div>';
-				return;
-			}
-
-			const groups = {
-				'Hari Ini': [],
-				'Kemarin': [],
-				'7 Hari Terakhir': [],
-				'Bulan Ini': [],
-				'Lebih Lama': []
-			};
-
-			const now = new Date();
-			const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-			const yesterday = new Date(today);
-			yesterday.setDate(yesterday.getDate() - 1);
-			const last7Days = new Date(today);
-			last7Days.setDate(last7Days.getDate() - 7);
-			const thisMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-
-			sessions.forEach(session => {
-				const date = new Date(session.timestamp);
-				const compareDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-
-				if (compareDate.getTime() === today.getTime()) {
-					groups['Hari Ini'].push(session);
-				} else if (compareDate.getTime() === yesterday.getTime()) {
-					groups['Kemarin'].push(session);
-				} else if (date >= last7Days) {
-					groups['7 Hari Terakhir'].push(session);
-				} else if (date >= thisMonth) {
-					groups['Bulan Ini'].push(session);
-				} else {
-					groups['Lebih Lama'].push(session);
-				}
-			});
-
-			Object.entries(groups).forEach(([label, groupSessions]) => {
-				if (groupSessions.length > 0) {
-					const groupDiv = document.createElement('div');
-					groupDiv.className = "mb-4";
-
-					const header = document.createElement('h3');
-					header.className = "px-3 text-xs font-bold text-slate-300 mb-2 uppercase tracking-normal";
-					header.innerText = label;
-					groupDiv.appendChild(header);
-
-					const listDiv = document.createElement('div');
-					listDiv.className = "space-y-0.5";
-
-					groupSessions.forEach(session => {
-						const isActive = session.id === currentSessionId;
-						const item = document.createElement('div');
-						item.className = "w-full h-[34px] relative overflow-hidden select-none";
-
-						const itemId = session.id;
-						item.innerHTML = `
-                            <!-- Delete Button (Background) -->
-                            <div class="absolute inset-y-0 right-0 w-[60px] bg-white flex items-center justify-center cursor-pointer z-0" 
-                                onclick="deleteSession('${itemId}', event)">
-                                <i data-lucide="trash-2" class="w-3.5 h-3.5 text-red-500"></i>
-                            </div>
-
-                            <!-- Content (Foreground) -->
-                            <div class="w-full h-full bg-white absolute top-0 left-0 z-10 flex items-center px-3 transition-transform duration-200 ease-out"
-                                id="swipe-content-${itemId}"
-                                onclick="handleSwipeClick('${itemId}')"
-                                ontouchstart="swipeStart(event, '${itemId}')"
-                                ontouchmove="swipeMove(event)"
-                                ontouchend="swipeEnd(event)"
-                                onmousedown="mouseSwipeStart(event, '${itemId}')">
-                                    <span class="truncate text-sm font-medium w-full ${isActive ? 'text-slate-600 font-extrabold' : 'text-slate-500'}">
-                                        ${session.title}
-                                    </span>
-                            </div>
-                        `;
-						listDiv.appendChild(item);
-					});
-
-					groupDiv.appendChild(listDiv);
-					historyListEl.appendChild(groupDiv);
-				}
-			});
-
-			lucide.createIcons();
+		    const sessions = getAllSessions();
+		    sessions.sort((a, b) => b.timestamp - a.timestamp);
+		
+		    if (!historyListEl) return;
+		    historyListEl.innerHTML = '';
+		
+		    if (sessions.length === 0) {
+		        historyListEl.innerHTML = '<div class="text-center text-xs text-slate-400 mt-4">Belum ada riwayat.</div>';
+		        return;
+		    }
+		
+		    const groups = {
+		        'Hari Ini': [],
+		        'Kemarin': [],
+		        '7 Hari Terakhir': [],
+		        'Bulan Ini': [],
+		        'Lebih Lama': []
+		    };
+		
+		    const now = new Date();
+		    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+		    const yesterday = new Date(today);
+		    yesterday.setDate(yesterday.getDate() - 1);
+		    const last7Days = new Date(today);
+		    last7Days.setDate(last7Days.getDate() - 7);
+		    const thisMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+		
+		    sessions.forEach(session => {
+		        const date = new Date(session.timestamp);
+		        const compareDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+		
+		        if (compareDate.getTime() === today.getTime()) {
+		            groups['Hari Ini'].push(session);
+		        } else if (compareDate.getTime() === yesterday.getTime()) {
+		            groups['Kemarin'].push(session);
+		        } else if (date >= last7Days) {
+		            groups['7 Hari Terakhir'].push(session);
+		        } else if (date >= thisMonth) {
+		            groups['Bulan Ini'].push(session);
+		        } else {
+		            groups['Lebih Lama'].push(session);
+		        }
+		    });
+		
+		    Object.entries(groups).forEach(([label, groupSessions]) => {
+		        if (groupSessions.length > 0) {
+		            const groupDiv = document.createElement('div');
+		            groupDiv.className = "mb-1";
+		
+		            const header = document.createElement('h3');
+		            header.className = "px-3 text-[11px] font-black text-slate-300 mb-0.5 uppercase tracking-tighter";
+		            header.innerText = label;
+		            groupDiv.appendChild(header);
+		
+		            const listDiv = document.createElement('div');
+		            listDiv.className = "space-y-0";
+		
+		            groupSessions.forEach(session => {
+		                const isActive = session.id === currentSessionId;
+		                const item = document.createElement('div');
+		                item.className = "w-full h-[32px] relative overflow-hidden select-none";
+		
+		                const itemId = session.id;
+		                item.innerHTML = `
+		                    <div class="absolute inset-y-0.5 right-1 w-[45px] bg-red-50 rounded-lg flex items-center justify-center z-0" 
+		                        onclick="deleteSession('${itemId}', event)">
+		                        <i data-lucide="trash-2" class="w-3.5 h-3.5 text-red-500"></i>
+		                    </div>
+		
+		                    <div class="w-full h-full bg-white absolute top-0 left-0 z-10 flex items-center px-3 transition-transform duration-200 ease-out cursor-pointer"
+		                        id="swipe-content-${itemId}"
+		                        onclick="handleSwipeClick('${itemId}')"
+		                        ontouchstart="swipeStart(event, '${itemId}')"
+		                        ontouchmove="swipeMove(event)"
+		                        ontouchend="swipeEnd(event)"
+		                        onmousedown="mouseSwipeStart(event, '${itemId}')">
+		                            <span class="truncate text-sm ${isActive ? 'text-slate-900 font-bold' : 'text-slate-600 font-medium'} w-full">
+		                                ${session.title}
+		                            </span>
+		                    </div>
+		                `;
+		                listDiv.appendChild(item);
+		            });
+		
+		            groupDiv.appendChild(listDiv);
+		            historyListEl.appendChild(groupDiv);
+		        }
+		    });
+		
+		    lucide.createIcons();
 			
 			document.querySelectorAll('.dropdown-option').forEach(option => {
 			    option.addEventListener('click', function() {
@@ -2001,7 +2054,405 @@
 				swipeOpenId = null;
 			}
 		});
-
+		
+		// FUNGSI VOICE //
+		
+		async function openVoiceMode() {
+		    const screen = document.getElementById('voiceScreen');
+		    if (!screen) return;
+		    screen.classList.remove('hidden');
+		    screen.classList.add('flex');
+		    
+		    voiceNextTime = 0;
+		    voiceSessionId++;
+		    voiceInterrupted = false;
+		    isAISpeaking = false;
+		    activeVoiceSources = [];
+		    energyCounter = 0;
+		
+		    await initVoiceAudio();
+		    initVoiceSession();
+		    resizeVoiceCanvas();
+		    startVoiceVisualizer();
+		}
+		
+		async function initVoiceAudio() {
+		    voiceInCtx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 16000 });
+		    voiceOutCtx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 24000 });
+		    
+		    if (voiceInCtx.state === 'suspended') await voiceInCtx.resume();
+		    if (voiceOutCtx.state === 'suspended') await voiceOutCtx.resume();
+		
+		    aiAnalyser = voiceOutCtx.createAnalyser();
+		    aiAnalyser.fftSize = 1024;
+		    aiAnalyser.connect(voiceOutCtx.destination);
+		
+		    try {
+		        voiceStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+		        const source = voiceInCtx.createMediaStreamSource(voiceStream);
+		        voiceAnalyser = voiceInCtx.createAnalyser();
+		        voiceAnalyser.fftSize = 1024;
+		        voiceDataArray = new Uint8Array(voiceAnalyser.frequencyBinCount);
+		        source.connect(voiceAnalyser);
+		
+		        const workletCode = `class P extends AudioWorkletProcessor { process(inputs) { if (inputs[0][0]) this.port.postMessage(inputs[0][0]); return true; } }; registerProcessor('p', P);`;
+		        const url = URL.createObjectURL(new Blob([workletCode], { type: 'application/javascript' }));
+		        await voiceInCtx.audioWorklet.addModule(url);
+		
+		        const node = new AudioWorkletNode(voiceInCtx, 'p');
+		        node.port.onmessage = (e) => {
+		            if (voiceWs && voiceWs.readyState === WebSocket.OPEN) {
+		                let sum = 0;
+		                for (let i = 0; i < e.data.length; i++) sum += Math.abs(e.data[i]);
+		                let energy = sum / e.data.length;
+		
+		                if (isAISpeaking && energy > 0.04) {
+		                    energyCounter++;
+		                    if (energyCounter > 8) {
+		                        interruptVoice();
+		                        energyCounter = 0;
+		                    }
+		                } else {
+		                    energyCounter = 0;
+		                }
+		
+		                if (energy > 0.01 && voiceInterrupted) {
+		                    voiceInterrupted = false;
+		                    voiceSessionId++;
+		                }
+		
+		                if (!voiceInterrupted && !isAISpeaking) {
+		                    const int16 = new Int16Array(e.data.length);
+		                    for (let i = 0; i < e.data.length; i++) int16[i] = e.data[i] * 0x7FFF;
+		                    voiceWs.send(JSON.stringify({
+		                        type: 'audio',
+		                        data: {
+		                            data: btoa(String.fromCharCode(...new Uint8Array(int16.buffer))),
+		                            mimeType: 'audio/pcm;rate=16000'
+		                        }
+		                    }));
+		                }
+		            }
+		        };
+		        source.connect(node);
+		    } catch (err) {
+		        console.error("Mic Error:", err);
+		    }
+		}
+		
+		async function initVoiceSession() {
+		    const sysPrompt = document.getElementById('systemPromptInput').value || MAIN_SYSTEM_PROMPT;
+		    const historyContext = chatHistory.slice(-5).map(h => `${h.role === 'model' ? 'AI' : 'User'}: ${h.parts[0].text}`).join('\n');
+		    const fullPrompt = `${sysPrompt}\n\nKonteks Percakapan Terakhir:\n${historyContext}`;
+		
+		    try {
+		        voiceWs = new WebSocket('wss://gemini-proxy-408925499207.asia-southeast2.run.app');
+		        voiceWs.onopen = () => {
+		            startVoiceTimer();
+		            voiceWs.send(JSON.stringify({
+		                type: 'setup',
+		                config: {
+		                    model: "models/gemini-2.5-flash",
+		                    responseModalities: ['AUDIO'],
+		                    speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: currentVoice } } },
+		                    systemInstruction: fullPrompt,
+		                    tools: [{ googleSearch: {} }]
+		                }
+		            }));
+		        };
+		        voiceWs.onmessage = (e) => {
+		            if (!voiceWs || voiceInterrupted) return;
+		            const res = JSON.parse(e.data);
+		            if (res.type === 'gemini_msg') {
+		                const turn = res.data.serverContent?.modelTurn;
+		                if (turn && turn.parts) {
+		                    turn.parts.forEach(p => {
+		                        if (p.inlineData) { isAISpeaking = true; playVoiceAudio(p.inlineData.data, voiceSessionId); }
+		                        if (p.text) syncVoiceToChat('assistant', p.text);
+		                    });
+		                }
+		            }
+		        };
+		        voiceWs.onerror = () => closeVoiceMode();
+		        voiceWs.onclose = () => closeVoiceMode();
+		    } catch (err) { closeVoiceMode(); }
+		}
+		
+		function playVoiceAudio(base64, sid) {
+		    if (sid !== voiceSessionId || voiceInterrupted) return;
+		    const binary = atob(base64);
+		    const bytes = new Uint8Array(binary.length);
+		    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+		    const int16 = new Int16Array(bytes.buffer);
+		    const buf = voiceOutCtx.createBuffer(1, int16.length, 24000);
+		    const data = buf.getChannelData(0);
+		    for (let i = 0; i < int16.length; i++) data[i] = int16[i] / 32768.0;
+		    const source = voiceOutCtx.createBufferSource();
+		    source.buffer = buf;
+		    source.connect(aiAnalyser);
+		    const now = voiceOutCtx.currentTime;
+		    if (voiceNextTime < now) voiceNextTime = now;
+		    source.start(voiceNextTime);
+		    voiceNextTime += buf.duration;
+		    activeVoiceSources.push(source);
+		    source.onended = () => {
+		        activeVoiceSources = activeVoiceSources.filter(s => s !== source);
+		        if (activeVoiceSources.length === 0) isAISpeaking = false;
+		    };
+		}
+		
+		function interruptVoice() {
+		    isAISpeaking = false;
+		    voiceInterrupted = true;
+		    voiceSessionId++;
+		    activeVoiceSources.forEach(s => { try { s.stop(); s.disconnect(); } catch(e){} });
+		    activeVoiceSources = [];
+		    if (voiceWs && voiceWs.readyState === WebSocket.OPEN) voiceWs.send(JSON.stringify({ type: 'cancel' }));
+		}
+		
+		function syncVoiceToChat(role, text) {
+		    const lastMsg = chatHistory[chatHistory.length - 1];
+		    if (lastMsg && lastMsg.role === (role === 'assistant' ? 'model' : 'user') && lastMsg._isVoice) {
+		        lastMsg.parts[0].text += " " + text;
+		    } else {
+		        chatHistory.push({ role: role === 'assistant' ? 'model' : 'user', parts: [{ text }], _isVoice: true });
+		        appendMessageToUI(role === 'assistant' ? 'model' : 'user', text);
+		    }
+		}
+		
+		function startVoiceTimer() {
+		    let sec = 0;
+		    const el = document.getElementById('voice-timer');
+		    if (!el) return;
+		    clearInterval(voiceTimerInterval);
+		    voiceTimerInterval = setInterval(() => {
+		        sec++;
+		        const hrs = Math.floor(sec / 3600).toString().padStart(2, '0');
+		        const mins = Math.floor((sec % 3600) / 60).toString().padStart(2, '0');
+		        const secs = (sec % 60).toString().padStart(2, '0');
+		        if (el) el.innerText = `${hrs}:${mins}:${secs}`;
+		    }, 1000);
+		}
+		
+		function closeVoiceMode() {
+		    if (voiceWs) { voiceWs.onmessage = null; voiceWs.close(); voiceWs = null; }
+		    if (voiceStream) { voiceStream.getTracks().forEach(t => t.stop()); voiceStream = null; }
+		    if (voiceInCtx) { voiceInCtx.close(); voiceInCtx = null; }
+		    if (voiceOutCtx) { voiceOutCtx.close(); voiceOutCtx = null; }
+		    stopVoiceCamera();
+		    clearInterval(voiceTimerInterval);
+		    isAISpeaking = false;
+		    activeVoiceSources = [];
+		    const screen = document.getElementById('voiceScreen');
+		    if (screen) { screen.classList.add('hidden'); screen.classList.remove('flex'); }
+		}
+		
+		async function switchCamera() {
+		    if (!isVoiceCamOn) return;
+		    facingMode = (facingMode === 'user') ? 'environment' : 'user';
+		    if (voiceCamStream) voiceCamStream.getTracks().forEach(t => t.stop());
+		    isVoiceCamOn = false;
+		    await toggleVoiceCamera();
+		}
+		
+		async function toggleVoiceCamera() {
+		    const btn = document.getElementById('cameraToggleBtn');
+		    const video = document.getElementById('voice-large-video');
+		    const canvas = document.getElementById('voice-canvas');
+		    const box = document.getElementById('voice-visual-box');
+		
+		    if (!isVoiceCamOn) {
+		        try {
+		            voiceCamStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode } });
+		            video.srcObject = voiceCamStream;
+		            video.classList.remove('hidden');
+		            canvas.classList.add('hidden');
+		            box.classList.add('shadow-xl', 'rounded-[2rem]');
+		            isVoiceCamOn = true;
+		            btn.classList.replace('text-slate-500', 'text-blue-600');
+		            if (voiceCamInterval) clearInterval(voiceCamInterval);
+		            voiceCamInterval = setInterval(sendVoiceFrame, 1000);
+		        } catch (e) { alert("Gagal Kamera"); }
+		    } else { stopVoiceCamera(); }
+		}
+		
+		function stopVoiceCamera() {
+		    if (voiceCamStream) voiceCamStream.getTracks().forEach(t => t.stop());
+		    clearInterval(voiceCamInterval);
+		    const btn = document.getElementById('cameraToggleBtn');
+		    const box = document.getElementById('voice-visual-box');
+		    if (btn) btn.classList.replace('text-blue-600', 'text-slate-500');
+		    document.getElementById('voice-large-video').classList.add('hidden');
+		    document.getElementById('voice-canvas').classList.remove('hidden');
+		    box.classList.remove('shadow-xl', 'rounded-[2rem]');
+		    isVoiceCamOn = false;
+		}
+		
+		function sendVoiceFrame() {
+		    if (voiceWs && voiceWs.readyState === WebSocket.OPEN && isVoiceCamOn) {
+		        const video = document.getElementById('voice-large-video');
+		        const frameCanvas = document.getElementById('voice-frame-canvas');
+		        const ctx = frameCanvas.getContext('2d');
+		        if (video.videoWidth > 0) {
+		            frameCanvas.width = 320;
+		            frameCanvas.height = (video.videoHeight / video.videoWidth) * 320;
+		            ctx.drawImage(video, 0, 0, frameCanvas.width, frameCanvas.height);
+		            const base64 = frameCanvas.toDataURL('image/jpeg', 0.5).split(',')[1];
+		            voiceWs.send(JSON.stringify({ type: 'image', data: { mimeType: "image/jpeg", data: base64 } }));
+		        }
+		    }
+		}
+		
+		function resizeVoiceCanvas() {
+		    const canvas = document.getElementById('voice-canvas');
+		    const container = document.getElementById('voice-visual-box');
+		    if (!canvas || !container) return;
+		    
+		    const dpr = window.devicePixelRatio || 1;
+		    const rect = container.getBoundingClientRect();
+		    
+		    const size = Math.min(rect.width, rect.height) * 0.82;
+		    
+		    canvas.style.width = size + 'px';
+		    canvas.style.height = size + 'px';
+		    canvas.width = size * dpr;
+		    canvas.height = size * dpr;
+		}
+		
+		function startVoiceVisualizer() {
+		    const canvas = document.getElementById('voice-canvas');
+		    const ctx = canvas.getContext('2d');
+		    let currentVol = 0;
+		
+		    function draw() {
+		        if (document.getElementById('voiceScreen').classList.contains('hidden')) return;
+		        requestAnimationFrame(draw);
+		        
+		        const w = canvas.width, h = canvas.height;
+		        ctx.clearRect(0, 0, w, h);
+		
+		        const activeAn = isAISpeaking ? aiAnalyser : voiceAnalyser;
+		        if (!activeAn) return;
+		
+		        activeAn.getByteFrequencyData(voiceDataArray);
+		        
+		        let sum = 0;
+		        for (let i = 10; i < 150; i++) sum += voiceDataArray[i];
+		        let targetVol = sum / 140;
+		        
+		        currentVol += (targetVol - currentVol) * 0.1;
+		        
+		        const centerX = w / 2, centerY = h / 2;
+		        const baseRadius = Math.min(w, h) / 8;
+		        
+		        const maxRadius = (Math.min(w, h) / 2) - 20;
+		        
+		        let dynamicRadius = baseRadius + (currentVol * (maxRadius / 150));
+		        if (dynamicRadius > maxRadius) dynamicRadius = maxRadius;
+		        if (dynamicRadius < baseRadius) dynamicRadius = baseRadius;
+		
+		        ctx.beginPath();
+		        ctx.arc(centerX, centerY, dynamicRadius, 0, Math.PI * 2);
+		        
+		        const grad = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, dynamicRadius);
+		        grad.addColorStop(0, '#f8fafc');
+		        grad.addColorStop(0.8, '#f1f5f9');
+		        grad.addColorStop(1, '#e2e8f0');
+		        
+		        ctx.fillStyle = grad;
+		        ctx.shadowBlur = 40;
+		        ctx.shadowColor = 'rgba(0,0,0,0.04)';
+		        ctx.fill();
+		        
+		        ctx.strokeStyle = '#f1f5f9';
+		        ctx.lineWidth = 1.5;
+		        ctx.stroke();
+		    }
+		    draw();
+		}
+		
+		async function init() {
+		    const { data: { session } } = await _supabase.auth.getSession();
+		
+		    const savedLevel = localStorage.getItem('alisa_thinking') || "2";
+		    const savedPrompt = localStorage.getItem('alisa_prompt') || MAIN_SYSTEM_PROMPT;
+		    const savedModel = localStorage.getItem('alisa_model') || "gemini-2.5-flash";
+		    const savedTemp = localStorage.getItem('alisa_temp') || "1.0";
+		    const savedTokens = localStorage.getItem('alisa_tokens') || "65536";
+		    const savedVoice = localStorage.getItem('alisa_voice') || "Kore";
+		
+		    document.getElementById('settings-thinking').value = savedLevel;
+		    document.getElementById('label-thinking').innerText = ["LOW", "MEDIUM", "HIGH"][savedLevel - 1];
+		    document.getElementById('systemPromptInput').value = savedPrompt;
+		    document.getElementById('settings-temp').value = savedTemp;
+		    document.getElementById('label-temp').innerText = savedTemp;
+		    document.getElementById('settings-tokens').value = savedTokens;
+		    document.getElementById('label-tokens').innerText = savedTokens;
+		    
+		    currentSelectedModel = savedModel;
+		    const modelMapping = {
+		        "gemini-2.5-pro": "Gemini 2.5 Pro",
+		        "gemini-2.5-flash": "Gemini 2.5 Flash",
+		        "gemini-2.5-flash-lite": "Gemini 2.5 Flash Lite",
+		        "gemini-3-flash-preview": "Gemini 3 Flash",
+		        "gemini-3-pro-preview": "Gemini 3 Pro",
+		        "gemini-3-deep-think-preview": "Gemini 3 Deep Think"
+		    };
+		    if (document.getElementById('selected-model-text')) {
+		        document.getElementById('selected-model-text').innerText = modelMapping[savedModel] || "Gemini 2.5 Flash";
+		    }
+		
+		    currentVoice = savedVoice;
+		    const voiceLabel = document.getElementById('selected-voice-text');
+		    if (voiceLabel) {
+		        const vMap = { "Kore": "Kore (Default)", "Aoede": "Aoede", "Zephyr": "Zephyr", "Leda": "Leda", "Fenrir": "Fenrir" };
+		        voiceLabel.innerText = vMap[savedVoice] || "Kore (Default)";
+		    }
+		
+		    document.getElementById('voice-trigger').onclick = (e) => {
+		        e.stopPropagation();
+		        document.getElementById('voice-menu').classList.toggle('hidden');
+		    };
+		    document.querySelectorAll('.voice-option').forEach(opt => {
+		        opt.onclick = function(e) {
+		            e.stopPropagation();
+		            currentVoice = this.getAttribute('data-value');
+		            document.getElementById('selected-voice-text').innerText = this.innerText;
+		            document.getElementById('voice-menu').classList.add('hidden');
+		            saveAdminSettings();
+		        };
+		    });
+		
+		    document.getElementById('voiceBtn').onclick = openVoiceMode;
+		    document.getElementById('backFromVoice').onclick = closeVoiceMode;
+		    document.getElementById('endCallBtn').onclick = closeVoiceMode;
+		    document.getElementById('cameraToggleBtn').onclick = toggleVoiceCamera;
+		    document.getElementById('switchCameraBtn').onclick = switchCamera;
+		
+		    const savedActiveID = localStorage.getItem(ACTIVE_SESSION_KEY);
+		    if (savedActiveID) {
+		        currentSessionId = savedActiveID;
+		        loadSession(currentSessionId);
+		    } else {
+		        startNewSession();
+		    }
+		    
+		    loadSidebarHistory();
+		    if (session) {
+		        if (session.user && session.user.email) sidebarEmail.innerText = session.user.email;
+		        showApp();
+		    } else {
+		        loginScreen.style.display = 'flex';
+		    }
+		
+		    const preventStick = () => {
+		        const top = chatContainer.scrollTop;
+		        const totalScroll = chatContainer.scrollHeight;
+		        if (top === 0) chatContainer.scrollTop = 1;
+		        else if (top + chatContainer.offsetHeight >= totalScroll) chatContainer.scrollTop = top - 1;
+		    };
+		    chatContainer.addEventListener('touchstart', preventStick, { passive: true });
+		}
 		init();
 	</script>
 </body>
