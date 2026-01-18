@@ -25,21 +25,66 @@
 		rel="stylesheet">
 	<style>
 		html,
-		body {
-		    margin: 0;
-		    padding: 0;
-		    height: 100%;
-		    width: 100%;
-		    overflow: hidden;
-		    background-color: #ffffff;
-		    font-family: 'Inter', sans-serif;
-		    -webkit-text-size-adjust: none;
-		    touch-action: none;
-		    -webkit-user-select: none;
-		    user-select: none;
-		    -webkit-tap-highlight-color: transparent;
-		    position: fixed;
-		}
+body {
+    margin: 0;
+    padding: 0;
+    height: 100dvh;
+    width: 100vw;
+    overflow: hidden;
+    background-color: #ffffff;
+    font-family: 'Inter', sans-serif;
+    -webkit-text-size-adjust: none;
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    position: fixed;
+}
+
+#loadingOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100dvh;
+    background: #ffffff;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: none;
+    pointer-events: all;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+#loadingOverlay img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    pointer-events: none;
+    -webkit-user-drag: none;
+    user-drag: none;
+}
+
+footer {
+    flex: 0 0 auto;
+    background-color: #ffffff;
+    z-index: 100;
+    padding-bottom: 12px;
+    /* Menutup celah sub-pixel dengan border tipis warna sangat terang */
+    border-top: 1px solid #f8fafc; 
+}
+
+.footer-content {
+    width: 100%;
+    max-width: 48rem;
+    margin: 0 auto;
+    padding: 12px 1rem;
+    background-color: #ffffff;
+}
 		
 		#appInterface {
 		    width: 100%;
@@ -330,31 +375,6 @@
 		    padding-bottom: 26px; 
 		}
 		
-		#loadingOverlay {
-		    position: fixed;
-		    top: 0;
-		    left: 0;
-		    width: 100%;
-		    height: 100%;
-		    background: #ffffff;
-		    z-index: 9999;
-		    display: flex;
-		    align-items: center;
-		    justify-content: center;
-		    touch-action: none;
-		    user-select: none;
-		    -webkit-user-select: none;
-		    overscroll-behavior: none;
-		    pointer-events: all;
-		    transition: opacity 0.4s ease-out, visibility 0.4s;
-		}
-		
-		#loadingOverlay img {
-		    max-width: 80px;
-		    max-height: 80px;
-		    object-contain: contain;
-		    pointer-events: none;
-		}
 	</style>
 </head>
 
@@ -921,17 +941,18 @@
 		            if (!proseUsed && aiContainerTop) aiContainerTop.remove();
 		
 		            if (chatHistory.length === 2) {
-		                const userText = chatHistory[0].parts.find(p => p.text)?.text.split("\n\nKONTEKS DOKUMEN:")[0] || "File Lampiran";
-		                const aiText = chatHistory[1].parts[0].text;
-		                const newTitle = await generateAiTitle(userText, aiText);
-		                const sessions = getAllSessions();
-		                const idx = sessions.findIndex(s => s.id === currentSessionId);
-		                if (idx >= 0) {
-		                    sessions[idx].title = newTitle;
-		                    localStorage.setItem(STORAGE_KEY, JSON.stringify(sessions));
-		                    loadSidebarHistory();
-		                }
-		            }
+					    const aiResponse = chatHistory[1].parts[0].text;
+					    
+					    const newTitle = await generateAiTitle(aiResponse);
+					    
+					    const sessions = getAllSessions();
+					    const idx = sessions.findIndex(s => s.id === currentSessionId);
+					    if (idx >= 0) {
+					        sessions[idx].title = newTitle;
+					        localStorage.setItem(STORAGE_KEY, JSON.stringify(sessions));
+					        loadSidebarHistory();
+					    }
+					}
 		        }
 		    } catch (error) {
 		        hideTyping();
@@ -945,7 +966,7 @@
 		    }
 		}
 		
-		async function generateAiTitle(userMsg, aiMsg) {
+		async function generateAiTitle(aiMsg) {
 		    const { data: { session } } = await _supabase.auth.getSession();
 		    if (!session) return "Percakapan Baru";
 		    try {
@@ -960,17 +981,18 @@
 		                contents: [{
 		                    role: "user",
 		                    parts: [{ 
-		                        text: `Buat judul singkat (2-4 kata) sesuai dengan konteks pembicaraan. Tanpa tanda petik atau kata 'Percakapan'.\n\nUser: ${userMsg}\nAI: ${aiMsg}` 
+		                        text: `Buat satu judul yang menarik, cerdas, dan profesional (2-4 kata) yang merangkum inti dari jawaban AI berikut: "${aiMsg}". JANGAN gunakan kata 'Jawaban', 'Percakapan', atau 'Hasil'. Tanpa tanda petik.` 
 		                    }]
 		                }],
-		                generation_config: { temperature: 0.6, max_output_tokens: 20 }
+		                generation_config: { temperature: 0.7, max_output_tokens: 20 }
 		            })
 		        });
 		        const data = await response.json();
 		        const generatedTitle = data.candidates?.[0]?.content?.parts?.[0]?.text;
-		        return generatedTitle ? generatedTitle.replace(/["'*./]/g, '').trim() : userMsg.substring(0, 30);
+		        
+		        return generatedTitle ? generatedTitle.replace(/["'*./]/g, '').trim() : "Percakapan Baru";
 		    } catch (e) {
-		        return userMsg.substring(0, 30);
+		        return "Percakapan Baru";
 		    }
 		}
 
