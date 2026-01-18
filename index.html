@@ -26,405 +26,424 @@
 	<style>
 		html,
 		body {
-		    margin: 0;
-		    padding: 0;
-		    height: 100%;
-		    height: -webkit-fill-available;
-		    height: 100dvh;
-		    width: 100vw;
-		    overflow: hidden;
-		    background-color: #ffffff;
-		    font-family: 'Inter', sans-serif;
-		    -webkit-text-size-adjust: none;
-		    touch-action: none;
-		    -webkit-user-select: none;
-		    user-select: none;
-		    -webkit-tap-highlight-color: transparent;
-		    position: fixed;
-		    top: 0;
-		    left: 0;
+			margin: 0;
+			padding: 0;
+			height: 100%;
+			height: -webkit-fill-available;
+			height: 100dvh;
+			width: 100vw;
+			overflow: hidden;
+			background-color: #ffffff;
+			font-family: 'Inter', sans-serif;
+			-webkit-text-size-adjust: none;
+			touch-action: none;
+			-webkit-user-select: none;
+			user-select: none;
+			-webkit-tap-highlight-color: transparent;
+			position: fixed;
+			top: 0;
+			left: 0;
 		}
-		
+
 		#appInterface {
-		    width: 100%;
-		    height: 100%;
-		    height: -webkit-fill-available;
-		    height: 100dvh;
-		    display: none;
-		    flex-direction: column;
-		    background-color: #ffffff;
-		    position: absolute;
-		    top: 0;
-		    left: 0;
-		    right: 0;
-		    bottom: 0;
+			width: 100%;
+			height: 100%;
+			height: -webkit-fill-available;
+			height: 100dvh;
+			display: none;
+			flex-direction: column;
+			background-color: #ffffff;
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
 		}
-		
+
 		#loadingOverlay {
-		    position: fixed;
-		    inset: 0;
-		    width: 100vw;
-		    height: 100%;
-		    height: 100dvh;
-		    background: #ffffff;
-		    z-index: 9999;
-		    display: flex;
-		    flex-direction: column;
-		    align-items: center;
-		    justify-content: center;
-		    touch-action: none;
-		    user-select: none;
-		    -webkit-user-select: none;
-		    overscroll-behavior: none;
-		    pointer-events: all;
-		    transition: opacity 0.4s ease-out, visibility 0.4s;
+			position: fixed;
+			inset: 0;
+			width: 100vw;
+			height: 100%;
+			height: 100dvh;
+			background: #ffffff;
+			z-index: 9999;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			touch-action: none;
+			user-select: none;
+			-webkit-user-select: none;
+			overscroll-behavior: none;
+			pointer-events: all;
+			transition: opacity 0.4s ease-out, visibility 0.4s;
 		}
-		
+
 		.loading-wrapper {
-		    width: 200px;
-		    display: flex;
-		    flex-direction: column;
-		    align-items: center;
-		    gap: 12px;
+			width: 200px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 12px;
 		}
-		
+
 		.loading-container {
-		    width: 100%;
-		    height: 24px;
-		    background-color: #f1f5f9;
-		    border-radius: 12px;
-		    overflow: hidden;
-		    position: relative;
-		    border: 1px solid #f1f5f9;
+			width: 100%;
+			height: 24px;
+			background-color: #f1f5f9;
+			border-radius: 12px;
+			overflow: hidden;
+			position: relative;
+			border: 1px solid #f1f5f9;
 		}
-		
+
 		.loading-bar {
-		    width: 0%;
-		    height: 100%;
-		    background-color: #000000;
-		    position: absolute;
-		    top: 0;
-		    left: 0;
-		    transition: width 0.3s ease-out;
+			width: 0%;
+			height: 100%;
+			background-color: #000000;
+			position: absolute;
+			top: 0;
+			left: 0;
+			transition: width 0.3s ease-out;
 		}
-		
+
 		#loadingText {
-		    position: absolute;
-		    inset: 0;
-		    display: flex;
-		    align-items: center;
-		    justify-content: center;
-		    font-size: 10px;
-		    font-weight: 800;
-		    font-family: 'Inter', sans-serif;
-		    letter-spacing: 1px;
-		    mix-blend-mode: difference;
-		    color: #ffffff;
-		    z-index: 10;
+			position: absolute;
+			inset: 0;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 10px;
+			font-weight: 800;
+			font-family: 'Inter', sans-serif;
+			letter-spacing: 1px;
+			mix-blend-mode: difference;
+			color: #ffffff;
+			z-index: 10;
 		}
-		
+
 		#mainSidebar {
-		    display: flex;
-		    flex-direction: column;
-		    overscroll-behavior: contain;
+			display: flex;
+			flex-direction: column;
+			overscroll-behavior: contain;
 		}
-		
+
 		.sidebar-bottom-controls {
-		    flex: 0 0 auto;
-		    background-color: #ffffff;
-		    border-top: 1px solid #f8fafc; 
-		    padding: 12px 1rem;
-		    padding-bottom: 24px; 
+			flex: 0 0 auto;
+			background-color: #ffffff;
+			border-top: 1px solid #f8fafc;
+			padding: 12px 1rem;
+			padding-bottom: 24px;
 		}
-		
+
 		#historyList {
-		    flex: 1 1 auto;
-		    overflow-y: auto;
-		    -webkit-overflow-scrolling: touch;
-		    overscroll-behavior-y: contain;
-		    padding-bottom: 32px;
+			flex: 1 1 auto;
+			overflow-y: auto;
+			-webkit-overflow-scrolling: touch;
+			overscroll-behavior-y: contain;
+			padding-bottom: 32px;
 		}
-		
+
 		header {
-		    flex: 0 0 auto;
-		    background: white;
-		    border-bottom: 1px solid #f8fafc;
-		    padding-top: env(safe-area-inset-top, 0px);
-		    z-index: 100;
+			flex: 0 0 auto;
+			background: white;
+			border-bottom: 1px solid #f8fafc;
+			padding-top: env(safe-area-inset-top, 0px);
+			z-index: 100;
 		}
-		
+
 		main {
-		    flex: 1 1 auto;
-		    overflow-y: auto;
-		    -webkit-overflow-scrolling: touch;
-		    background-color: #ffffff;
-		    position: relative;
-		    overscroll-behavior: contain;
-		    transform: translateZ(0);
-		    -webkit-transform: translateZ(0);
-		    backface-visibility: hidden;
-		    -webkit-backface-visibility: hidden;
-		    will-change: transform;
+			flex: 1 1 auto;
+			overflow-y: auto;
+			-webkit-overflow-scrolling: touch;
+			background-color: #ffffff;
+			position: relative;
+			overscroll-behavior: contain;
+			transform: translateZ(0);
+			-webkit-transform: translateZ(0);
+			backface-visibility: hidden;
+			-webkit-backface-visibility: hidden;
+			will-change: transform;
 		}
-		
+
 		footer {
-		    flex: 0 0 auto;
-		    background-color: #ffffff;
-		    z-index: 100;
-		    padding-bottom: 12px;
-		    border-top: 1px solid #f8fafc;
-		    margin-top: -1px;
+			flex: 0 0 auto;
+			background-color: #ffffff;
+			z-index: 100;
+			padding-bottom: 12px;
+			border-top: 1px solid #f8fafc;
+			margin-top: -1px;
 		}
-		
+
 		.footer-content {
-		    width: 100%;
-		    max-width: 48rem;
-		    margin: 0 auto;
-		    padding: 12px 1rem;
+			width: 100%;
+			max-width: 48rem;
+			margin: 0 auto;
+			padding: 12px 1rem;
 		}
-		
+
 		*,
 		*::before,
 		*::after {
-		    -webkit-user-drag: none;
-		    -khtml-user-drag: none;
-		    -moz-user-drag: none;
-		    -o-user-drag: none;
-		    user-drag: none;
-		    -webkit-user-select: none;
-		    -moz-user-select: none;
-		    -ms-user-select: none;
-		    user-select: none;
+			-webkit-user-drag: none;
+			-khtml-user-drag: none;
+			-moz-user-drag: none;
+			-o-user-drag: none;
+			user-drag: none;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
 		}
-		
+
 		.prose,
 		.prose *,
 		input,
 		textarea {
-		    -webkit-user-select: text;
-		    -moz-user-select: text;
-		    -ms-user-select: text;
-		    user-select: text;
+			-webkit-user-select: text;
+			-moz-user-select: text;
+			-ms-user-select: text;
+			user-select: text;
 		}
-		
+
 		img,
 		svg {
-		    pointer-events: none;
+			pointer-events: none;
 		}
-		
+
 		.prose img {
-		    pointer-events: auto;
+			pointer-events: auto;
 		}
-		
+
 		#userInput {
-		    width: 100%;
-		    background: transparent;
-		    border: none;
-		    outline: none;
-		    resize: none;
-		    padding: 12px 8px;
-		    font-size: 16px;
-		    font-weight: 500;
-		    color: #1f2937;
-		    line-height: 20px;
-		    max-height: 150px;
-		    display: block;
+			width: 100%;
+			background: transparent;
+			border: none;
+			outline: none;
+			resize: none;
+			padding: 12px 8px;
+			font-size: 16px;
+			font-weight: 500;
+			color: #1f2937;
+			line-height: 20px;
+			max-height: 150px;
+			display: block;
 		}
-		
+
 		#userInput::placeholder {
-		    font-size: 15px;
-		    color: #94a3b8;
+			font-size: 15px;
+			color: #94a3b8;
 		}
-		
+
 		#loginScreen {
-		    position: fixed;
-		    inset: 0;
-		    background: white;
-		    z-index: 100;
-		    display: none;
-		    align-items: center;
-		    justify-content: center;
-		    padding: 2rem;
+			position: fixed;
+			inset: 0;
+			background: white;
+			z-index: 100;
+			display: none;
+			align-items: center;
+			justify-content: center;
+			padding: 2rem;
 		}
-		
+
 		code {
-		    font-family: 'JetBrains Mono', monospace;
+			font-family: 'JetBrains Mono', monospace;
 		}
-		
+
 		.prose pre {
-		    background: #f3f4f6 !important;
-		    padding: 1rem !important;
-		    border-radius: 1rem !important;
-		    margin: 0.75rem 0;
-		    overflow-x: auto;
+			background: #f3f4f6 !important;
+			padding: 1rem !important;
+			border-radius: 1rem !important;
+			margin: 0.75rem 0;
+			overflow-x: auto;
 		}
-		
+
 		.prose table {
-		    display: block;
-		    width: 100%;
-		    overflow-x: auto;
-		    border-collapse: collapse;
-		    margin: 0.75rem 0;
+			display: block;
+			width: 100%;
+			overflow-x: auto;
+			border-collapse: collapse;
+			margin: 0.75rem 0;
 		}
-		
+
 		.prose code {
-		    background-color: #f1f5f9 !important;
-		    color: #475569 !important;
-		    padding: 2px 5px !important;
-		    border-radius: 4px !important;
-		    font-weight: 600 !important;
-		    font-size: 0.85em !important;
-		    font-family: 'JetBrains Mono', monospace !important;
-		    vertical-align: 1px;
+			background-color: #f1f5f9 !important;
+			color: #475569 !important;
+			padding: 2px 5px !important;
+			border-radius: 4px !important;
+			font-weight: 600 !important;
+			font-size: 0.85em !important;
+			font-family: 'JetBrains Mono', monospace !important;
+			vertical-align: 1px;
 		}
-		
+
 		.prose pre code {
-		    background-color: transparent !important;
-		    padding: 0 !important;
-		    font-weight: 500 !important;
+			background-color: transparent !important;
+			padding: 0 !important;
+			font-weight: 500 !important;
 		}
-		
+
 		.prose-container {
-		    overflow-x: visible;
+			overflow-x: visible;
 		}
-		
+
 		.prose ul,
 		.prose ol {
-		    padding-left: 2.2rem;
-		    margin-bottom: 0.75rem;
-		    list-style-position: outside;
+			padding-left: 2.2rem;
+			margin-bottom: 0.75rem;
+			list-style-position: outside;
 		}
-		
+
 		.prose li {
-		    margin-bottom: 0.2rem;
+			margin-bottom: 0.2rem;
 		}
-		
+
 		.prose ul {
-		    list-style-type: disc;
+			list-style-type: disc;
 		}
-		
+
 		.prose ol {
-		    list-style-type: decimal;
+			list-style-type: decimal;
 		}
-		
+
 		.prose th,
 		.prose td {
-		    border: 1px solid #e5e7eb;
-		    padding: 0.5rem 0.75rem;
-		    font-size: 14px !important;
+			border: 1px solid #e5e7eb;
+			padding: 0.5rem 0.75rem;
+			font-size: 14px !important;
 		}
-		
+
 		.prose p {
-		    margin-bottom: 0.5rem;
+			margin-bottom: 0.5rem;
 		}
-		
+
 		::-webkit-scrollbar {
-		    display: none;
-		    width: 0;
-		    height: 0;
-		    background: transparent;
+			display: none;
+			width: 0;
+			height: 0;
+			background: transparent;
 		}
-		
+
 		.custom-scroll {
-		    scrollbar-width: none;
-		    -ms-overflow-style: none;
+			scrollbar-width: none;
+			-ms-overflow-style: none;
 		}
-		
+
 		.content-width {
-		    width: 100%;
-		    max-width: 48rem;
-		    margin: 0 auto;
-		    padding: 0 1rem;
+			width: 100%;
+			max-width: 48rem;
+			margin: 0 auto;
+			padding: 0 1rem;
 		}
-		
+
 		@keyframes appearance {
-		    0%, 100% { opacity: 0.3; transform: scale(0.8); }
-		    50% { opacity: 1; transform: scale(1); }
+
+			0%,
+			100% {
+				opacity: 0.3;
+				transform: scale(0.8);
+			}
+
+			50% {
+				opacity: 1;
+				transform: scale(1);
+			}
 		}
-		
+
 		.typing-indicator {
-		    display: flex;
-		    align-items: center;
-		    gap: 4px;
-		    height: 22px;
-		    margin-top: 2px;
+			display: flex;
+			align-items: center;
+			gap: 4px;
+			height: 22px;
+			margin-top: 2px;
 		}
-		
+
 		.typing-dot {
-		    width: 4px;
-		    height: 4px;
-		    background-color: #94a3b8;
-		    border-radius: 50%;
-		    animation: appearance 1.4s infinite ease-in-out;
+			width: 4px;
+			height: 4px;
+			background-color: #94a3b8;
+			border-radius: 50%;
+			animation: appearance 1.4s infinite ease-in-out;
 		}
-		
-		.typing-dot:nth-child(1) { animation-delay: 0s; }
-		.typing-dot:nth-child(2) { animation-delay: 0.2s; }
-		.typing-dot:nth-child(3) { animation-delay: 0.4s; }
-		
+
+		.typing-dot:nth-child(1) {
+			animation-delay: 0s;
+		}
+
+		.typing-dot:nth-child(2) {
+			animation-delay: 0.2s;
+		}
+
+		.typing-dot:nth-child(3) {
+			animation-delay: 0.4s;
+		}
+
 		.media-container>* {
-		    margin-top: 0 !important;
+			margin-top: 0 !important;
 		}
 	</style>
 </head>
 
 <body class="text-slate-900">
-	
+
 	<!-- Loading Spiner -->
 	<div id="loadingOverlay">
-	    <div class="loading-wrapper">
-	        <div class="loading-container">
-	            <div id="loadingText">0%</div>
-	            <div class="loading-bar" id="loadBar"></div>
-	        </div>
-	    </div>
+		<div class="loading-wrapper">
+			<div class="loading-container">
+				<div id="loadingText">0%</div>
+				<div class="loading-bar" id="loadBar"></div>
+			</div>
+		</div>
 	</div>
-	
+
 	<!-- Sidebar Overlay -->
 	<div id="sidebarOverlay"
 		class="fixed inset-0 bg-black/20 z-[150] hidden backdrop-blur-sm transition-opacity opacity-0"></div>
 
 	<!-- Sidebar -->
 	<div id="mainSidebar"
-    class="fixed inset-y-0 left-0 w-[280px] bg-white z-[160] transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col border-r border-slate-100 shadow-2xl">
-    
-	    <div class="h-16 flex items-center px-4 border-b border-slate-50 shrink-0">
-	        <div class="flex items-center gap-3 w-full">
-	            <div class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-600 font-bold shadow-sm shrink-0">
-	                <i data-lucide="user" class="w-5 h-5"></i>
-	            </div>
-	            <div class="flex-1 min-w-0">
-	                <p id="sidebarEmail" class="text-[14px] font-bold text-slate-600 truncate font-sans leading-tight">
-	                    user@example.com</p>
-	            </div>
-	        </div>
-	    </div>
-	
-	    <div class="flex-1 overflow-y-auto custom-scroll p-3 space-y-4" id="historyList"></div>
-	
-	    <div class="sidebar-bottom-controls">
-	        <div class="space-y-2">
-	            <button id="newChatSidebarBtn"
-	                class="w-full flex items-center justify-start gap-3 px-4 py-3 text-slate-700 bg-slate-50 rounded-xl transition-all group active:scale-[0.98]">
-	                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-	                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
-	                    class="text-current transition-colors opacity-60 group-hover:opacity-100">
-	                    <path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" />
-	                    <path d="M8 12h8" />
-	                    <path d="M12 8v8" />
-	                </svg>
-	                <span class="font-bold text-sm tracking-wide">Percakapan Baru</span>
-	            </button>
-	            <button id="sidebarLogoutBtn"
-	                class="w-full flex items-center justify-start gap-3 px-4 py-3 text-slate-500 bg-slate-50 rounded-xl transition-all group active:scale-[0.98] hover:text-red-600">
-	                <i data-lucide="log-out" stroke-width="2.5"
-	                    class="w-[18px] h-[18px] text-current transition-colors opacity-60 group-hover:opacity-100"></i>
-	                <span class="font-bold text-sm tracking-wide">Keluar</span>
-	            </button>
-	        </div>
-	    </div>
+		class="fixed inset-y-0 left-0 w-[280px] bg-white z-[160] transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col border-r border-slate-100 shadow-2xl">
+
+		<div class="h-16 flex items-center px-4 border-b border-slate-50 shrink-0">
+			<div class="flex items-center gap-3 w-full">
+				<div
+					class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-600 font-bold shadow-sm shrink-0">
+					<i data-lucide="user" class="w-5 h-5"></i>
+				</div>
+				<div class="flex-1 min-w-0">
+					<p id="sidebarEmail" class="text-[14px] font-bold text-slate-600 truncate font-sans leading-tight">
+						user@example.com</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="flex-1 overflow-y-auto custom-scroll p-3 space-y-4" id="historyList"></div>
+
+		<div class="sidebar-bottom-controls">
+			<div class="space-y-2">
+				<button id="newChatSidebarBtn"
+					class="w-full flex items-center justify-start gap-3 px-4 py-3 text-slate-700 bg-slate-50 rounded-xl transition-all group active:scale-[0.98]">
+					<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+						stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+						class="text-current transition-colors opacity-60 group-hover:opacity-100">
+						<path
+							d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" />
+						<path d="M8 12h8" />
+						<path d="M12 8v8" />
+					</svg>
+					<span class="font-bold text-sm tracking-wide">Percakapan Baru</span>
+				</button>
+				<button id="sidebarLogoutBtn"
+					class="w-full flex items-center justify-start gap-3 px-4 py-3 text-slate-500 bg-slate-50 rounded-xl transition-all group active:scale-[0.98] hover:text-red-600">
+					<i data-lucide="log-out" stroke-width="2.5"
+						class="w-[18px] h-[18px] text-current transition-colors opacity-60 group-hover:opacity-100"></i>
+					<span class="font-bold text-sm tracking-wide">Keluar</span>
+				</button>
+			</div>
+		</div>
 	</div>
-	
+
 	<!-- Login Screen -->
 	<div id="loginScreen" class="fixed inset-0 bg-white z-[100] flex items-center justify-center p-6">
 		<div
@@ -433,15 +452,16 @@
 				<img src="icon/icon.png" alt="Logo" class="w-16 h-16 object-contain">
 			</div>
 			<form id="loginForm" class="w-full space-y-4">
-			    <input type="email" id="emailInput" placeholder="Email" required onblur="window.scrollTo(0,0)"
-			        class="w-full px-5 py-4 bg-gray-50 rounded-2xl text-sm font-semibold border-none outline-none focus:ring-0">
-			    <input type="password" id="passwordInput" placeholder="Password" required onblur="window.scrollTo(0,0)"
-			        class="w-full px-5 py-4 bg-gray-50 rounded-2xl text-sm font-semibold border-none outline-none focus:ring-0">
-			    <button type="submit" id="loginBtn"
-			        class="w-full py-4 bg-black text-white rounded-2xl font-bold text-sm active:scale-95 transition-all mt-2 uppercase">
-			        Masuk
-			    </button>
-			    <div id="loginError" class="text-red-500 text-[11px] font-bold hidden text-center uppercase tracking-wider mt-2"></div>
+				<input type="email" id="emailInput" placeholder="Email" required onblur="window.scrollTo(0,0)"
+					class="w-full px-5 py-4 bg-gray-50 rounded-2xl text-sm font-semibold border-none outline-none focus:ring-0">
+				<input type="password" id="passwordInput" placeholder="Password" required onblur="window.scrollTo(0,0)"
+					class="w-full px-5 py-4 bg-gray-50 rounded-2xl text-sm font-semibold border-none outline-none focus:ring-0">
+				<button type="submit" id="loginBtn"
+					class="w-full py-4 bg-black text-white rounded-2xl font-bold text-sm active:scale-95 transition-all mt-2 uppercase">
+					Masuk
+				</button>
+				<div id="loginError"
+					class="text-red-500 text-[11px] font-bold hidden text-center uppercase tracking-wider mt-2"></div>
 			</form>
 			<div id="loginError" class="text-red-500 text-sm mt-6 font-bold hidden text-center uppercase"></div>
 		</div>
@@ -449,25 +469,41 @@
 
 	<div id="appInterface">
 		<header class="h-16 px-4 md:px-8 flex items-center">
-		    <div class="w-full flex justify-between items-center">
-		        <div class="flex items-center gap-3">
-		            <img src="icon/icon.png" alt="Logo" class="w-10 h-10 object-contain">
-		        </div>
-		        <div class="flex items-center gap-1">
-		            <button id="voiceBtn"
-		                class="p-2.5 hover:bg-slate-50 text-slate-400 rounded-xl transition-all active:scale-95">
-		                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-audio-lines"><path d="M2 10v3"/><path d="M6 6v11"/><path d="M10 3v18"/><path d="M14 8v7"/><path d="M18 5v13"/><path d="M22 10v3"/></svg>
-		            </button>
-		            <button id="settingsBtn"
-		                class="p-2.5 hover:bg-slate-50 text-slate-400 rounded-xl transition-all active:scale-95">
-		                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings-2"><path d="M14 17H5"/><path d="M19 7h-9"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg>
-		            </button>
-		            <button id="menuBtn"
-		                class="p-2.5 hover:bg-slate-50 text-slate-400 rounded-xl transition-all active:scale-95 ml-1">
-		                <i data-lucide="menu" class="w-6 h-6"></i>
-		            </button>
-		        </div>
-		    </div>
+			<div class="w-full flex justify-between items-center">
+				<div class="flex items-center gap-3">
+					<img src="icon/icon.png" alt="Logo" class="w-10 h-10 object-contain">
+				</div>
+				<div class="flex items-center gap-1">
+					<button id="voiceBtn"
+						class="p-2.5 hover:bg-slate-50 text-slate-400 rounded-xl transition-all active:scale-95">
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+							stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+							class="lucide lucide-audio-lines">
+							<path d="M2 10v3" />
+							<path d="M6 6v11" />
+							<path d="M10 3v18" />
+							<path d="M14 8v7" />
+							<path d="M18 5v13" />
+							<path d="M22 10v3" />
+						</svg>
+					</button>
+					<button id="settingsBtn"
+						class="p-2.5 hover:bg-slate-50 text-slate-400 rounded-xl transition-all active:scale-95">
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+							stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+							class="lucide lucide-settings-2">
+							<path d="M14 17H5" />
+							<path d="M19 7h-9" />
+							<circle cx="17" cy="17" r="3" />
+							<circle cx="7" cy="7" r="3" />
+						</svg>
+					</button>
+					<button id="menuBtn"
+						class="p-2.5 hover:bg-slate-50 text-slate-400 rounded-xl transition-all active:scale-95 ml-1">
+						<i data-lucide="menu" class="w-6 h-6"></i>
+					</button>
+				</div>
+			</div>
 		</header>
 
 		<main id="chatContainer" class="custom-scroll">
@@ -477,167 +513,307 @@
 		</main>
 
 		<footer>
-		    <div class="footer-content">
-		        <div id="file-preview-container" class="grid grid-cols-2 md:grid-cols-4 gap-2 empty:hidden mb-4"></div>
-		        
-		        <form id="chatForm" class="w-full">
-		            <div id="inputWrapper" class="relative flex items-center bg-slate-50 rounded-full px-1 py-1.5 transition-colors duration-200">
-		                <input type="file" id="file-input" multiple accept="image/*,application/pdf,.docx,.xlsx,.xls,.pptx,.js,.css,.java,.html,.xml,.py,.sql,.ts,.cpp,.h,.hpp,.lua,.swift" class="hidden" onchange="handleFileSelect(event)">
-		                
-		                <button type="button" id="uploadBtn" onclick="document.getElementById('file-input').click()" class="p-2 text-slate-400 hover:text-slate-600 transition-colors shrink-0">
-		                    <i data-lucide="plus" class="w-6 h-6"></i>
-		                </button>
-		                <textarea id="userInput" placeholder="Tulis pesan..." rows="1" class="flex-1 w-full bg-transparent border-none outline-none resize-none px-2 text-sm font-medium text-slate-900 leading-[24px] max-h-[150px] block placeholder:text-slate-400"></textarea>
-		                <button type="submit" id="sendBtn" class="p-2 text-slate-800 hover:text-indigo-600 transition-colors shrink-0">
-		                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="currentColor">
-		                        <path d="M21.66,12a2,2,0,0,1-1.14,1.81L5.87,20.75A2.08,2.08,0,0,1,5,21a2,2,0,0,1-1.82-2.82L5.46,13H11a1,1,0,0,0,0-2H5.46L3.18,5.87A2,2,0,0,1,5.86,3.25h0l14.65,6.94A2,2,0,0,1,21.66,12Z"></path>
-		                    </svg>
-		                </button>
-		            </div>
-		        </form>
-		    </div>
+			<div class="footer-content">
+				<div id="file-preview-container" class="grid grid-cols-2 md:grid-cols-4 gap-2 empty:hidden mb-4"></div>
+
+				<form id="chatForm" class="w-full">
+					<div id="inputWrapper"
+						class="relative flex items-center bg-slate-50 rounded-full px-1 py-1.5 transition-colors duration-200">
+						<input type="file" id="file-input" multiple
+							accept="image/*,application/pdf,.docx,.xlsx,.xls,.pptx,.js,.css,.java,.html,.xml,.py,.sql,.ts,.cpp,.h,.hpp,.lua,.swift"
+							class="hidden" onchange="handleFileSelect(event)">
+
+						<button type="button" id="uploadBtn" onclick="document.getElementById('file-input').click()"
+							class="p-2 text-slate-400 hover:text-slate-600 transition-colors shrink-0">
+							<i data-lucide="plus" class="w-6 h-6"></i>
+						</button>
+						<textarea id="userInput" placeholder="Tulis pesan..." rows="1"
+							class="flex-1 w-full bg-transparent border-none outline-none resize-none px-2 text-sm font-medium text-slate-900 leading-[24px] max-h-[150px] block placeholder:text-slate-400"></textarea>
+						<button type="submit" id="sendBtn"
+							class="p-2 text-slate-800 hover:text-indigo-600 transition-colors shrink-0">
+							<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6"
+								fill="currentColor">
+								<path
+									d="M21.66,12a2,2,0,0,1-1.14,1.81L5.87,20.75A2.08,2.08,0,0,1,5,21a2,2,0,0,1-1.82-2.82L5.46,13H11a1,1,0,0,0,0-2H5.46L3.18,5.87A2,2,0,0,1,5.86,3.25h0l14.65,6.94A2,2,0,0,1,21.66,12Z">
+								</path>
+							</svg>
+						</button>
+					</div>
+				</form>
+			</div>
 		</footer>
 	</div>
-	
+
 	<!-- ADMIN SCREEN -->
 	<div id="adminScreen" class="fixed inset-0 bg-white z-[200] hidden flex-col">
-	    <header class="h-16 px-4 md:px-8 flex items-center border-b border-slate-100 shrink-0 relative">
-	        <div class="flex items-center z-10">
-	            <button id="backFromAdmin" class="p-2 -ml-2 text-slate-400 hover:text-slate-600 transition-all active:scale-90">
-	                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left"><path d="m15 18-6-6 6-6"/></svg>
-	            </button>
-	        </div>
-	        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-	            <h2 class="text-sm font-black text-slate-800 uppercase tracking-widest">Admin Control</h2>
-	        </div>
-	    </header>
-	
-	    <main id="adminScroller" class="flex-1 overflow-y-auto bg-white custom-scroll">
-	        <div class="content-width pt-4 md:pt-8 pb-8 space-y-4">
-	            <div class="w-full bg-slate-50 rounded-2xl p-5 shadow-sm border-none" id="model-dropdown">
-	                <div class="mb-4">
-	                    <span class="text-xs font-black text-slate-500 uppercase tracking-widest">Model AI</span>
-	                </div>
-	                <div class="space-y-4">
-	                    <div class="relative">
-	                        <button type="button" id="dropdown-trigger" class="w-full bg-gray-100 rounded-xl px-5 py-3 text-[15px] font-bold text-slate-700 shadow-sm flex items-center justify-between outline-none">
-	                            <span id="selected-model-text">Gemini 3 Flash</span>
-	                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform duration-200" id="dropdown-icon"></i>
-	                        </button>
-	                        <div id="dropdown-menu" class="hidden absolute left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl border border-slate-100 p-2 z-[210]">
-	                            <div class="flex flex-col">
-	                                <div class="dropdown-option py-3 px-4 rounded-xl hover:bg-slate-50 cursor-pointer text-sm font-medium text-slate-800" data-value="gemini-2.5-pro">Gemini 2.5 Pro</div>
-	                                <div class="dropdown-option py-3 px-4 rounded-xl hover:bg-slate-50 cursor-pointer text-sm font-medium text-slate-800" data-value="gemini-2.5-flash">Gemini 2.5 Flash</div>
-	                                <div class="dropdown-option py-3 px-4 rounded-xl hover:bg-slate-50 cursor-pointer text-sm font-medium text-slate-800" data-value="gemini-2.5-flash-lite">Gemini 2.5 Flash Lite</div>
-	                                <div class="dropdown-option py-3 px-4 rounded-xl hover:bg-slate-50 cursor-pointer text-sm font-medium text-slate-800" data-value="gemini-3-flash-preview">Gemini 3 Flash</div>
-	                                <div class="dropdown-option py-3 px-4 rounded-xl hover:bg-slate-50 cursor-pointer text-sm font-medium text-slate-800" data-value="gemini-3-pro-preview">Gemini 3 Pro</div>
-	                                <div class="dropdown-option py-3 px-4 rounded-xl hover:bg-slate-50 cursor-pointer text-sm font-medium text-slate-800" data-value="gemini-3-deep-think-preview">Gemini 3 Deep Think</div>
-	                            </div>
-	                        </div>
-	                    </div>
-	
-	                    <div class="relative">
-	                        <button type="button" id="voice-trigger" class="w-full bg-gray-100 rounded-xl px-5 py-3 text-[15px] font-bold text-slate-700 shadow-sm flex items-center justify-between outline-none">
-	                            <span id="selected-voice-text">Kore (Default)</span>
-	                            <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform duration-200" id="voice-icon"></i>
-	                        </button>
-	                        <div id="voice-menu" class="hidden absolute left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl border border-slate-100 p-2 z-[210]">
-	                            <div class="flex flex-col max-h-48 overflow-y-auto">
-	                                <div class="voice-option py-3 px-4 rounded-xl hover:bg-slate-50 cursor-pointer text-sm font-medium text-slate-800" data-value="Kore">Kore (Default)</div>
-	                                <div class="voice-option py-3 px-4 rounded-xl hover:bg-slate-50 cursor-pointer text-sm font-medium text-slate-800" data-value="Aoede">Aoede</div>
-	                                <div class="voice-option py-3 px-4 rounded-xl hover:bg-slate-50 cursor-pointer text-sm font-medium text-slate-800" data-value="Zephyr">Zephyr</div>
-	                                <div class="voice-option py-3 px-4 rounded-xl hover:bg-slate-50 cursor-pointer text-sm font-medium text-slate-800" data-value="Leda">Leda</div>
-	                                <div class="voice-option py-3 px-4 rounded-xl hover:bg-slate-50 cursor-pointer text-sm font-medium text-slate-800" data-value="Fenrir">Fenrir</div>
-	                            </div>
-	                        </div>
-	                    </div>
-	                </div>
-	            </div>
-	
-	            <div class="w-full bg-slate-50 rounded-2xl p-5 shadow-sm border-none">
-	                <div class="mb-6">
-	                    <span class="text-xs font-black text-slate-500 uppercase tracking-widest">Parameter AI</span>
-	                </div>
-	                <div class="space-y-6">
-	                    <div>
-	                        <div class="flex justify-between items-center mb-2">
-	                            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Temperature</span>
-	                            <span id="label-temp" class="text-[11px] font-black text-slate-600">1.0</span>
-	                        </div>
-	                        <input type="range" id="settings-temp" min="0" max="2" step="0.1" class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-600">
-	                    </div>
-	
-	                    <div>
-	                        <div class="flex justify-between items-center mb-2">
-	                            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Max Tokens</span>
-	                            <span id="label-tokens" class="text-[11px] font-black text-slate-600">65536</span>
-	                        </div>
-	                        <input type="range" id="settings-tokens" min="1024" max="128000" step="1024" class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-600">
-	                    </div>
-	
-	                    <div>
-	                        <div class="flex justify-between items-center mb-2">
-	                            <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Thinking Budget</span>
-	                            <span id="label-thinking" class="text-[11px] font-black text-slate-600">MEDIUM</span>
-	                        </div>
-	                        <input type="range" id="settings-thinking" min="1" max="3" step="1" class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-600">
-	                    </div>
-	                </div>
-	            </div>
-	
-	            <div class="w-full bg-slate-50 rounded-2xl p-5 shadow-sm border-none">
-	                <div class="mb-4">
-	                    <span class="text-xs font-black text-slate-500 uppercase tracking-widest">System Prompt</span>
-	                </div>
-	                <textarea id="systemPromptInput" rows="4" onblur="window.scrollTo(0,0)" class="w-full bg-gray-100 rounded-xl px-4 py-3 text-[15px] leading-relaxed font-medium text-slate-600 outline-none focus:ring-1 focus:ring-slate-200 transition-all resize-none"></textarea>
-	            </div>
-	        </div>
-	    </main>
-	
-	    <footer class="bg-white shrink-0 h-6 mb-[env(safe-area-inset-bottom,0px)]"></footer>
+		<header class="h-16 px-4 md:px-8 flex items-center border-b border-slate-100 shrink-0 relative">
+			<div class="flex items-center z-10">
+				<button id="backFromAdmin"
+					class="p-2 -ml-2 text-slate-400 hover:text-slate-600 transition-all active:scale-90">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+						stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+						class="lucide lucide-chevron-left">
+						<path d="m15 18-6-6 6-6" />
+					</svg>
+				</button>
+			</div>
+			<div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+				<h2 class="text-sm font-black text-slate-800 uppercase tracking-widest">Admin Control</h2>
+			</div>
+		</header>
+
+		<main id="adminScroller" class="flex-1 overflow-y-auto bg-white custom-scroll">
+			<div class="content-width pt-4 md:pt-8 pb-8 space-y-4">
+				<div class="w-full bg-slate-50 rounded-2xl p-5 shadow-sm border-none" id="model-dropdown">
+					<div class="mb-4">
+						<span class="text-xs font-black text-slate-500 uppercase tracking-widest">Model AI</span>
+					</div>
+					<div class="space-y-4">
+						<div class="relative">
+							<button type="button" id="dropdown-trigger"
+								class="w-full bg-gray-100 rounded-xl px-5 py-3 text-[15px] font-bold text-slate-700 shadow-sm flex items-center justify-between outline-none">
+								<span id="selected-model-text">Gemini 3 Flash</span>
+								<i data-lucide="chevron-down"
+									class="w-4 h-4 text-slate-400 transition-transform duration-200"
+									id="dropdown-icon"></i>
+							</button>
+							<div id="dropdown-menu"
+								class="hidden absolute left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl border border-slate-100 p-2 z-[210]">
+								<div class="flex flex-col">
+									<div class="dropdown-option py-3 px-4 rounded-xl hover:bg-slate-50 cursor-pointer text-sm font-medium text-slate-800"
+										data-value="gemini-2.5-pro">Gemini 2.5 Pro</div>
+									<div class="dropdown-option py-3 px-4 rounded-xl hover:bg-slate-50 cursor-pointer text-sm font-medium text-slate-800"
+										data-value="gemini-2.5-flash">Gemini 2.5 Flash</div>
+									<div class="dropdown-option py-3 px-4 rounded-xl hover:bg-slate-50 cursor-pointer text-sm font-medium text-slate-800"
+										data-value="gemini-2.5-flash-lite">Gemini 2.5 Flash Lite</div>
+									<div class="dropdown-option py-3 px-4 rounded-xl hover:bg-slate-50 cursor-pointer text-sm font-medium text-slate-800"
+										data-value="gemini-3-flash-preview">Gemini 3 Flash</div>
+									<div class="dropdown-option py-3 px-4 rounded-xl hover:bg-slate-50 cursor-pointer text-sm font-medium text-slate-800"
+										data-value="gemini-3-pro-preview">Gemini 3 Pro</div>
+									<div class="dropdown-option py-3 px-4 rounded-xl hover:bg-slate-50 cursor-pointer text-sm font-medium text-slate-800"
+										data-value="gemini-3-deep-think-preview">Gemini 3 Deep Think</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="relative">
+							<button type="button" id="voice-trigger"
+								class="w-full bg-gray-100 rounded-xl px-5 py-3 text-[15px] font-bold text-slate-700 shadow-sm flex items-center justify-between outline-none">
+								<span id="selected-voice-text">Kore (Default)</span>
+								<i data-lucide="chevron-down"
+									class="w-4 h-4 text-slate-400 transition-transform duration-200"
+									id="voice-icon"></i>
+							</button>
+							<div id="voice-menu"
+								class="hidden absolute left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl border border-slate-100 p-2 z-[210]">
+								<div class="flex flex-col max-h-48 overflow-y-auto">
+									<div class="voice-option py-3 px-4 rounded-xl hover:bg-slate-50 cursor-pointer text-sm font-medium text-slate-800"
+										data-value="Kore">Kore (Default)</div>
+									<div class="voice-option py-3 px-4 rounded-xl hover:bg-slate-50 cursor-pointer text-sm font-medium text-slate-800"
+										data-value="Aoede">Aoede</div>
+									<div class="voice-option py-3 px-4 rounded-xl hover:bg-slate-50 cursor-pointer text-sm font-medium text-slate-800"
+										data-value="Zephyr">Zephyr</div>
+									<div class="voice-option py-3 px-4 rounded-xl hover:bg-slate-50 cursor-pointer text-sm font-medium text-slate-800"
+										data-value="Leda">Leda</div>
+									<div class="voice-option py-3 px-4 rounded-xl hover:bg-slate-50 cursor-pointer text-sm font-medium text-slate-800"
+										data-value="Fenrir">Fenrir</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="w-full bg-slate-50 rounded-2xl p-5 shadow-sm border-none mb-4">
+					<div class="mb-4">
+						<span class="text-xs font-black text-slate-500 uppercase tracking-widest">Sumber Data</span>
+					</div>
+					<div class="space-y-4">
+						<!-- Google Search Switch -->
+						<div class="flex items-center justify-between bg-white p-3 rounded-xl border border-slate-100">
+							<div class="flex items-center gap-3">
+								<div
+									class="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
+									<i data-lucide="globe" class="w-4 h-4"></i>
+								</div>
+								<span class="text-sm font-bold text-slate-700">Google Search</span>
+							</div>
+							<label class="relative inline-flex items-center cursor-pointer">
+								<input type="checkbox" id="google-search-toggle" class="sr-only peer" checked>
+								<div
+									class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600">
+								</div>
+							</label>
+						</div>
+
+						<!-- Knowledge Base Switch -->
+						<div class="flex items-center justify-between bg-white p-3 rounded-xl border border-slate-100">
+							<div class="flex items-center gap-3">
+								<div
+									class="w-8 h-8 rounded-full bg-purple-50 flex items-center justify-center text-purple-600">
+									<i data-lucide="database" class="w-4 h-4"></i>
+								</div>
+								<span class="text-sm font-bold text-slate-700">Knowledge Base</span>
+							</div>
+							<label class="relative inline-flex items-center cursor-pointer">
+								<input type="checkbox" id="kb-toggle" class="sr-only peer">
+								<div
+									class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600">
+								</div>
+							</label>
+						</div>
+
+						<!-- Upload KB -->
+						<div class="mt-4 pt-4 border-t border-slate-100">
+							<div class="flex justify-between items-center mb-2">
+								<span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Upload
+									Pengetahuan (.txt)</span>
+							</div>
+
+							<div id="kb-upload-status" class="hidden mb-3">
+								<div class="flex justify-between items-center mb-1">
+									<span id="kb-filename"
+										class="text-[9px] font-black text-slate-400 uppercase tracking-tighter truncate max-w-[200px]"></span>
+									<span id="kb-percent" class="text-[9px] font-black text-black">0%</span>
+								</div>
+								<div class="w-full h-1 bg-slate-100 rounded-full overflow-hidden">
+									<div id="kb-progress" class="h-full bg-purple-600 transition-all duration-300"
+										style="width: 0%"></div>
+								</div>
+							</div>
+
+							<input type="file" id="kb-file-input" multiple accept=".txt" class="hidden"
+								onchange="handleKbUpload(event)">
+							<button type="button" onclick="document.getElementById('kb-file-input').click()"
+								class="w-full flex items-center justify-center gap-2 py-3 bg-white border border-slate-200 text-slate-600 rounded-xl font-bold text-xs hover:bg-slate-50 active:scale-[0.98] transition-all uppercase tracking-wide">
+								<i data-lucide="upload" class="w-4 h-4"></i>
+								Upload Dokumen Baru
+							</button>
+						</div>
+					</div>
+				</div>
+
+				<div class="w-full bg-slate-50 rounded-2xl p-5 shadow-sm border-none">
+					<div class="mb-6">
+						<span class="text-xs font-black text-slate-500 uppercase tracking-widest">Parameter AI</span>
+					</div>
+					<div class="space-y-6">
+						<div>
+							<div class="flex justify-between items-center mb-2">
+								<span
+									class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Temperature</span>
+								<span id="label-temp" class="text-[11px] font-black text-slate-600">1.0</span>
+							</div>
+							<input type="range" id="settings-temp" min="0" max="2" step="0.1"
+								class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-600">
+						</div>
+
+						<div>
+							<div class="flex justify-between items-center mb-2">
+								<span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Max
+									Tokens</span>
+								<span id="label-tokens" class="text-[11px] font-black text-slate-600">65536</span>
+							</div>
+							<input type="range" id="settings-tokens" min="1024" max="128000" step="1024"
+								class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-600">
+						</div>
+
+						<div>
+							<div class="flex justify-between items-center mb-2">
+								<span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Thinking
+									Budget</span>
+								<span id="label-thinking" class="text-[11px] font-black text-slate-600">MEDIUM</span>
+							</div>
+							<input type="range" id="settings-thinking" min="1" max="3" step="1"
+								class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-600">
+						</div>
+					</div>
+				</div>
+
+				<div class="w-full bg-slate-50 rounded-2xl p-5 shadow-sm border-none">
+					<div class="mb-4">
+						<span class="text-xs font-black text-slate-500 uppercase tracking-widest">System Prompt</span>
+					</div>
+					<textarea id="systemPromptInput" rows="4" onblur="window.scrollTo(0,0)"
+						class="w-full bg-gray-100 rounded-xl px-4 py-3 text-[15px] leading-relaxed font-medium text-slate-600 outline-none focus:ring-1 focus:ring-slate-200 transition-all resize-none"></textarea>
+				</div>
+			</div>
+		</main>
+
+		<footer class="bg-white shrink-0 h-6 mb-[env(safe-area-inset-bottom,0px)]"></footer>
 	</div>
-	
+
 	<!-- VOICE SCREEN -->
 	<div id="voiceScreen" class="fixed inset-0 bg-white z-[250] hidden flex-col">
-	    <header class="h-16 px-4 md:px-8 flex items-center border-none shrink-0 relative">
-	        <div class="flex items-center z-10">
-	            <button id="backFromVoice" class="p-2 -ml-2 text-slate-400 hover:text-slate-600 transition-all active:scale-90">
-	                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left"><path d="m15 18-6-6 6-6"/></svg>
-	            </button>
-	        </div>
-	        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-	            <h2 class="text-sm font-black text-slate-800 uppercase tracking-widest">Live Voice</h2>
-	        </div>
-	    </header>
-	
-	    <main class="flex-1 w-full max-w-3xl mx-auto px-4 py-0 flex flex-col items-center justify-center overflow-hidden relative">
-		    <div id="voice-visual-box" class="w-full h-full relative flex items-center justify-center overflow-hidden">
-		        <canvas id="voice-canvas" class="block"></canvas>
-		        <video id="voice-large-video" autoplay playsinline muted 
-		            class="hidden absolute inset-0 w-full h-full object-cover rounded-[2rem] shadow-xl bg-slate-900 border-none z-20">
-		        </video>
-		        <canvas id="voice-frame-canvas" style="display:none;"></canvas>
-		    </div>
+		<header class="h-16 px-4 md:px-8 flex items-center border-none shrink-0 relative">
+			<div class="flex items-center z-10">
+				<button id="backFromVoice"
+					class="p-2 -ml-2 text-slate-400 hover:text-slate-600 transition-all active:scale-90">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+						stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+						class="lucide lucide-chevron-left">
+						<path d="m15 18-6-6 6-6" />
+					</svg>
+				</button>
+			</div>
+			<div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+				<h2 class="text-sm font-black text-slate-800 uppercase tracking-widest">Live Voice</h2>
+			</div>
+		</header>
+
+		<main
+			class="flex-1 w-full max-w-3xl mx-auto px-4 py-0 flex flex-col items-center justify-center overflow-hidden relative">
+			<div id="voice-visual-box" class="w-full h-full relative flex items-center justify-center overflow-hidden">
+				<canvas id="voice-canvas" class="block"></canvas>
+				<video id="voice-large-video" autoplay playsinline muted
+					class="hidden absolute inset-0 w-full h-full object-cover rounded-[2rem] shadow-xl bg-slate-900 border-none z-20">
+				</video>
+				<canvas id="voice-frame-canvas" style="display:none;"></canvas>
+			</div>
 		</main>
-	
-	    <footer class="w-full shrink-0 bg-white">
-	        <div class="max-w-4xl mx-auto px-6 pb-8 pt-4 flex flex-col items-center gap-6">
-	            <div id="voice-timer" class="text-slate-300 font-mono text-xs tracking-[0.3em] font-bold">00:00:00</div>
-	            <div class="flex justify-center items-center gap-6 md:gap-10">
-	                <button id="switchCameraBtn" class="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center bg-slate-50 text-slate-500 rounded-full active:scale-90 transition-all border border-slate-100 shadow-sm shrink-0">
-	                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-switch-camera"><path d="M11 19H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h5"/><path d="M13 5h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-5"/><circle cx="12" cy="12" r="3"/><path d="m18 22-3-3 3-3"/><path d="m6 2 3 3-3 3"/></svg>
-	                </button>
-	
-	                <button id="endCallBtn" class="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center bg-red-50 text-red-500 rounded-full active:scale-90 transition-all border border-red-100 shadow-sm shrink-0">
-	                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-phone-off"><path d="M10.1 13.9a14 14 0 0 0 3.732 2.668 1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2 18 18 0 0 1-12.728-5.272"/><path d="M22 2 2 22"/><path d="M4.76 13.582A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 .244.473"/></svg>
-	                </button>
-	
-	                <button id="cameraToggleBtn" class="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center bg-slate-50 text-slate-500 rounded-full active:scale-90 transition-all border border-slate-100 shadow-sm shrink-0">
-	                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-camera"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z"/><circle cx="12" cy="13" r="3"/></svg>
-	                </button>
-	            </div>
-	        </div>
-	    </footer>
+
+		<footer class="w-full shrink-0 bg-white">
+			<div class="max-w-4xl mx-auto px-6 pb-8 pt-4 flex flex-col items-center gap-6">
+				<div id="voice-timer" class="text-slate-300 font-mono text-xs tracking-[0.3em] font-bold">00:00:00</div>
+				<div class="flex justify-center items-center gap-6 md:gap-10">
+					<button id="switchCameraBtn"
+						class="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center bg-slate-50 text-slate-500 rounded-full active:scale-90 transition-all border border-slate-100 shadow-sm shrink-0">
+						<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+							stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+							class="lucide lucide-switch-camera">
+							<path d="M11 19H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h5" />
+							<path d="M13 5h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-5" />
+							<circle cx="12" cy="12" r="3" />
+							<path d="m18 22-3-3 3-3" />
+							<path d="m6 2 3 3-3 3" />
+						</svg>
+					</button>
+
+					<button id="endCallBtn"
+						class="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center bg-red-50 text-red-500 rounded-full active:scale-90 transition-all border border-red-100 shadow-sm shrink-0">
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+							stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+							class="lucide lucide-phone-off">
+							<path
+								d="M10.1 13.9a14 14 0 0 0 3.732 2.668 1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2 18 18 0 0 1-12.728-5.272" />
+							<path d="M22 2 2 22" />
+							<path
+								d="M4.76 13.582A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 .244.473" />
+						</svg>
+					</button>
+
+					<button id="cameraToggleBtn"
+						class="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center bg-slate-50 text-slate-500 rounded-full active:scale-90 transition-all border border-slate-100 shadow-sm shrink-0">
+						<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+							stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+							class="lucide lucide-camera">
+							<path
+								d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z" />
+							<circle cx="12" cy="13" r="3" />
+						</svg>
+					</button>
+				</div>
+			</div>
+		</footer>
 	</div>
 	<script>
 		const SUPABASE_URL = "https://wluwdfbvkyafscotpils.supabase.co";
@@ -651,7 +827,15 @@
 		const STREAM_SPEED = 8;
 		const STREAM_CHUNK_SIZE = 5;
 
-		const MAIN_SYSTEM_PROMPT = "Anda adalah ALISA, Asisten Inspektorat Provinsi Lampung yang ramah, Profesional dan sangat membantu, selalu berikan informasi yang akurat dan terbaru. PENTING!!! jangan pernah membuat gambar dan mencari video youtube untuk permintaan user gunkan sebijak mungkin jika kamu benar benar membutuhkannya saja.";
+		const MAIN_SYSTEM_PROMPT = `Anda adalah ALISA, Asisten Inspektorat Provinsi Lampung yang ramah, Profesional, dan sangat membantu, selalu berikan informasi yang akurat dan terbaru.
+
+PANDUAN KONTEKS & DATABASE (PENTING):
+1. Jika Anda menerima informasi dari "Knowledge Base" (Konteks Dokumen) atau Google Search, JANGAN menyebutkan "Berdasarkan dokumen", "Menurut data yang diunggah", atau frasa sejenis.
+2. Anggaplah semua informasi tersebut adalah pengetahuan internal Anda sendiri. Sampaikan jawaban secara langsung, percaya diri, dan natural.
+3. Jika konteks tidak menjawab pertanyaan user, gunakan pengetahuan umum Anda atau Google Search (jika aktif), tetap dengan nada profesional Inspektorat.
+
+PENGGUNAAN MEDIA:
+Jangan pernah membuat gambar atau mencari video youtube KECUALI jika user MEMINTANYA secara spesifik. Gunakan fitur tersebut sebijak mungkin.`;
 		const IMAGE_GEN_PROMPT = "Untuk Membuat Gunakan tag [image]english description[/image].";
 		const VIDEO_GEN_PROMPT = "Untuk Mencari video youtube Gunakan tag [youtube]query pencarian spesifik[/youtube].";
 
@@ -680,9 +864,9 @@
 		let typingBubble = null;
 		let isGenerating = false;
 		let abortController = null;
-		
+
 		let pendingFiles = [];
-		
+
 		let currentVoice = localStorage.getItem('alisa_voice') || 'Kore';
 		let voiceWs, voiceInCtx, voiceOutCtx, voiceAnalyser, aiAnalyser, voiceDataArray, voiceStream;
 		let isAISpeaking = false, voiceNextTime = 0, voiceSessionId = 0, voiceInterrupted = false;
@@ -693,301 +877,325 @@
 		const DB_VERSION = 1;
 		const STORE_NAME = "images";
 		let dbInstance = null;
-		
+
 		const settingsBtn = document.getElementById('settingsBtn');
 		const adminScreen = document.getElementById('adminScreen');
 		const backFromAdmin = document.getElementById('backFromAdmin');
 		const thinkingMap = { "1": 4000, "2": 16000, "3": 32000 };
 		let currentSelectedModel = localStorage.getItem('alisa_model') || "gemini-3-flash-preview";
-		
+
 		function saveAdminSettings() {
-		    localStorage.setItem('alisa_model', currentSelectedModel);
-		    localStorage.setItem('alisa_thinking', document.getElementById('settings-thinking').value);
-		    localStorage.setItem('alisa_prompt', document.getElementById('systemPromptInput').value);
-		    localStorage.setItem('alisa_temp', document.getElementById('settings-temp').value);
-		    localStorage.setItem('alisa_tokens', document.getElementById('settings-tokens').value);
+			localStorage.setItem('alisa_model', currentSelectedModel);
+			localStorage.setItem('alisa_voice', currentVoice);
+			localStorage.setItem('alisa_thinking', document.getElementById('settings-thinking').value);
+			localStorage.setItem('alisa_prompt', document.getElementById('systemPromptInput').value);
+			localStorage.setItem('alisa_temp', document.getElementById('settings-temp').value);
+			localStorage.setItem('alisa_tokens', document.getElementById('settings-tokens').value);
+			localStorage.setItem('alisa_google_search', document.getElementById('google-search-toggle').checked);
+			localStorage.setItem('alisa_kb_toggle', document.getElementById('kb-toggle').checked);
 		}
-		
+
 		if (settingsBtn && adminScreen) {
-		    settingsBtn.addEventListener('click', () => {
-		        adminScreen.classList.remove('hidden');
-		        adminScreen.classList.add('flex');
-		    });
+			settingsBtn.addEventListener('click', () => {
+				adminScreen.classList.remove('hidden');
+				adminScreen.classList.add('flex');
+			});
 		}
-		
+
 		if (backFromAdmin && adminScreen) {
-		    backFromAdmin.addEventListener('click', () => {
-		        adminScreen.classList.add('hidden');
-		        adminScreen.classList.remove('flex');
-		        saveAdminSettings();
-		    });
+			backFromAdmin.addEventListener('click', () => {
+				adminScreen.classList.add('hidden');
+				adminScreen.classList.remove('flex');
+				saveAdminSettings();
+			});
 		}
-		
+
 		document.querySelectorAll('.dropdown-option').forEach(option => {
-		    option.addEventListener('click', function() {
-		        currentSelectedModel = this.getAttribute('data-value');
-		        document.getElementById('selected-model-text').innerText = this.innerText;
-		        document.getElementById('dropdown-menu').classList.add('hidden');
-		        document.getElementById('dropdown-icon').style.transform = 'rotate(0deg)';
-		        saveAdminSettings();
-		    });
+			option.addEventListener('click', function () {
+				currentSelectedModel = this.getAttribute('data-value');
+				document.getElementById('selected-model-text').innerText = this.innerText;
+				document.getElementById('dropdown-menu').classList.add('hidden');
+				document.getElementById('dropdown-icon').style.transform = 'rotate(0deg)';
+				saveAdminSettings();
+			});
 		});
-		
+
 		document.getElementById('dropdown-trigger').addEventListener('click', () => {
-		    const menu = document.getElementById('dropdown-menu');
-		    const icon = document.getElementById('dropdown-icon');
-		    const isHidden = menu.classList.toggle('hidden');
-		    icon.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(180deg)';
+			const menu = document.getElementById('dropdown-menu');
+			const icon = document.getElementById('dropdown-icon');
+			const isHidden = menu.classList.toggle('hidden');
+			icon.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(180deg)';
 		});
-		
+
 		window.addEventListener('click', (e) => {
-		    const modelMenu = document.getElementById('dropdown-menu');
-		    const modelIcon = document.getElementById('dropdown-icon');
-		    if (!e.target.closest('#model-dropdown')) {
-		        modelMenu.classList.add('hidden');
-		        if (modelIcon) modelIcon.style.transform = 'rotate(0deg)';
-		    }
-		
-		    const voiceMenu = document.getElementById('voice-menu');
-		    const voiceIcon = document.getElementById('voice-icon');
-		    if (!e.target.closest('#voice-trigger')) {
-		        if (voiceMenu && !voiceMenu.classList.contains('hidden')) {
-		            voiceMenu.classList.add('hidden');
-		            if (voiceIcon) voiceIcon.style.transform = 'rotate(0deg)';
-		        }
-		    }
+			const modelMenu = document.getElementById('dropdown-menu');
+			const modelIcon = document.getElementById('dropdown-icon');
+			if (!e.target.closest('#model-dropdown')) {
+				modelMenu.classList.add('hidden');
+				if (modelIcon) modelIcon.style.transform = 'rotate(0deg)';
+			}
+
+			const voiceMenu = document.getElementById('voice-menu');
+			const voiceIcon = document.getElementById('voice-icon');
+			if (!e.target.closest('#voice-trigger')) {
+				if (voiceMenu && !voiceMenu.classList.contains('hidden')) {
+					voiceMenu.classList.add('hidden');
+					if (voiceIcon) voiceIcon.style.transform = 'rotate(0deg)';
+				}
+			}
 		});
-		
-		document.getElementById('settings-thinking').addEventListener('input', function() {
-		    const labels = ["LOW", "MEDIUM", "HIGH"];
-		    document.getElementById('label-thinking').innerText = labels[this.value - 1];
-		    saveAdminSettings();
+
+		document.getElementById('settings-thinking').addEventListener('input', function () {
+			const labels = ["LOW", "MEDIUM", "HIGH"];
+			document.getElementById('label-thinking').innerText = labels[this.value - 1];
+			saveAdminSettings();
 		});
-		
-		document.getElementById('settings-temp').addEventListener('input', function() {
-		    document.getElementById('label-temp').innerText = this.value;
-		    saveAdminSettings();
+
+		document.getElementById('settings-temp').addEventListener('input', function () {
+			document.getElementById('label-temp').innerText = this.value;
+			saveAdminSettings();
 		});
-		
-		document.getElementById('settings-tokens').addEventListener('input', function() {
-		    document.getElementById('label-tokens').innerText = this.value;
-		    saveAdminSettings();
+
+		document.getElementById('settings-tokens').addEventListener('input', function () {
+			document.getElementById('label-tokens').innerText = this.value;
+			saveAdminSettings();
 		});
-		
+
 		const voiceBtn = document.getElementById('voiceBtn');
 		const voiceScreen = document.getElementById('voiceScreen');
 		const backFromVoice = document.getElementById('backFromVoice');
-		
+
 		if (voiceBtn && voiceScreen) {
-		    voiceBtn.addEventListener('click', () => {
-		        voiceScreen.classList.remove('hidden');
-		        voiceScreen.classList.add('flex');
-		    });
+			voiceBtn.addEventListener('click', () => {
+				voiceScreen.classList.remove('hidden');
+				voiceScreen.classList.add('flex');
+			});
 		}
-		
+
 		if (backFromVoice && voiceScreen) {
-		    backFromVoice.addEventListener('click', () => {
-		        voiceScreen.classList.add('hidden');
-		        voiceScreen.classList.remove('flex');
-		    });
+			backFromVoice.addEventListener('click', () => {
+				voiceScreen.classList.add('hidden');
+				voiceScreen.classList.remove('flex');
+			});
 		}
-						
+
 		async function sendMessage(e) {
-		    if (e) e.preventDefault();
-		    if (isGenerating) {
-		        if (abortController) abortController.abort();
-		        setGeneratingState(false);
-		        return;
-		    }
-		
-		    const rawInput = userInput.value.trim();
-		    if (!rawInput && pendingFiles.length === 0) return;
-		
-		    const filesToProcess = [...pendingFiles];
-		    let fileMetadata = filesToProcess.map(f => ({ name: f.name, size: f.size }));
-		    let fileCardsHTML = "";
-		    filesToProcess.forEach(f => {
-		        fileCardsHTML += getFileCardHTML(f.name, f.size);
-		    });
-		
-		    const dynamicMainPrompt = document.getElementById('systemPromptInput').value || MAIN_SYSTEM_PROMPT;
-		    const sliderVal = document.getElementById('settings-thinking').value;
-		    const currentBudget = thinkingMap[sliderVal] || 16000;
-		    const currentTemp = parseFloat(document.getElementById('settings-temp').value) || 1.0;
-		    const currentMaxTokens = parseInt(document.getElementById('settings-tokens').value) || 65536;
-		
-		    const { data: { session } } = await _supabase.auth.getSession();
-		    if (!session) return;
-		    const userToken = session.access_token;
-		
-		    userInput.blur();
-		    userInput.value = '';
-		    userInput.style.height = 'auto';
-		    userInput.disabled = true;
-		    setGeneratingState(true);
-		    abortController = new AbortController();
-		
-		    let apiParts = [];
-		    let textContext = "";
-		    pendingFiles = [];
-		    renderPreviews();
-		
-		    for (const f of filesToProcess) {
-		        const ext = f.name.split('.').pop().toLowerCase();
-		        if (f.mime.startsWith('image/') || f.mime === 'application/pdf') {
-		            const cleanBase64 = f.base64.includes(',') ? f.base64.split(',')[1] : f.base64;
-		            apiParts.push({ inline_data: { mime_type: f.mime, data: cleanBase64 } });
-		        } else {
-		            textContext += await (['docx', 'xlsx', 'xls', 'pptx'].includes(ext) ? extractTextFromOffice(f) : readCodeFile(f));
-		        }
-		    }
-		
-		    const finalPrompt = rawInput + (textContext ? "\n\nKONTEKS DOKUMEN:\n" + textContext : "");
-		    const userMessageParts = apiParts.length > 0 ? [...apiParts, { text: finalPrompt }] : [{ text: finalPrompt }];
-		    
-		    chatHistory.push({ role: "user", parts: userMessageParts, fileMetadata: fileMetadata });
-		    
-		    appendMessageToUI('user', rawInput, true, false, fileCardsHTML);
-		    
-		    saveCurrentSession();
-		    showTyping();
-		
-		    const combinedSystemInstruction = `${dynamicMainPrompt}\n\n${IMAGE_GEN_PROMPT}\n\n${VIDEO_GEN_PROMPT}`;
-		
-		    try {
-		        const payload = {
-		            system_instruction: { parts: [{ text: combinedSystemInstruction }] },
-		            contents: chatHistory.map(h => ({ role: h.role, parts: h.parts })),
-		            tools: [{ google_search: {} }],
-		            generation_config: { 
-		                temperature: currentTemp,
-		                max_output_tokens: currentMaxTokens 
-		            }
-		        };
-		
-		        if (currentSelectedModel.includes('think')) {
-		            payload.thinking_config = { include_thoughts: true, thinking_budget_tokens: currentBudget };
-		        }
-		
-		        const response = await fetch(PROXY_URL + `?model=${currentSelectedModel}&action=generateContent`, {
-		            method: 'POST',
-		            headers: {
-		                'Content-Type': 'application/json',
-		                'apikey': SUPABASE_KEY,
-		                'Authorization': `Bearer ${userToken}`
-		            },
-		            signal: abortController.signal,
-		            body: JSON.stringify(payload)
-		        });
-		
-		        const data = await response.json();
-		        if (!response.ok) throw new Error(data.error?.message || `HTTP ${response.status}`);
-		        
-		        const parts = data.candidates?.[0]?.content?.parts || [];
-		        let finalResponse = "";
-		        parts.forEach(part => { if (part.text && !part.thought) finalResponse += part.text; });
-		        
-		        hideTyping();
-		        
-		        if (finalResponse) {
-		            const mediaSplitRegex = /(\[image\][\s\S]*?\[\/image\]|\[youtube\][\s\S]*?\[\/youtube\])/gi;
-		            const resParts = finalResponse.split(mediaSplitRegex);
-		            const aiContainerTop = appendMessageToUI('model', "");
-		            let currentProseEl = aiContainerTop;
-		            const messageBody = aiContainerTop.parentElement;
-		            let proseUsed = false;
-		            
-		            chatHistory.push({ role: "model", parts: [{ text: "" }] });
-		            
-		            for (let i = 0; i < resParts.length; i++) {
-		                if (!isGenerating) break;
-		                const part = resParts[i];
-		                if (!part.trim()) continue;
-		                
-		                const imgMatch = part.match(/\[image\]([\s\S]*?)\[\/image\]/i);
-		                const vidMatch = part.match(/\[youtube\]([\s\S]*?)\[\/youtube\]/i);
-		                
-		                if (imgMatch) {
-		                    const mediaDiv = document.createElement('div');
-		                    mediaDiv.className = "media-container w-full flex flex-col";
-		                    messageBody.appendChild(mediaDiv);
-		                    await generateImage(imgMatch[1].trim(), mediaDiv);
-		                } else if (vidMatch) {
-		                    const mediaDiv = document.createElement('div');
-		                    mediaDiv.className = "media-container w-full flex flex-col";
-		                    messageBody.appendChild(mediaDiv);
-		                    await generateYoutubeVideo(vidMatch[1].trim(), mediaDiv);
-		                } else {
-		                    if (i > 0) {
-		                        const div = document.createElement('div');
-		                        div.className = "w-full prose-container prose max-w-none text-slate-600 text-[15px] leading-relaxed font-medium";
-		                        messageBody.appendChild(div);
-		                        currentProseEl = div;
-		                    }
-		                    const streamedText = await streamText(currentProseEl, part);
-		                    if (streamedText) {
-		                        proseUsed = true;
-		                        const lastMsg = chatHistory[chatHistory.length - 1];
-		                        lastMsg.parts[0].text += (lastMsg.parts[0].text ? "\n\n" : "") + streamedText;
-		                        saveCurrentSession();
-		                    }
-		                }
-		            }
-		            if (!proseUsed && aiContainerTop) aiContainerTop.remove();
-		
-		            if (chatHistory.length === 2) {
-					    const aiResponse = chatHistory[1].parts[0].text;
-					    
-					    const newTitle = await generateAiTitle(aiResponse);
-					    
-					    const sessions = getAllSessions();
-					    const idx = sessions.findIndex(s => s.id === currentSessionId);
-					    if (idx >= 0) {
-					        sessions[idx].title = newTitle;
-					        localStorage.setItem(STORAGE_KEY, JSON.stringify(sessions));
-					        loadSidebarHistory();
-					    }
+			if (e) e.preventDefault();
+			if (isGenerating) {
+				if (abortController) abortController.abort();
+				setGeneratingState(false);
+				return;
+			}
+
+			const rawInput = userInput.value.trim();
+			if (!rawInput && pendingFiles.length === 0) return;
+
+			const filesToProcess = [...pendingFiles];
+			let fileMetadata = filesToProcess.map(f => ({ name: f.name, size: f.size }));
+			let fileCardsHTML = "";
+			filesToProcess.forEach(f => {
+				fileCardsHTML += getFileCardHTML(f.name, f.size);
+			});
+
+			const dynamicMainPrompt = document.getElementById('systemPromptInput').value || MAIN_SYSTEM_PROMPT;
+			const sliderVal = document.getElementById('settings-thinking').value;
+			const currentBudget = thinkingMap[sliderVal] || 16000;
+			const currentTemp = parseFloat(document.getElementById('settings-temp').value) || 1.0;
+			const currentMaxTokens = parseInt(document.getElementById('settings-tokens').value) || 65536;
+
+			const { data: { session } } = await _supabase.auth.getSession();
+			if (!session) return;
+			const userToken = session.access_token;
+
+			userInput.blur();
+			userInput.value = '';
+			userInput.style.height = 'auto';
+			userInput.disabled = true;
+			setGeneratingState(true);
+			abortController = new AbortController();
+
+			let apiParts = [];
+			let textContext = "";
+			pendingFiles = [];
+			renderPreviews();
+
+			for (const f of filesToProcess) {
+				const ext = f.name.split('.').pop().toLowerCase();
+				if (f.mime.startsWith('image/') || f.mime === 'application/pdf') {
+					const cleanBase64 = f.base64.includes(',') ? f.base64.split(',')[1] : f.base64;
+					apiParts.push({ inline_data: { mime_type: f.mime, data: cleanBase64 } });
+				} else {
+					textContext += await (['docx', 'xlsx', 'xls', 'pptx'].includes(ext) ? extractTextFromOffice(f) : readCodeFile(f));
+				}
+			}
+
+			const finalPrompt = rawInput + (textContext ? "\n\nKONTEKS DOKUMEN:\n" + textContext : "");
+			const userMessageParts = apiParts.length > 0 ? [...apiParts, { text: finalPrompt }] : [{ text: finalPrompt }];
+
+			chatHistory.push({ role: "user", parts: userMessageParts, fileMetadata: fileMetadata });
+
+			appendMessageToUI('user', rawInput, true, false, fileCardsHTML);
+
+			saveCurrentSession();
+			showTyping();
+
+			const combinedSystemInstruction = `${dynamicMainPrompt}\n\n${IMAGE_GEN_PROMPT}\n\n${VIDEO_GEN_PROMPT}`;
+
+			// Check Search & KB Settings
+			const useGoogleSearch = document.getElementById('google-search-toggle').checked;
+			const useKB = document.getElementById('kb-toggle').checked;
+
+			let contextPrompt = finalPrompt;
+
+			if (useKB) {
+				const kbResults = await searchKB(rawInput, userToken);
+				if (kbResults) {
+					contextPrompt = "GUNAKAN REFERENSI BERIKUT UNTUK MENJAWAB:\n" + kbResults + "\n\nPERTANYAAN: " + finalPrompt;
+					// Update last history item to include context for the AI (but keep UI as is)
+					chatHistory[chatHistory.length - 1].parts.forEach(p => {
+						if (p.text && p.text.includes(rawInput)) p.text = contextPrompt;
+					});
+				}
+			}
+
+			try {
+				const payload = {
+					system_instruction: { parts: [{ text: combinedSystemInstruction }] },
+					contents: chatHistory.map(h => ({ role: h.role, parts: h.parts })),
+					// tools: [{ google_search: {} }], // Replaced below
+					generation_config: {
+						temperature: currentTemp,
+						max_output_tokens: currentMaxTokens
 					}
-		        }
-		    } catch (error) {
-		        hideTyping();
-		        if (error.name !== 'AbortError') {
-		            appendMessageToUI('error', "Gagal menghubungi AI. Silakan coba lagi.");
-		        }
-		    } finally {
-		        setGeneratingState(false);
-		        userInput.disabled = false;
-		        abortController = null;
-		    }
+				};
+
+				if (useGoogleSearch) {
+					payload.tools = [{ google_search: {} }];
+				}
+
+				if (currentSelectedModel.includes('think')) {
+					payload.thinking_config = { include_thoughts: true, thinking_budget_tokens: currentBudget };
+				}
+
+				const response = await fetch(PROXY_URL + `?model=${currentSelectedModel}&action=generateContent`, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						'apikey': SUPABASE_KEY,
+						'Authorization': `Bearer ${userToken}`
+					},
+					signal: abortController.signal,
+					body: JSON.stringify(payload)
+				});
+
+				const data = await response.json();
+				if (!response.ok) throw new Error(data.error?.message || `HTTP ${response.status}`);
+
+				const parts = data.candidates?.[0]?.content?.parts || [];
+				let finalResponse = "";
+				parts.forEach(part => { if (part.text && !part.thought) finalResponse += part.text; });
+
+				hideTyping();
+
+				if (finalResponse) {
+					const mediaSplitRegex = /(\[image\][\s\S]*?\[\/image\]|\[youtube\][\s\S]*?\[\/youtube\])/gi;
+					const resParts = finalResponse.split(mediaSplitRegex);
+					const aiContainerTop = appendMessageToUI('model', "");
+					let currentProseEl = aiContainerTop;
+					const messageBody = aiContainerTop.parentElement;
+					let proseUsed = false;
+
+					chatHistory.push({ role: "model", parts: [{ text: "" }] });
+
+					for (let i = 0; i < resParts.length; i++) {
+						if (!isGenerating) break;
+						const part = resParts[i];
+						if (!part.trim()) continue;
+
+						const imgMatch = part.match(/\[image\]([\s\S]*?)\[\/image\]/i);
+						const vidMatch = part.match(/\[youtube\]([\s\S]*?)\[\/youtube\]/i);
+
+						if (imgMatch) {
+							const mediaDiv = document.createElement('div');
+							mediaDiv.className = "media-container w-full flex flex-col";
+							messageBody.appendChild(mediaDiv);
+							await generateImage(imgMatch[1].trim(), mediaDiv);
+						} else if (vidMatch) {
+							const mediaDiv = document.createElement('div');
+							mediaDiv.className = "media-container w-full flex flex-col";
+							messageBody.appendChild(mediaDiv);
+							await generateYoutubeVideo(vidMatch[1].trim(), mediaDiv);
+						} else {
+							if (i > 0) {
+								const div = document.createElement('div');
+								div.className = "w-full prose-container prose max-w-none text-slate-600 text-[15px] leading-relaxed font-medium";
+								messageBody.appendChild(div);
+								currentProseEl = div;
+							}
+							const streamedText = await streamText(currentProseEl, part);
+							if (streamedText) {
+								proseUsed = true;
+								const lastMsg = chatHistory[chatHistory.length - 1];
+								lastMsg.parts[0].text += (lastMsg.parts[0].text ? "\n\n" : "") + streamedText;
+								saveCurrentSession();
+							}
+						}
+					}
+					if (!proseUsed && aiContainerTop) aiContainerTop.remove();
+
+					if (chatHistory.length === 2) {
+						const aiResponse = chatHistory[1].parts[0].text;
+
+						const newTitle = await generateAiTitle(aiResponse);
+
+						const sessions = getAllSessions();
+						const idx = sessions.findIndex(s => s.id === currentSessionId);
+						if (idx >= 0) {
+							sessions[idx].title = newTitle;
+							localStorage.setItem(STORAGE_KEY, JSON.stringify(sessions));
+							loadSidebarHistory();
+						}
+					}
+				}
+			} catch (error) {
+				hideTyping();
+				if (error.name !== 'AbortError') {
+					appendMessageToUI('error', "Gagal menghubungi AI. Silakan coba lagi.");
+				}
+			} finally {
+				setGeneratingState(false);
+				userInput.disabled = false;
+				abortController = null;
+			}
 		}
-		
+
 		async function generateAiTitle(aiMsg) {
-		    const { data: { session } } = await _supabase.auth.getSession();
-		    if (!session) return "Percakapan Baru";
-		    try {
-		        const response = await fetch(PROXY_URL + "?model=gemini-2.5-flash-lite&action=generateContent", {
-		            method: 'POST',
-		            headers: {
-		                'Content-Type': 'application/json',
-		                'apikey': SUPABASE_KEY,
-		                'Authorization': `Bearer ${session.access_token}`
-		            },
-		            body: JSON.stringify({
-		                contents: [{
-		                    role: "user",
-		                    parts: [{ 
-		                        text: `Buat judul singkat (2-4 kata) tanpa tanda baca seperti ':' atau label kategori. Jika isinya sapaan (seperti halo, hai, selamat pagi/siang/malam), buat judul sapaan natural seperti 'Hai ALISA' atau 'Selamat Pagi'. Jika isinya informasi, rangkum intinya secara langsung. Jawaban AI: "${aiMsg}"` 
-		                    }]
-		                }],
-		                generation_config: { temperature: 0.7, max_output_tokens: 20 }
-		            })
-		        });
-		        const data = await response.json();
-		        const resText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-		        return resText ? resText.replace(/[:"'*./]/g, '').trim() : "Percakapan Baru";
-		    } catch (e) {
-		        return "Percakapan Baru";
-		    }
+			const { data: { session } } = await _supabase.auth.getSession();
+			if (!session) return "Percakapan Baru";
+			try {
+				const response = await fetch(PROXY_URL + "?model=gemini-2.5-flash-lite&action=generateContent", {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						'apikey': SUPABASE_KEY,
+						'Authorization': `Bearer ${session.access_token}`
+					},
+					body: JSON.stringify({
+						contents: [{
+							role: "user",
+							parts: [{
+								text: `Buat judul singkat (2-4 kata) tanpa tanda baca seperti ':' atau label kategori. Jika isinya sapaan (seperti halo, hai, selamat pagi/siang/malam), buat judul sapaan natural seperti 'Hai ALISA' atau 'Selamat Pagi'. Jika isinya informasi, rangkum intinya secara langsung. Jawaban AI: "${aiMsg}"`
+							}]
+						}],
+						generation_config: { temperature: 0.7, max_output_tokens: 20 }
+					})
+				});
+				const data = await response.json();
+				const resText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+				return resText ? resText.replace(/[:"'*./]/g, '').trim() : "Percakapan Baru";
+			} catch (e) {
+				return "Percakapan Baru";
+			}
 		}
 
 		function initDB() {
@@ -1043,7 +1251,7 @@
 		}
 
 		lucide.createIcons();
-		
+
 		marked.setOptions({
 			gfm: true,
 			breaks: true,
@@ -1077,115 +1285,129 @@
 		}
 
 		loginForm.addEventListener('submit', async (e) => {
-		    e.preventDefault();
-		    const btn = document.getElementById('loginBtn');
-		    const errorEl = document.getElementById('loginError');
-		    const originalText = btn.innerHTML;
-		
-		    btn.disabled = true;
-		    btn.innerHTML = `<svg class="animate-spin h-5 w-5 text-white mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>`;
-		    errorEl.classList.add('hidden');
-		
-		    try {
-		        const { error } = await _supabase.auth.signInWithPassword({
-		            email: emailInput.value,
-		            password: passwordInput.value
-		        });
-		
-		        if (error) throw error;
-		
-		        setTimeout(() => {
-		            sidebarEmail.innerText = emailInput.value;
-		            showApp();
-		        }, 2000);
-		    } catch (err) {
-		        errorEl.innerText = err.message === "Invalid login credentials" ? "EMAIL ATAU PASSWORD SALAH" : err.message.toUpperCase();
-		        errorEl.classList.remove('hidden');
-		        btn.disabled = false;
-		        btn.innerHTML = originalText;
-		    }
+			e.preventDefault();
+			const btn = document.getElementById('loginBtn');
+			const errorEl = document.getElementById('loginError');
+			const originalText = btn.innerHTML;
+
+			btn.disabled = true;
+			btn.innerHTML = `<svg class="animate-spin h-5 w-5 text-white mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>`;
+			errorEl.classList.add('hidden');
+
+			try {
+				const { error } = await _supabase.auth.signInWithPassword({
+					email: emailInput.value,
+					password: passwordInput.value
+				});
+
+				if (error) throw error;
+
+				setTimeout(() => {
+					sidebarEmail.innerText = emailInput.value;
+					showApp();
+				}, 2000);
+			} catch (err) {
+				errorEl.innerText = err.message === "Invalid login credentials" ? "EMAIL ATAU PASSWORD SALAH" : err.message.toUpperCase();
+				errorEl.classList.remove('hidden');
+				btn.disabled = false;
+				btn.innerHTML = originalText;
+			}
 		});
 
 		function renderHistory() {
-		    messagesArea.innerHTML = '';
-		    chatHistory.forEach(msg => {
-		        const role = msg.role === 'user' ? 'user' : 'model';
-		        let textToShow = "";
-		        let cardsHTML = "";
-		
-		        if (msg.role === 'user') {
-		            const textPart = msg.parts.find(p => p.text);
-		            if (textPart) {
-		                textToShow = textPart.text.split("\n\nKONTEKS DOKUMEN:")[0].trim();
-		            }
-		            if (msg.fileMetadata) {
-		                msg.fileMetadata.forEach(f => {
-		                    cardsHTML += getFileCardHTML(f.name, f.size);
-		                });
-		            }
-		        } else {
-		            textToShow = msg.parts[0].text;
-		        }
-		
-		        appendMessageToUI(role, textToShow, false, false, cardsHTML);
-		    });
+			messagesArea.innerHTML = '';
+			chatHistory.forEach(msg => {
+				const role = msg.role === 'user' ? 'user' : 'model';
+				let textToShow = "";
+				let cardsHTML = "";
+
+				if (msg.role === 'user') {
+					const textPart = msg.parts.find(p => p.text);
+					if (textPart && textPart.text) {
+						let cleanText = textPart.text;
+						if (cleanText.includes("\n\nKONTEKS DOKUMEN:")) {
+							cleanText = cleanText.split("\n\nKONTEKS DOKUMEN:")[0];
+						}
+						if (cleanText.includes("GUNAKAN REFERENSI BERIKUT UNTUK MENJAWAB:")) {
+							const parts = cleanText.split("GUNAKAN REFERENSI BERIKUT UNTUK MENJAWAB:");
+							if (cleanText.includes("\n\nPERTANYAAN: ")) {
+								cleanText = cleanText.split("\n\nPERTANYAAN: ").pop();
+							} else {
+								cleanText = parts[0] || parts[1] || textPart.text;
+							}
+						}
+						textToShow = cleanText.trim();
+					}
+					if (msg.fileMetadata) {
+						msg.fileMetadata.forEach(f => {
+							cardsHTML += getFileCardHTML(f.name, f.size);
+						});
+					}
+				} else {
+					textToShow = msg.parts[0].text;
+				}
+
+				appendMessageToUI(role, textToShow, false, false, cardsHTML);
+			});
 		}
 
 		function saveCurrentSession() {
-		    try {
-		        const sessions = getAllSessions();
-		        const existingIndex = sessions.findIndex(s => s.id === currentSessionId);
-		        
-		        let title = "Percakapan Baru";
-		        
-		        if (existingIndex >= 0 && sessions[existingIndex].title && sessions[existingIndex].title !== "Percakapan Baru") {
-		            const oldTitle = sessions[existingIndex].title;
-		            const firstMsg = chatHistory[0]?.parts.find(p => p.text)?.text.split("\n\nKONTEKS DOKUMEN:")[0] || "";
-		            const defaultTitleFallback = firstMsg.substring(0, 30);
-		            
-		            if (oldTitle !== defaultTitleFallback && oldTitle !== "Lampiran Dokumen") {
-		                title = oldTitle;
-		            } else {
-		                const userText = firstMsg.trim();
-		                if (userText) title = userText.substring(0, 30) + (userText.length > 30 ? "..." : "");
-		                else if (chatHistory[0]?.fileMetadata) title = "Lampiran Dokumen";
-		            }
-		        } else {
-		            const firstUserMsg = chatHistory.find(m => m.role === 'user');
-		            if (firstUserMsg && firstUserMsg.parts) {
-		                const textPart = firstUserMsg.parts.find(p => p.text);
-		                if (textPart) {
-		                    let cleanTitle = textPart.text.split("\n\nKONTEKS DOKUMEN:")[0].trim();
-		                    if (!cleanTitle) cleanTitle = "Lampiran Dokumen";
-		                    title = cleanTitle.substring(0, 30) + (cleanTitle.length > 30 ? "..." : "");
-		                }
-		            }
-		        }
-		
-		        const cleanedHistory = chatHistory.map(msg => ({
-		            role: msg.role,
-		            fileMetadata: msg.fileMetadata || null,
-		            parts: msg.parts.map(part => {
-		                if (part.inline_data || part.data) return { text: "" };
-		                return part;
-		            })
-		        }));
-		
-		        const sessionData = {
-		            id: currentSessionId,
-		            title: title,
-		            timestamp: existingIndex >= 0 ? sessions[existingIndex].timestamp : Date.now(),
-		            history: cleanedHistory
-		        };
-		
-		        if (existingIndex >= 0) sessions[existingIndex] = sessionData;
-		        else sessions.unshift(sessionData);
-		
-		        localStorage.setItem(STORAGE_KEY, JSON.stringify(sessions));
-		        loadSidebarHistory();
-		    } catch (e) {
-		        console.error("Save Error", e);
-		    }
+			try {
+				const sessions = getAllSessions();
+				const existingIndex = sessions.findIndex(s => s.id === currentSessionId);
+
+				let title = "Percakapan Baru";
+
+				if (existingIndex >= 0 && sessions[existingIndex].title && sessions[existingIndex].title !== "Percakapan Baru") {
+					const oldTitle = sessions[existingIndex].title;
+					let firstMsgText = chatHistory[0]?.parts.find(p => p.text)?.text || "";
+					firstMsgText = firstMsgText.split("\n\nKONTEKS DOKUMEN:")[0].split("GUNAKAN REFERENSI BERIKUT UNTUK MENJAWAB:")[0];
+					const defaultTitleFallback = firstMsgText.substring(0, 30);
+
+					if (oldTitle !== defaultTitleFallback && oldTitle !== "Lampiran Dokumen") {
+						title = oldTitle;
+					} else {
+						const userText = firstMsg.trim();
+						if (userText) title = userText.substring(0, 30) + (userText.length > 30 ? "..." : "");
+						else if (chatHistory[0]?.fileMetadata) title = "Lampiran Dokumen";
+					}
+				} else {
+					const firstUserMsg = chatHistory.find(m => m.role === 'user');
+					if (firstUserMsg && firstUserMsg.parts) {
+						const textPart = firstUserMsg.parts.find(p => p.text);
+						if (textPart) {
+							let cleanTitle = textPart.text.split("\n\nKONTEKS DOKUMEN:")[0];
+							cleanTitle = cleanTitle.split("GUNAKAN REFERENSI BERIKUT UNTUK MENJAWAB:")[0].trim();
+							if (!cleanTitle) cleanTitle = "Lampiran Dokumen";
+							title = cleanTitle.substring(0, 30) + (cleanTitle.length > 30 ? "..." : "");
+						}
+					}
+				}
+
+				const cleanedHistory = chatHistory.map(msg => ({
+					role: msg.role,
+					fileMetadata: msg.fileMetadata || null,
+					parts: msg.parts.map(part => {
+						if (part.inline_data || part.data) return { text: "" };
+						return part;
+					})
+				}));
+
+				const sessionData = {
+					id: currentSessionId,
+					title: title,
+					timestamp: existingIndex >= 0 ? sessions[existingIndex].timestamp : Date.now(),
+					history: cleanedHistory
+				};
+
+				if (existingIndex >= 0) sessions[existingIndex] = sessionData;
+				else sessions.unshift(sessionData);
+
+				localStorage.setItem(STORAGE_KEY, JSON.stringify(sessions));
+				loadSidebarHistory();
+			} catch (e) {
+				console.error("Save Error", e);
+			}
 		}
 
 		userInput.addEventListener('input', function () {
@@ -1206,20 +1428,20 @@
 		});
 
 		userInput.addEventListener('blur', () => {
-		    window.scrollTo(0, 0);
+			window.scrollTo(0, 0);
 		});
-		
+
 		if (window.visualViewport) {
-		    window.visualViewport.addEventListener('resize', () => {
-		        if (document.activeElement.tagName === 'TEXTAREA' && !sidebar.classList.contains('-translate-x-full') === false) {
-		            requestAnimationFrame(() => {
-		                scrollBottom(true, 'auto');
-		                chatContainer.style.display = 'none';
-		                chatContainer.offsetHeight; 
-		                chatContainer.style.display = 'block';
-		            });
-		        }
-		    });
+			window.visualViewport.addEventListener('resize', () => {
+				if (document.activeElement.tagName === 'TEXTAREA' && !sidebar.classList.contains('-translate-x-full') === false) {
+					requestAnimationFrame(() => {
+						scrollBottom(true, 'auto');
+						chatContainer.style.display = 'none';
+						chatContainer.offsetHeight;
+						chatContainer.style.display = 'block';
+					});
+				}
+			});
 		}
 
 		userInput.addEventListener('keydown', function (e) {
@@ -1230,32 +1452,32 @@
 				}
 			}
 		});
-		
+
 		window.addEventListener('resize', () => {
-		    const screen = document.getElementById('voiceScreen');
-		    const box = document.getElementById('voice-visual-box');
-		    
-		    if (screen && !screen.classList.contains('hidden')) {
-		        box.style.transition = 'none';
-		        box.style.opacity = '0';
-		        
-		        clearTimeout(window.voiceResizeTimeout);
-		        window.voiceResizeTimeout = setTimeout(() => {
-		            resizeVoiceCanvas();
-		            requestAnimationFrame(() => {
-		                requestAnimationFrame(() => {
-		                    box.style.transition = 'opacity 0.4s ease-in-out';
-		                    box.style.opacity = '1';
-		                });
-		            });
-		        }, 1100);
-		    }
+			const screen = document.getElementById('voiceScreen');
+			const box = document.getElementById('voice-visual-box');
+
+			if (screen && !screen.classList.contains('hidden')) {
+				box.style.transition = 'none';
+				box.style.opacity = '0';
+
+				clearTimeout(window.voiceResizeTimeout);
+				window.voiceResizeTimeout = setTimeout(() => {
+					resizeVoiceCanvas();
+					requestAnimationFrame(() => {
+						requestAnimationFrame(() => {
+							box.style.transition = 'opacity 0.4s ease-in-out';
+							box.style.opacity = '1';
+						});
+					});
+				}, 1100);
+			}
 		});
 
 		function getFileCardHTML(name, size) {
-		    const ext = name.split('.').pop().toLowerCase();
-		    const visual = getFileIcon(ext);
-		    return `
+			const ext = name.split('.').pop().toLowerCase();
+			const visual = getFileIcon(ext);
+			return `
 		        <div class="bg-gray-100 rounded-2xl p-3 flex items-center gap-2 relative w-full min-h-[64px] border-none animate-in fade-in slide-in-from-bottom-1">
 		            <div class="w-10 h-10 flex-none flex items-center justify-center overflow-hidden shrink-0">${visual}</div>
 		            <div class="flex-1 flex flex-col justify-center min-w-0 h-10">
@@ -1266,16 +1488,16 @@
 		}
 
 		function appendMessageToUI(role, text, animate = true, isRawHtml = false, fileCardsHTML = "") {
-		    const isUser = role === 'user';
-		    const isError = role === 'error';
-		    const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-		    const nameLabel = isUser ? 'ANDA' : (isError ? 'SYSTEM ERROR' : 'ALISA');
-		    const nameColorClass = isUser ? 'text-slate-600' : (isError ? 'text-red-600' : 'text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500');
-		
-		    const div = document.createElement('div');
-		    div.className = `w-full ${animate ? 'animate-in fade-in slide-in-from-bottom-2 duration-300' : ''} mb-2`;
-		
-		    div.innerHTML = `
+			const isUser = role === 'user';
+			const isError = role === 'error';
+			const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+			const nameLabel = isUser ? 'ANDA' : (isError ? 'SYSTEM ERROR' : 'ALISA');
+			const nameColorClass = isUser ? 'text-slate-600' : (isError ? 'text-red-600' : 'text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500');
+
+			const div = document.createElement('div');
+			div.className = `w-full ${animate ? 'animate-in fade-in slide-in-from-bottom-2 duration-300' : ''} mb-2`;
+
+			div.innerHTML = `
 		        <div class="w-full bg-slate-50 rounded-2xl p-4 ${!isUser && !isError ? 'pb-6' : ''} shadow-sm border-none group relative">
 		            <div class="flex justify-between items-center border-b border-slate-100 pb-1 mb-0.5">
 		                <span class="text-xs font-black ${nameColorClass} uppercase tracking-widest">${nameLabel}</span>
@@ -1294,14 +1516,14 @@
 		            ` : ''}
 		        </div>
 		    `;
-		
-		    messagesArea.appendChild(div);
-		    lucide.createIcons();
-		    if (window.hljs) div.querySelectorAll('pre code').forEach(hljs.highlightElement);
-		    if (animate) scrollBottom(true, 'auto');
-		    resolveIdbImages(div, animate);
-		
-		    return div.querySelector('.prose-container');
+
+			messagesArea.appendChild(div);
+			lucide.createIcons();
+			if (window.hljs) div.querySelectorAll('pre code').forEach(hljs.highlightElement);
+			if (animate) scrollBottom(true, 'auto');
+			resolveIdbImages(div, animate);
+
+			return div.querySelector('.prose-container');
 		}
 
 		function resolveIdbImages(container, animate = false) {
@@ -1418,141 +1640,141 @@
 			}
 			lucide.createIcons();
 		}
-		
+
 		function formatBytes(bytes, decimals = 2) {
-		    if (bytes === 0) return '0 Bytes';
-		    const k = 1024;
-		    const dm = decimals < 0 ? 0 : decimals;
-		    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-		    const i = Math.floor(Math.log(bytes) / Math.log(k));
-		    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+			if (bytes === 0) return '0 Bytes';
+			const k = 1024;
+			const dm = decimals < 0 ? 0 : decimals;
+			const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+			const i = Math.floor(Math.log(bytes) / Math.log(k));
+			return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 		}
-		
+
 		function getFileIcon(extension) {
-		    const icons = {
-		        'pdf': 'pdf-file-icon.svg',
-		        'docx': 'docx-file-icon.svg',
-		        'xlsx': 'excel-file-icon.svg',
-		        'xls': 'excel-file-icon.svg',
-		        'pptx': 'ppt-file-icon.svg',
-		        'js': 'javascript-file-icon.svg',
-		        'css': 'css-file-icon.svg',
-		        'java': 'java-file-icon.svg',
-		        'html': 'html-file-icon.svg',
-		        'xml': 'xml-file-icon.svg',
-		        'py': 'python-file-icon.svg',
-		        'sql': 'sql-file-icon.svg',
-		        'ts': 'typescript-file-icon.svg',
-		        'lua': 'lua-file-icon.svg',
-		        'cpp': 'cpp-file-icon.svg',
-		        'h': 'cpp-file-icon.svg',
-		        'hpp': 'cpp-file-icon.svg',
-		        'swift': 'swift-file-icon.svg',
-		        'jpg': 'image-file-icon.svg',
-		        'jpeg': 'image-file-icon.svg',
-		        'png': 'image-file-icon.svg',
-		        'gif': 'image-file-icon.svg',
-		        'webp': 'image-file-icon.svg',
-		        'heic': 'image-file-icon.svg',
-		        'heif': 'image-file-icon.svg'
-		    };
-		    const iconFile = icons[extension] || 'default-file-icon.svg';
-		    return `<img src="icon/${iconFile}" class="w-7 h-7 object-contain">`;
+			const icons = {
+				'pdf': 'pdf-file-icon.svg',
+				'docx': 'docx-file-icon.svg',
+				'xlsx': 'excel-file-icon.svg',
+				'xls': 'excel-file-icon.svg',
+				'pptx': 'ppt-file-icon.svg',
+				'js': 'javascript-file-icon.svg',
+				'css': 'css-file-icon.svg',
+				'java': 'java-file-icon.svg',
+				'html': 'html-file-icon.svg',
+				'xml': 'xml-file-icon.svg',
+				'py': 'python-file-icon.svg',
+				'sql': 'sql-file-icon.svg',
+				'ts': 'typescript-file-icon.svg',
+				'lua': 'lua-file-icon.svg',
+				'cpp': 'cpp-file-icon.svg',
+				'h': 'cpp-file-icon.svg',
+				'hpp': 'cpp-file-icon.svg',
+				'swift': 'swift-file-icon.svg',
+				'jpg': 'image-file-icon.svg',
+				'jpeg': 'image-file-icon.svg',
+				'png': 'image-file-icon.svg',
+				'gif': 'image-file-icon.svg',
+				'webp': 'image-file-icon.svg',
+				'heic': 'image-file-icon.svg',
+				'heif': 'image-file-icon.svg'
+			};
+			const iconFile = icons[extension] || 'default-file-icon.svg';
+			return `<img src="icon/${iconFile}" class="w-7 h-7 object-contain">`;
 		}
-		
+
 		function convertToBase64(file) {
-		    return new Promise((resolve, reject) => {
-		        const reader = new FileReader();
-		        reader.readAsDataURL(file);
-		        reader.onload = () => resolve(reader.result);
-		        reader.onerror = error => reject(error);
-		    });
+			return new Promise((resolve, reject) => {
+				const reader = new FileReader();
+				reader.readAsDataURL(file);
+				reader.onload = () => resolve(reader.result);
+				reader.onerror = error => reject(error);
+			});
 		}
-		
+
 		async function extractTextFromOffice(file) {
-		    const ext = file.name.split('.').pop().toLowerCase();
-		    try {
-		        if (ext === 'docx') {
-		            const ab = await file.rawFile.arrayBuffer();
-		            const res = await mammoth.extractRawText({ arrayBuffer: ab });
-		            return `\n[FILE WORD: ${file.name}]\n${res.value}\n`;
-		        }
-		        if (['xlsx', 'xls'].includes(ext)) {
-		            const ab = await file.rawFile.arrayBuffer();
-		            const wb = XLSX.read(ab, { type: 'array' });
-		            const text = wb.SheetNames.map(n => `\n-- Sheet: ${n} --\n${XLSX.utils.sheet_to_csv(wb.Sheets[n])}`).join('');
-		            return `\n[FILE EXCEL: ${file.name}]\n${text}\n`;
-		        }
-		        if (ext === 'pptx') {
-		            const zip = new JSZip();
-		            const content = await zip.loadAsync(file.rawFile);
-		            let text = `\n[FILE POWERPOINT: ${file.name}]\n`;
-		            const slides = Object.keys(content.files).filter(n => n.startsWith("ppt/slides/slide") && n.endsWith(".xml")).sort();
-		            for (const f of slides) {
-		                const xml = await content.files[f].async("text");
-		                const nodes = new DOMParser().parseFromString(xml, "text/xml").getElementsByTagName("a:t");
-		                text += `\n[SLIDE]\n${Array.from(nodes).map(n => n.textContent).join(" ")}\n`;
-		            }
-		            return text;
-		        }
-		    } catch (e) { return `\n[Gagal membaca ${file.name}]\n`; }
-		    return '';
+			const ext = file.name.split('.').pop().toLowerCase();
+			try {
+				if (ext === 'docx') {
+					const ab = await file.rawFile.arrayBuffer();
+					const res = await mammoth.extractRawText({ arrayBuffer: ab });
+					return `\n[FILE WORD: ${file.name}]\n${res.value}\n`;
+				}
+				if (['xlsx', 'xls'].includes(ext)) {
+					const ab = await file.rawFile.arrayBuffer();
+					const wb = XLSX.read(ab, { type: 'array' });
+					const text = wb.SheetNames.map(n => `\n-- Sheet: ${n} --\n${XLSX.utils.sheet_to_csv(wb.Sheets[n])}`).join('');
+					return `\n[FILE EXCEL: ${file.name}]\n${text}\n`;
+				}
+				if (ext === 'pptx') {
+					const zip = new JSZip();
+					const content = await zip.loadAsync(file.rawFile);
+					let text = `\n[FILE POWERPOINT: ${file.name}]\n`;
+					const slides = Object.keys(content.files).filter(n => n.startsWith("ppt/slides/slide") && n.endsWith(".xml")).sort();
+					for (const f of slides) {
+						const xml = await content.files[f].async("text");
+						const nodes = new DOMParser().parseFromString(xml, "text/xml").getElementsByTagName("a:t");
+						text += `\n[SLIDE]\n${Array.from(nodes).map(n => n.textContent).join(" ")}\n`;
+					}
+					return text;
+				}
+			} catch (e) { return `\n[Gagal membaca ${file.name}]\n`; }
+			return '';
 		}
-		
+
 		async function readCodeFile(file) {
-		    try {
-		        const text = await file.rawFile.text();
-		        return `\n[ISI FILE ${file.name.toUpperCase()}]:\n${text}\n`;
-		    } catch (e) { return `\n[Gagal membaca isi file ${file.name}]\n`; }
+			try {
+				const text = await file.rawFile.text();
+				return `\n[ISI FILE ${file.name.toUpperCase()}]:\n${text}\n`;
+			} catch (e) { return `\n[Gagal membaca isi file ${file.name}]\n`; }
 		}
-		
+
 		async function handleFileSelect(event) {
-		    const files = Array.from(event.target.files);
-		    if (!files.length) return;
-		    if (pendingFiles.length + files.length > 4) {
-		        alert("Maksimal 4 file dalam satu pengiriman.");
-		        event.target.value = '';
-		        return;
-		    }
-		    try {
-		        for (const file of files) {
-		            const base64 = await convertToBase64(file);
-		            let mimeType = file.type || '';
-		            const ext = file.name ? file.name.split('.').pop().toLowerCase() : '';
-		            if (!mimeType && ['jpg', 'jpeg', 'png', 'gif', 'webp', 'heic', 'heif'].includes(ext)) {
-		                mimeType = 'image/jpeg';
-		            }
-		            pendingFiles.push({
-		                name: file.name || "File",
-		                size: formatBytes(file.size),
-		                type: mimeType,
-		                base64: base64.split(',')[1],
-		                mime: mimeType,
-		                rawFile: file
-		            });
-		        }
-		    } catch (e) {
-		        console.error(e);
-		    } finally {
-		        renderPreviews();
-		        event.target.value = '';
-		    }
+			const files = Array.from(event.target.files);
+			if (!files.length) return;
+			if (pendingFiles.length + files.length > 4) {
+				alert("Maksimal 4 file dalam satu pengiriman.");
+				event.target.value = '';
+				return;
+			}
+			try {
+				for (const file of files) {
+					const base64 = await convertToBase64(file);
+					let mimeType = file.type || '';
+					const ext = file.name ? file.name.split('.').pop().toLowerCase() : '';
+					if (!mimeType && ['jpg', 'jpeg', 'png', 'gif', 'webp', 'heic', 'heif'].includes(ext)) {
+						mimeType = 'image/jpeg';
+					}
+					pendingFiles.push({
+						name: file.name || "File",
+						size: formatBytes(file.size),
+						type: mimeType,
+						base64: base64.split(',')[1],
+						mime: mimeType,
+						rawFile: file
+					});
+				}
+			} catch (e) {
+				console.error(e);
+			} finally {
+				renderPreviews();
+				event.target.value = '';
+			}
 		}
-		
+
 		function renderPreviews() {
-		    const container = document.getElementById('file-preview-container');
-		    if (!container) return;
-		    container.innerHTML = '';
-		    pendingFiles.forEach((file, index) => {
-		        const ext = file.name ? file.name.split('.').pop().toLowerCase() : '';
-		        const isImage = (file.type && typeof file.type === 'string' && file.type.startsWith('image/')) || 
-		                        ['jpg', 'jpeg', 'png', 'gif', 'webp', 'heic', 'heif'].includes(ext);
-		        const visual = isImage 
-		            ? `<img src="data:${file.mime || 'image/jpeg'};base64,${file.base64}" class="w-full h-full object-cover rounded-lg">` 
-		            : getFileIcon(ext);
-		        const card = document.createElement('div');
-		        card.className = "bg-gray-100 rounded-2xl p-3 flex items-center gap-2 relative w-full min-h-[64px] border-none";
-		        card.innerHTML = `
+			const container = document.getElementById('file-preview-container');
+			if (!container) return;
+			container.innerHTML = '';
+			pendingFiles.forEach((file, index) => {
+				const ext = file.name ? file.name.split('.').pop().toLowerCase() : '';
+				const isImage = (file.type && typeof file.type === 'string' && file.type.startsWith('image/')) ||
+					['jpg', 'jpeg', 'png', 'gif', 'webp', 'heic', 'heif'].includes(ext);
+				const visual = isImage
+					? `<img src="data:${file.mime || 'image/jpeg'};base64,${file.base64}" class="w-full h-full object-cover rounded-lg">`
+					: getFileIcon(ext);
+				const card = document.createElement('div');
+				card.className = "bg-gray-100 rounded-2xl p-3 flex items-center gap-2 relative w-full min-h-[64px] border-none";
+				card.innerHTML = `
 		            <div class="w-10 h-10 flex-none flex items-center justify-center overflow-hidden shrink-0">${visual}</div>
 		            <div class="flex-1 flex flex-col justify-center min-w-0 h-10">
 		                <p class="text-[12px] font-bold text-gray-700 truncate leading-none mb-1 m-0 p-0">${file.name}</p>
@@ -1561,13 +1783,13 @@
 		            <button onclick="removeFile(${index})" class="absolute -top-3 -right-3 w-7 h-7 flex items-center justify-center border-none p-0 cursor-pointer outline-none bg-transparent">
 		                <svg fill="#d1d5db" viewBox="0 0 24 24" class="w-full h-full"><path d="M12 4c-4.419 0-8 3.582-8 8s3.581 8 8 8 8-3.582 8-8-3.581-8-8-8zm3.707 10.293c.391.391.391 1.023 0 1.414-.195.195-.451.293-.707.293s-.512-.098-.707-.293l-2.293-2.293-2.293 2.293c-.195.195-.451.293-.707.293s-.512-.098-.707-.293c-.391-.391-.391-1.023 0-1.414l2.293-2.293-2.293-2.293c-.391-.391-.391-1.023 0-1.414s1.023-.391 1.414 0l2.293 2.293 2.293-2.293c.391-.391 1.023-.391 1.414 0s.391 1.023 0 1.414l-2.293 2.293 2.293 2.293z"></path></svg>
 		            </button>`;
-		        container.appendChild(card);
-		    });
+				container.appendChild(card);
+			});
 		}
-		
+
 		function removeFile(index) {
-		    pendingFiles.splice(index, 1);
-		    renderPreviews();
+			pendingFiles.splice(index, 1);
+			renderPreviews();
 		}
 
 		async function generateImage(prompt, targetContainer = null) {
@@ -1751,7 +1973,7 @@
 				}
 			}
 		}
-		
+
 		async function uploadImageToSupabase(base64Data, fileName, mimeType) {
 			const byteCharacters = atob(base64Data);
 			const byteNumbers = new Array(byteCharacters.length);
@@ -1826,19 +2048,19 @@
 		});
 
 		function toggleSidebar(show) {
-		    if (show) {
-		        if (document.activeElement && (document.activeElement.tagName === 'TEXTAREA' || document.activeElement.tagName === 'INPUT')) {
-		            document.activeElement.blur();
-		        }
-		        
-		        sidebar.classList.remove('-translate-x-full');
-		        overlay.classList.remove('hidden');
-		        setTimeout(() => overlay.classList.remove('opacity-0'), 10);
-		    } else {
-		        sidebar.classList.add('-translate-x-full');
-		        overlay.classList.add('opacity-0');
-		        setTimeout(() => overlay.classList.add('hidden'), 300);
-		    }
+			if (show) {
+				if (document.activeElement && (document.activeElement.tagName === 'TEXTAREA' || document.activeElement.tagName === 'INPUT')) {
+					document.activeElement.blur();
+				}
+
+				sidebar.classList.remove('-translate-x-full');
+				overlay.classList.remove('hidden');
+				setTimeout(() => overlay.classList.remove('opacity-0'), 10);
+			} else {
+				sidebar.classList.add('-translate-x-full');
+				overlay.classList.add('opacity-0');
+				setTimeout(() => overlay.classList.add('hidden'), 300);
+			}
 		}
 
 		if (menuBtn) {
@@ -1930,70 +2152,70 @@
 		let swipeOpenId = null;
 
 		function loadSidebarHistory() {
-		    const sessions = getAllSessions();
-		    sessions.sort((a, b) => b.timestamp - a.timestamp);
-		
-		    if (!historyListEl) return;
-		    historyListEl.innerHTML = '';
-		
-		    if (sessions.length === 0) {
-		        historyListEl.innerHTML = '<div class="text-center text-xs text-slate-400 mt-4">Belum ada riwayat.</div>';
-		        return;
-		    }
-		
-		    const groups = {
-		        'Hari Ini': [],
-		        'Kemarin': [],
-		        '7 Hari Terakhir': [],
-		        'Bulan Ini': [],
-		        'Lebih Lama': []
-		    };
-		
-		    const now = new Date();
-		    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-		    const yesterday = new Date(today);
-		    yesterday.setDate(yesterday.getDate() - 1);
-		    const last7Days = new Date(today);
-		    last7Days.setDate(last7Days.getDate() - 7);
-		    const thisMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-		
-		    sessions.forEach(session => {
-		        const date = new Date(session.timestamp);
-		        const compareDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-		
-		        if (compareDate.getTime() === today.getTime()) {
-		            groups['Hari Ini'].push(session);
-		        } else if (compareDate.getTime() === yesterday.getTime()) {
-		            groups['Kemarin'].push(session);
-		        } else if (date >= last7Days) {
-		            groups['7 Hari Terakhir'].push(session);
-		        } else if (date >= thisMonth) {
-		            groups['Bulan Ini'].push(session);
-		        } else {
-		            groups['Lebih Lama'].push(session);
-		        }
-		    });
-		
-		    Object.entries(groups).forEach(([label, groupSessions]) => {
-		        if (groupSessions.length > 0) {
-		            const groupDiv = document.createElement('div');
-		            groupDiv.className = "mb-1";
-		
-		            const header = document.createElement('h3');
-		            header.className = "px-3 text-[11px] font-black text-slate-300 mb-0.5 uppercase tracking-tighter";
-		            header.innerText = label;
-		            groupDiv.appendChild(header);
-		
-		            const listDiv = document.createElement('div');
-		            listDiv.className = "space-y-0";
-		
-		            groupSessions.forEach(session => {
-		                const isActive = session.id === currentSessionId;
-		                const item = document.createElement('div');
-		                item.className = "w-full h-[32px] relative overflow-hidden select-none";
-		
-		                const itemId = session.id;
-		                item.innerHTML = `
+			const sessions = getAllSessions();
+			sessions.sort((a, b) => b.timestamp - a.timestamp);
+
+			if (!historyListEl) return;
+			historyListEl.innerHTML = '';
+
+			if (sessions.length === 0) {
+				historyListEl.innerHTML = '<div class="text-center text-xs text-slate-400 mt-4">Belum ada riwayat.</div>';
+				return;
+			}
+
+			const groups = {
+				'Hari Ini': [],
+				'Kemarin': [],
+				'7 Hari Terakhir': [],
+				'Bulan Ini': [],
+				'Lebih Lama': []
+			};
+
+			const now = new Date();
+			const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+			const yesterday = new Date(today);
+			yesterday.setDate(yesterday.getDate() - 1);
+			const last7Days = new Date(today);
+			last7Days.setDate(last7Days.getDate() - 7);
+			const thisMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+
+			sessions.forEach(session => {
+				const date = new Date(session.timestamp);
+				const compareDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+				if (compareDate.getTime() === today.getTime()) {
+					groups['Hari Ini'].push(session);
+				} else if (compareDate.getTime() === yesterday.getTime()) {
+					groups['Kemarin'].push(session);
+				} else if (date >= last7Days) {
+					groups['7 Hari Terakhir'].push(session);
+				} else if (date >= thisMonth) {
+					groups['Bulan Ini'].push(session);
+				} else {
+					groups['Lebih Lama'].push(session);
+				}
+			});
+
+			Object.entries(groups).forEach(([label, groupSessions]) => {
+				if (groupSessions.length > 0) {
+					const groupDiv = document.createElement('div');
+					groupDiv.className = "mb-1";
+
+					const header = document.createElement('h3');
+					header.className = "px-3 text-[11px] font-black text-slate-300 mb-0.5 uppercase tracking-tighter";
+					header.innerText = label;
+					groupDiv.appendChild(header);
+
+					const listDiv = document.createElement('div');
+					listDiv.className = "space-y-0";
+
+					groupSessions.forEach(session => {
+						const isActive = session.id === currentSessionId;
+						const item = document.createElement('div');
+						item.className = "w-full h-[32px] relative overflow-hidden select-none";
+
+						const itemId = session.id;
+						item.innerHTML = `
 		                    <div class="absolute inset-y-0.5 right-1 w-[45px] bg-red-50 rounded-lg flex items-center justify-center z-0" 
 		                        onclick="deleteSession('${itemId}', event)">
 		                        <i data-lucide="trash-2" class="w-3.5 h-3.5 text-red-500"></i>
@@ -2011,28 +2233,28 @@
 		                            </span>
 		                    </div>
 		                `;
-		                listDiv.appendChild(item);
-		            });
-		
-		            groupDiv.appendChild(listDiv);
-		            historyListEl.appendChild(groupDiv);
-		        }
-		    });
-		
-		    lucide.createIcons();
-			
-			document.querySelectorAll('.dropdown-option').forEach(option => {
-			    option.addEventListener('click', function() {
-			        currentSelectedModel = this.getAttribute('data-value');
-			        document.getElementById('selected-model-text').innerText = this.innerText;
-			        document.getElementById('dropdown-menu').classList.add('hidden');
-			        document.getElementById('dropdown-icon').style.transform = 'rotate(0deg)';
-			    });
+						listDiv.appendChild(item);
+					});
+
+					groupDiv.appendChild(listDiv);
+					historyListEl.appendChild(groupDiv);
+				}
 			});
-		
-			document.getElementById('settings-thinking').addEventListener('input', function() {
-			    const labels = ["LOW", "MEDIUM", "HIGH"];
-			    document.getElementById('label-thinking').innerText = labels[this.value - 1];
+
+			lucide.createIcons();
+
+			document.querySelectorAll('.dropdown-option').forEach(option => {
+				option.addEventListener('click', function () {
+					currentSelectedModel = this.getAttribute('data-value');
+					document.getElementById('selected-model-text').innerText = this.innerText;
+					document.getElementById('dropdown-menu').classList.add('hidden');
+					document.getElementById('dropdown-icon').style.transform = 'rotate(0deg)';
+				});
+			});
+
+			document.getElementById('settings-thinking').addEventListener('input', function () {
+				const labels = ["LOW", "MEDIUM", "HIGH"];
+				document.getElementById('label-thinking').innerText = labels[this.value - 1];
 			});
 		}
 
@@ -2192,518 +2414,629 @@
 				swipeOpenId = null;
 			}
 		});
-		
+
 		function openVoiceMode() {
-		    const screen = document.getElementById('voiceScreen');
-		    if (!screen) return;
-		    
-		    isAISpeaking = false;
-		    voiceNextTime = 0;
-		    voiceInterrupted = false;
-		    activeVoiceSources = [];
-		    energyCounter = 0;
-		    
-		    screen.classList.remove('hidden');
-		    screen.classList.add('flex');
-		
-		    setTimeout(() => {
-		        resizeVoiceCanvas();
-		        initVoiceSession();
-		    }, 200);
+			const screen = document.getElementById('voiceScreen');
+			if (!screen) return;
+
+			isAISpeaking = false;
+			voiceNextTime = 0;
+			voiceInterrupted = false;
+			activeVoiceSources = [];
+			energyCounter = 0;
+
+			screen.classList.remove('hidden');
+			screen.classList.add('flex');
+
+			setTimeout(() => {
+				resizeVoiceCanvas();
+				initVoiceSession();
+			}, 200);
 		}
-				
+
 		async function initVoiceAudio() {
-		    if (voiceInCtx) await voiceInCtx.close();
-		    if (voiceOutCtx) await voiceOutCtx.close();
-		
-		    voiceInCtx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 16000 });
-		    voiceOutCtx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 24000 });
-		    
-		    await voiceInCtx.resume();
-		    await voiceOutCtx.resume();
-		    
-		    aiAnalyser = voiceOutCtx.createAnalyser();
-		    aiAnalyser.fftSize = 1024;
-		    aiAnalyser.connect(voiceOutCtx.destination);
-		    
-		    try {
-		        if (voiceStream) {
-		            voiceStream.getTracks().forEach(t => t.stop());
-		        }
-		        
-		        voiceStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-		        const source = voiceInCtx.createMediaStreamSource(voiceStream);
-		        
-		        voiceAnalyser = voiceInCtx.createAnalyser();
-		        voiceAnalyser.fftSize = 1024;
-		        voiceDataArray = new Uint8Array(voiceAnalyser.frequencyBinCount);
-		        source.connect(voiceAnalyser);
-		
-		        const workletJS = `
+			if (voiceInCtx) await voiceInCtx.close();
+			if (voiceOutCtx) await voiceOutCtx.close();
+
+			voiceInCtx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 16000 });
+			voiceOutCtx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 24000 });
+
+			await voiceInCtx.resume();
+			await voiceOutCtx.resume();
+
+			aiAnalyser = voiceOutCtx.createAnalyser();
+			aiAnalyser.fftSize = 1024;
+			aiAnalyser.connect(voiceOutCtx.destination);
+
+			try {
+				if (voiceStream) {
+					voiceStream.getTracks().forEach(t => t.stop());
+				}
+
+				voiceStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+				const source = voiceInCtx.createMediaStreamSource(voiceStream);
+
+				voiceAnalyser = voiceInCtx.createAnalyser();
+				voiceAnalyser.fftSize = 1024;
+				voiceDataArray = new Uint8Array(voiceAnalyser.frequencyBinCount);
+				source.connect(voiceAnalyser);
+
+				const workletJS = `
 		            class P extends AudioWorkletProcessor {
 		                process(inputs) { if (inputs[0][0]) this.port.postMessage(inputs[0][0]); return true; }
 		            }; registerProcessor('p', P);
 		        `;
-		        const url = 'data:application/javascript,' + encodeURIComponent(workletJS);
-		        await voiceInCtx.audioWorklet.addModule(url);
-		
-		        const node = new AudioWorkletNode(voiceInCtx, 'p');
-		        node.port.onmessage = (e) => {
-		            if (voiceWs && voiceWs.readyState === WebSocket.OPEN) {
-		                let sum = 0;
-		                for (let i = 0; i < e.data.length; i++) sum += Math.abs(e.data[i]);
-		                let energy = sum / e.data.length;
-		
-		                if (isAISpeaking && energy > 0.04) {
-		                    energyCounter++;
-		                    if (energyCounter > 8) {
-		                        interruptVoice();
-		                        energyCounter = 0;
-		                    }
-		                } else { energyCounter = 1; }
-		
-		                if (energy > 0.01 && voiceInterrupted) {
-		                    voiceInterrupted = false;
-		                    voiceSessionId++;
-		                }
-		
-		                if (!voiceInterrupted && !isAISpeaking) {
-		                    const int16 = new Int16Array(e.data.length);
-		                    for (let i = 0; i < e.data.length; i++) int16[i] = e.data[i] * 0x7FFF;
-		                    voiceWs.send(JSON.stringify({
-		                        type: 'audio',
-		                        data: {
-		                            data: btoa(String.fromCharCode(...new Uint8Array(int16.buffer))),
-		                            mimeType: 'audio/pcm;rate=16000'
-		                        }
-		                    }));
-		                }
-		            }
-		        };
-		        source.connect(node);
-		    } catch (err) {
-		        alert("Gagal akses mikrofon");
-		    }
+				const url = 'data:application/javascript,' + encodeURIComponent(workletJS);
+				await voiceInCtx.audioWorklet.addModule(url);
+
+				const node = new AudioWorkletNode(voiceInCtx, 'p');
+				node.port.onmessage = (e) => {
+					if (voiceWs && voiceWs.readyState === WebSocket.OPEN) {
+						let sum = 0;
+						for (let i = 0; i < e.data.length; i++) sum += Math.abs(e.data[i]);
+						let energy = sum / e.data.length;
+
+						if (isAISpeaking && energy > 0.04) {
+							energyCounter++;
+							if (energyCounter > 8) {
+								interruptVoice();
+								energyCounter = 0;
+							}
+						} else { energyCounter = 1; }
+
+						if (energy > 0.01 && voiceInterrupted) {
+							voiceInterrupted = false;
+							voiceSessionId++;
+						}
+
+						if (!voiceInterrupted && !isAISpeaking) {
+							const int16 = new Int16Array(e.data.length);
+							for (let i = 0; i < e.data.length; i++) int16[i] = e.data[i] * 0x7FFF;
+							voiceWs.send(JSON.stringify({
+								type: 'audio',
+								data: {
+									data: btoa(String.fromCharCode(...new Uint8Array(int16.buffer))),
+									mimeType: 'audio/pcm;rate=16000'
+								}
+							}));
+						}
+					}
+				};
+				source.connect(node);
+			} catch (err) {
+				alert("Gagal akses mikrofon");
+			}
 		}
-				
+
 		async function initVoiceSession() {
-		    if (voiceWs) {
-		        voiceWs.close();
-		        voiceWs = null;
-		    }
-		
-		    voiceNextTime = 0;
-		    voiceInterrupted = false;
-		    isAISpeaking = false;
-		    activeVoiceSources = [];
-		    energyCounter = 0;
-		    voiceSessionId = Date.now();
-		
-		    const historyContext = chatHistory.map(h => `${h.role === 'model' ? 'ALISA' : 'User'}: ${h.parts[0].text}`).slice(-6).join('\n');
-		    const fullPrompt = `${document.getElementById('systemPromptInput').value || MAIN_SYSTEM_PROMPT}\n\nKonteks Percakapan:\n${historyContext}`;
-		
-		    await initVoiceAudio();
-		
-		    try {
-		        voiceWs = new WebSocket('wss://gemini-proxy-408925499207.asia-southeast2.run.app');
-		        
-		        voiceWs.onopen = () => {
-		            startVoiceTimer();
-		            voiceWs.send(JSON.stringify({
-		                type: 'setup',
-		                config: {
-		                    responseModalities: ['AUDIO'],
-		                    speechConfig: {
-		                        voiceConfig: {
-		                            prebuiltVoiceConfig: { voiceName: currentVoice }
-		                        }
-		                    },
-		                    systemInstruction: fullPrompt,
-		                    tools: [{ googleSearch: {} }]
-		                }
-		            }));
-		        };
-		
-		        voiceWs.onmessage = (e) => {
-		            if (!voiceWs || voiceInterrupted) return;
-		            const res = JSON.parse(e.data);
-		            if (res.type === 'gemini_msg') {
-		                const modelTurn = res.data.serverContent?.modelTurn;
-		                if (modelTurn && modelTurn.parts) {
-		                    modelTurn.parts.forEach(p => {
-		                        if (p.inlineData) {
-		                            isAISpeaking = true;
-		                            playVoiceAudio(p.inlineData.data, voiceSessionId);
-		                        }
-		                        if (p.text) syncVoiceToChat('assistant', p.text);
-		                    });
-		                }
-		            }
-		        };
-		
-		        voiceWs.onclose = () => {
-		            if (!document.getElementById('voiceScreen').classList.contains('hidden')) {
-		                console.log("Reconnecting voice...");
-		            }
-		        };
-		            
-		        startVoiceVisualizer();
-		        
-		    } catch (err) {
-		        closeVoiceMode();
-		    }
+			if (voiceWs) {
+				voiceWs.close();
+				voiceWs = null;
+			}
+
+			voiceNextTime = 0;
+			voiceInterrupted = false;
+			isAISpeaking = false;
+			activeVoiceSources = [];
+			energyCounter = 0;
+			voiceSessionId = Date.now();
+
+			const historyContext = chatHistory.map(h => `${h.role === 'model' ? 'ALISA' : 'User'}: ${h.parts[0].text}`).slice(-6).join('\n');
+			const fullPrompt = `${document.getElementById('systemPromptInput').value || MAIN_SYSTEM_PROMPT}\n\nKonteks Percakapan:\n${historyContext}`;
+
+			await initVoiceAudio();
+
+			try {
+				voiceWs = new WebSocket('wss://gemini-proxy-408925499207.asia-southeast2.run.app');
+
+				voiceWs.onopen = () => {
+					startVoiceTimer();
+					voiceWs.send(JSON.stringify({
+						type: 'setup',
+						config: {
+							responseModalities: ['AUDIO'],
+							speechConfig: {
+								voiceConfig: {
+									prebuiltVoiceConfig: { voiceName: currentVoice }
+								}
+							},
+							systemInstruction: fullPrompt,
+							tools: [{ googleSearch: {} }]
+						}
+					}));
+				};
+
+				voiceWs.onmessage = (e) => {
+					if (!voiceWs || voiceInterrupted) return;
+					const res = JSON.parse(e.data);
+					if (res.type === 'gemini_msg') {
+						const modelTurn = res.data.serverContent?.modelTurn;
+						if (modelTurn && modelTurn.parts) {
+							modelTurn.parts.forEach(p => {
+								if (p.inlineData) {
+									isAISpeaking = true;
+									playVoiceAudio(p.inlineData.data, voiceSessionId);
+								}
+								if (p.text) syncVoiceToChat('assistant', p.text);
+							});
+						}
+					}
+				};
+
+				voiceWs.onclose = () => {
+					if (!document.getElementById('voiceScreen').classList.contains('hidden')) {
+						console.log("Reconnecting voice...");
+					}
+				};
+
+				startVoiceVisualizer();
+
+			} catch (err) {
+				closeVoiceMode();
+			}
 		}
-		
+
 		function playVoiceAudio(base64, sid) {
-		    if (sid !== voiceSessionId || voiceInterrupted) return;
-		    const binary = atob(base64);
-		    const bytes = new Uint8Array(binary.length);
-		    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-		    const int16 = new Int16Array(bytes.buffer);
-		    const buf = voiceOutCtx.createBuffer(1, int16.length, 24000);
-		    const data = buf.getChannelData(0);
-		    for (let i = 0; i < int16.length; i++) data[i] = int16[i] / 32768.0;
-		    const source = voiceOutCtx.createBufferSource();
-		    source.buffer = buf;
-		    source.connect(aiAnalyser);
-		    const now = voiceOutCtx.currentTime;
-		    if (voiceNextTime < now) voiceNextTime = now;
-		    source.start(voiceNextTime);
-		    voiceNextTime += buf.duration;
-		    activeVoiceSources.push(source);
-		    source.onended = () => {
-		        activeVoiceSources = activeVoiceSources.filter(s => s !== source);
-		        if (activeVoiceSources.length === 0) isAISpeaking = false;
-		    };
+			if (sid !== voiceSessionId || voiceInterrupted) return;
+			const binary = atob(base64);
+			const bytes = new Uint8Array(binary.length);
+			for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+			const int16 = new Int16Array(bytes.buffer);
+			const buf = voiceOutCtx.createBuffer(1, int16.length, 24000);
+			const data = buf.getChannelData(0);
+			for (let i = 0; i < int16.length; i++) data[i] = int16[i] / 32768.0;
+			const source = voiceOutCtx.createBufferSource();
+			source.buffer = buf;
+			source.connect(aiAnalyser);
+			const now = voiceOutCtx.currentTime;
+			if (voiceNextTime < now) voiceNextTime = now;
+			source.start(voiceNextTime);
+			voiceNextTime += buf.duration;
+			activeVoiceSources.push(source);
+			source.onended = () => {
+				activeVoiceSources = activeVoiceSources.filter(s => s !== source);
+				if (activeVoiceSources.length === 0) isAISpeaking = false;
+			};
 		}
-		
+
 		function interruptVoice() {
-		    isAISpeaking = false;
-		    voiceInterrupted = true;
-		    voiceSessionId++;
-		    activeVoiceSources.forEach(s => { try { s.stop(); s.disconnect(); } catch(e){} });
-		    activeVoiceSources = [];
-		    if (voiceWs && voiceWs.readyState === WebSocket.OPEN) voiceWs.send(JSON.stringify({ type: 'cancel' }));
+			isAISpeaking = false;
+			voiceInterrupted = true;
+			voiceSessionId++;
+			activeVoiceSources.forEach(s => { try { s.stop(); s.disconnect(); } catch (e) { } });
+			activeVoiceSources = [];
+			if (voiceWs && voiceWs.readyState === WebSocket.OPEN) voiceWs.send(JSON.stringify({ type: 'cancel' }));
 		}
-		
+
 		function syncVoiceToChat(role, text) {
-		    const lastMsg = chatHistory[chatHistory.length - 1];
-		    if (lastMsg && lastMsg.role === (role === 'assistant' ? 'model' : 'user') && lastMsg._isVoice) {
-		        lastMsg.parts[0].text += " " + text;
-		    } else {
-		        chatHistory.push({ role: role === 'assistant' ? 'model' : 'user', parts: [{ text }], _isVoice: true });
-		        appendMessageToUI(role === 'assistant' ? 'model' : 'user', text);
-		    }
+			const lastMsg = chatHistory[chatHistory.length - 1];
+			if (lastMsg && lastMsg.role === (role === 'assistant' ? 'model' : 'user') && lastMsg._isVoice) {
+				lastMsg.parts[0].text += " " + text;
+			} else {
+				chatHistory.push({ role: role === 'assistant' ? 'model' : 'user', parts: [{ text }], _isVoice: true });
+				appendMessageToUI(role === 'assistant' ? 'model' : 'user', text);
+			}
 		}
-		
+
 		function startVoiceTimer() {
-		    let sec = 0;
-		    const el = document.getElementById('voice-timer');
-		    if (!el) return;
-		    clearInterval(voiceTimerInterval);
-		    voiceTimerInterval = setInterval(() => {
-		        sec++;
-		        const hrs = Math.floor(sec / 3600).toString().padStart(2, '0');
-		        const mins = Math.floor((sec % 3600) / 60).toString().padStart(2, '0');
-		        const secs = (sec % 60).toString().padStart(2, '0');
-		        if (el) el.innerText = `${hrs}:${mins}:${secs}`;
-		    }, 1000);
+			let sec = 0;
+			const el = document.getElementById('voice-timer');
+			if (!el) return;
+			clearInterval(voiceTimerInterval);
+			voiceTimerInterval = setInterval(() => {
+				sec++;
+				const hrs = Math.floor(sec / 3600).toString().padStart(2, '0');
+				const mins = Math.floor((sec % 3600) / 60).toString().padStart(2, '0');
+				const secs = (sec % 60).toString().padStart(2, '0');
+				if (el) el.innerText = `${hrs}:${mins}:${secs}`;
+			}, 1000);
 		}
-		
+
 		function closeVoiceMode() {
-		    if (voiceWs) { 
-		        voiceWs.onmessage = null; 
-		        voiceWs.close(); 
-		        voiceWs = null; 
-		    }
-		    if (voiceStream) { 
-		        voiceStream.getTracks().forEach(t => t.stop()); 
-		        voiceStream = null; 
-		    }
-		    if (voiceInCtx) { 
-		        voiceInCtx.close(); 
-		        voiceInCtx = null; 
-		    }
-		    if (voiceOutCtx) { 
-		        voiceOutCtx.close(); 
-		        voiceOutCtx = null; 
-		    }
-		    stopVoiceCamera();
-		    clearInterval(voiceTimerInterval);
-		    isAISpeaking = false;
-		    voiceInterrupted = false;
-		    activeVoiceSources = [];
-		    energyCounter = 0;
-		    
-		    const screen = document.getElementById('voiceScreen');
-		    if (screen) { 
-		        screen.classList.add('hidden'); 
-		        screen.classList.remove('flex'); 
-		    }
+			if (voiceWs) {
+				voiceWs.onmessage = null;
+				voiceWs.close();
+				voiceWs = null;
+			}
+			if (voiceStream) {
+				voiceStream.getTracks().forEach(t => t.stop());
+				voiceStream = null;
+			}
+			if (voiceInCtx) {
+				voiceInCtx.close();
+				voiceInCtx = null;
+			}
+			if (voiceOutCtx) {
+				voiceOutCtx.close();
+				voiceOutCtx = null;
+			}
+			stopVoiceCamera();
+			clearInterval(voiceTimerInterval);
+			isAISpeaking = false;
+			voiceInterrupted = false;
+			activeVoiceSources = [];
+			energyCounter = 0;
+
+			const screen = document.getElementById('voiceScreen');
+			if (screen) {
+				screen.classList.add('hidden');
+				screen.classList.remove('flex');
+			}
 		}
-		
+
 		async function switchCamera() {
-		    if (!isVoiceCamOn) return;
-		    facingMode = (facingMode === 'user') ? 'environment' : 'user';
-		    if (voiceCamStream) voiceCamStream.getTracks().forEach(t => t.stop());
-		    isVoiceCamOn = false;
-		    await toggleVoiceCamera();
+			if (!isVoiceCamOn) return;
+			facingMode = (facingMode === 'user') ? 'environment' : 'user';
+			if (voiceCamStream) voiceCamStream.getTracks().forEach(t => t.stop());
+			isVoiceCamOn = false;
+			await toggleVoiceCamera();
 		}
-		
+
 		async function toggleVoiceCamera() {
-		    const btn = document.getElementById('cameraToggleBtn');
-		    const video = document.getElementById('voice-large-video');
-		    const canvas = document.getElementById('voice-canvas');
-		    const box = document.getElementById('voice-visual-box');
-		
-		    if (!isVoiceCamOn) {
-		        try {
-		            voiceCamStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode } });
-		            video.srcObject = voiceCamStream;
-		            video.classList.remove('hidden');
-		            canvas.classList.add('hidden');
-		            box.classList.add('shadow-xl', 'rounded-[2rem]');
-		            isVoiceCamOn = true;
-		            btn.classList.replace('text-slate-500', 'text-blue-600');
-		            if (voiceCamInterval) clearInterval(voiceCamInterval);
-		            voiceCamInterval = setInterval(sendVoiceFrame, 1000);
-		        } catch (e) { alert("Gagal Kamera"); }
-		    } else { stopVoiceCamera(); }
+			const btn = document.getElementById('cameraToggleBtn');
+			const video = document.getElementById('voice-large-video');
+			const canvas = document.getElementById('voice-canvas');
+			const box = document.getElementById('voice-visual-box');
+
+			if (!isVoiceCamOn) {
+				try {
+					voiceCamStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode } });
+					video.srcObject = voiceCamStream;
+					video.classList.remove('hidden');
+					canvas.classList.add('hidden');
+					box.classList.add('shadow-xl', 'rounded-[2rem]');
+					isVoiceCamOn = true;
+					btn.classList.replace('text-slate-500', 'text-blue-600');
+					if (voiceCamInterval) clearInterval(voiceCamInterval);
+					voiceCamInterval = setInterval(sendVoiceFrame, 1000);
+				} catch (e) { alert("Gagal Kamera"); }
+			} else { stopVoiceCamera(); }
 		}
-		
+
 		function stopVoiceCamera() {
-		    if (voiceCamStream) voiceCamStream.getTracks().forEach(t => t.stop());
-		    clearInterval(voiceCamInterval);
-		    const btn = document.getElementById('cameraToggleBtn');
-		    const box = document.getElementById('voice-visual-box');
-		    if (btn) btn.classList.replace('text-blue-600', 'text-slate-500');
-		    document.getElementById('voice-large-video').classList.add('hidden');
-		    document.getElementById('voice-canvas').classList.remove('hidden');
-		    box.classList.remove('shadow-xl', 'rounded-[2rem]');
-		    isVoiceCamOn = false;
+			if (voiceCamStream) voiceCamStream.getTracks().forEach(t => t.stop());
+			clearInterval(voiceCamInterval);
+			const btn = document.getElementById('cameraToggleBtn');
+			const box = document.getElementById('voice-visual-box');
+			if (btn) btn.classList.replace('text-blue-600', 'text-slate-500');
+			document.getElementById('voice-large-video').classList.add('hidden');
+			document.getElementById('voice-canvas').classList.remove('hidden');
+			box.classList.remove('shadow-xl', 'rounded-[2rem]');
+			isVoiceCamOn = false;
 		}
-		
+
 		function sendVoiceFrame() {
-		    if (voiceWs && voiceWs.readyState === WebSocket.OPEN && isVoiceCamOn) {
-		        const video = document.getElementById('voice-large-video');
-		        const frameCanvas = document.getElementById('voice-frame-canvas');
-		        const ctx = frameCanvas.getContext('2d');
-		        if (video.videoWidth > 0) {
-		            frameCanvas.width = 320;
-		            frameCanvas.height = (video.videoHeight / video.videoWidth) * 320;
-		            ctx.drawImage(video, 0, 0, frameCanvas.width, frameCanvas.height);
-		            const base64 = frameCanvas.toDataURL('image/jpeg', 0.5).split(',')[1];
-		            voiceWs.send(JSON.stringify({ type: 'image', data: { mimeType: "image/jpeg", data: base64 } }));
-		        }
-		    }
+			if (voiceWs && voiceWs.readyState === WebSocket.OPEN && isVoiceCamOn) {
+				const video = document.getElementById('voice-large-video');
+				const frameCanvas = document.getElementById('voice-frame-canvas');
+				const ctx = frameCanvas.getContext('2d');
+				if (video.videoWidth > 0) {
+					frameCanvas.width = 320;
+					frameCanvas.height = (video.videoHeight / video.videoWidth) * 320;
+					ctx.drawImage(video, 0, 0, frameCanvas.width, frameCanvas.height);
+					const base64 = frameCanvas.toDataURL('image/jpeg', 0.5).split(',')[1];
+					voiceWs.send(JSON.stringify({ type: 'image', data: { mimeType: "image/jpeg", data: base64 } }));
+				}
+			}
 		}
-		
+
 		function resizeVoiceCanvas() {
-		    const canvas = document.getElementById('voice-canvas');
-		    const container = document.getElementById('voice-visual-box');
-		    if (!canvas || !container) return;
-		    
-		    const dpr = window.devicePixelRatio || 1;
-		    const rect = container.getBoundingClientRect();
-		    
-		    const size = Math.min(rect.width, rect.height) * 0.82;
-		    
-		    canvas.style.width = size + 'px';
-		    canvas.style.height = size + 'px';
-		    canvas.width = size * dpr;
-		    canvas.height = size * dpr;
+			const canvas = document.getElementById('voice-canvas');
+			const container = document.getElementById('voice-visual-box');
+			if (!canvas || !container) return;
+
+			const dpr = window.devicePixelRatio || 1;
+			const rect = container.getBoundingClientRect();
+
+			const size = Math.min(rect.width, rect.height) * 0.82;
+
+			canvas.style.width = size + 'px';
+			canvas.style.height = size + 'px';
+			canvas.width = size * dpr;
+			canvas.height = size * dpr;
 		}
-		
+
 		function startVoiceVisualizer() {
-		    const canvas = document.getElementById('voice-canvas');
-		    const ctx = canvas.getContext('2d');
-		    let currentVol = 0;
-		
-		    function draw() {
-		        if (document.getElementById('voiceScreen').classList.contains('hidden')) return;
-		        requestAnimationFrame(draw);
-		        
-		        const w = canvas.width, h = canvas.height;
-		        ctx.clearRect(0, 0, w, h);
-		
-		        const activeAn = isAISpeaking ? aiAnalyser : voiceAnalyser;
-		        if (!activeAn) return;
-		
-		        activeAn.getByteFrequencyData(voiceDataArray);
-		        
-		        let sum = 0;
-		        for (let i = 10; i < 150; i++) sum += voiceDataArray[i];
-		        let targetVol = sum / 140;
-		        
-		        currentVol += (targetVol - currentVol) * 0.1;
-		        
-		        const centerX = w / 2, centerY = h / 2;
-		        const baseRadius = Math.min(w, h) / 8;
-		        
-		        const maxRadius = (Math.min(w, h) / 2) - 20;
-		        
-		        let dynamicRadius = baseRadius + (currentVol * (maxRadius / 150));
-		        if (dynamicRadius > maxRadius) dynamicRadius = maxRadius;
-		        if (dynamicRadius < baseRadius) dynamicRadius = baseRadius;
-		
-		        ctx.beginPath();
-		        ctx.arc(centerX, centerY, dynamicRadius, 0, Math.PI * 2);
-		        
-		        const grad = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, dynamicRadius);
-		        grad.addColorStop(0, '#f8fafc');
-		        grad.addColorStop(0.8, '#f1f5f9');
-		        grad.addColorStop(1, '#e2e8f0');
-		        
-		        ctx.fillStyle = grad;
-		        ctx.shadowBlur = 40;
-		        ctx.shadowColor = 'rgba(0,0,0,0.04)';
-		        ctx.fill();
-		        
-		        ctx.strokeStyle = '#f1f5f9';
-		        ctx.lineWidth = 1.5;
-		        ctx.stroke();
-		    }
-		    draw();
+			const canvas = document.getElementById('voice-canvas');
+			const ctx = canvas.getContext('2d');
+			let currentVol = 0;
+
+			function draw() {
+				if (document.getElementById('voiceScreen').classList.contains('hidden')) return;
+				requestAnimationFrame(draw);
+
+				const w = canvas.width, h = canvas.height;
+				ctx.clearRect(0, 0, w, h);
+
+				const activeAn = isAISpeaking ? aiAnalyser : voiceAnalyser;
+				if (!activeAn) return;
+
+				activeAn.getByteFrequencyData(voiceDataArray);
+
+				let sum = 0;
+				for (let i = 10; i < 150; i++) sum += voiceDataArray[i];
+				let targetVol = sum / 140;
+
+				currentVol += (targetVol - currentVol) * 0.1;
+
+				const centerX = w / 2, centerY = h / 2;
+				const baseRadius = Math.min(w, h) / 8;
+
+				const maxRadius = (Math.min(w, h) / 2) - 20;
+
+				let dynamicRadius = baseRadius + (currentVol * (maxRadius / 150));
+				if (dynamicRadius > maxRadius) dynamicRadius = maxRadius;
+				if (dynamicRadius < baseRadius) dynamicRadius = baseRadius;
+
+				ctx.beginPath();
+				ctx.arc(centerX, centerY, dynamicRadius, 0, Math.PI * 2);
+
+				const grad = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, dynamicRadius);
+				grad.addColorStop(0, '#f8fafc');
+				grad.addColorStop(0.8, '#f1f5f9');
+				grad.addColorStop(1, '#e2e8f0');
+
+				ctx.fillStyle = grad;
+				ctx.shadowBlur = 40;
+				ctx.shadowColor = 'rgba(0,0,0,0.04)';
+				ctx.fill();
+
+				ctx.strokeStyle = '#f1f5f9';
+				ctx.lineWidth = 1.5;
+				ctx.stroke();
+			}
+			draw();
 		}
-		
+
 		async function init() {
-		    const loadingOverlay = document.getElementById('loadingOverlay');
-		    const { data: { session } } = await _supabase.auth.getSession();
-		
-		    if (!session) {
-		        if (loadingOverlay) loadingOverlay.remove();
-		        loginScreen.style.display = 'flex';
-		    } else {
-		        if (session.user && session.user.email) sidebarEmail.innerText = session.user.email;
-		        
-		        setTimeout(() => {
-		            if (loadingOverlay) {
-		                loadingOverlay.style.opacity = '0';
-		                loadingOverlay.style.visibility = 'hidden';
-		                
-		                setTimeout(() => {
-		                    showApp();
-		                    loadingOverlay.remove();
-		                }, 500);
-		            } else {
-		                showApp();
-		            }
-		        }, 2000);
-		    }
-		
-		    const savedLevel = localStorage.getItem('alisa_thinking') || "2";
-		    const savedPrompt = localStorage.getItem('alisa_prompt') || MAIN_SYSTEM_PROMPT;
-		    const savedModel = localStorage.getItem('alisa_model') || "gemini-3-flash-preview";
-		    const savedTemp = localStorage.getItem('alisa_temp') || "1.0";
-		    const savedTokens = localStorage.getItem('alisa_tokens') || "65536";
-		    const savedVoice = localStorage.getItem('alisa_voice') || "Kore";
-		
-		    document.getElementById('settings-thinking').value = savedLevel;
-		    document.getElementById('label-thinking').innerText = ["LOW", "MEDIUM", "HIGH"][savedLevel - 1];
-		    document.getElementById('systemPromptInput').value = savedPrompt;
-		    document.getElementById('settings-temp').value = savedTemp;
-		    document.getElementById('label-temp').innerText = savedTemp;
-		    document.getElementById('settings-tokens').value = savedTokens;
-		    document.getElementById('label-tokens').innerText = savedTokens;
-		    
-		    currentSelectedModel = savedModel;
-		    const modelMapping = {
-		        "gemini-2.5-pro": "Gemini 2.5 Pro",
-		        "gemini-2.5-flash": "Gemini 2.5 Flash",
-		        "gemini-2.5-flash-lite": "Gemini 2.5 Flash Lite",
-		        "gemini-3-flash-preview": "Gemini 3 Flash",
-		        "gemini-3-pro-preview": "Gemini 3 Pro",
-		        "gemini-3-deep-think-preview": "Gemini 3 Deep Think"
-		    };
-		    const modelLabelEl = document.getElementById('selected-model-text');
-		    if (modelLabelEl) modelLabelEl.innerText = modelMapping[savedModel] || "Gemini 3 Flash";
-		
-		    currentVoice = savedVoice;
-		    const voiceLabelEl = document.getElementById('selected-voice-text');
-		    if (voiceLabelEl) {
-		        const vMap = { "Kore": "Kore (Default)", "Aoede": "Aoede", "Zephyr": "Zephyr", "Leda": "Leda", "Fenrir": "Fenrir" };
-		        voiceLabelEl.innerText = vMap[savedVoice] || "Kore (Default)";
-		    }
-		
-		    document.getElementById('voice-trigger').onclick = (e) => {
-		        e.stopPropagation();
-		        const menu = document.getElementById('voice-menu');
-		        const icon = document.getElementById('voice-icon');
-		        const isHidden = menu.classList.toggle('hidden');
-		        if (icon) {
-		            icon.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(180deg)';
-		        }
-		    };
-		    
-		    document.querySelectorAll('.voice-option').forEach(opt => {
-		        opt.onclick = function(e) {
-		            e.stopPropagation();
-		            currentVoice = this.getAttribute('data-value');
-		            document.getElementById('selected-voice-text').innerText = this.innerText;
-		            document.getElementById('voice-menu').classList.add('hidden');
-		            saveAdminSettings();
-		        };
-		    });
-		
-		    document.getElementById('voiceBtn').onclick = openVoiceMode;
-		    document.getElementById('backFromVoice').onclick = closeVoiceMode;
-		    document.getElementById('endCallBtn').onclick = closeVoiceMode;
-		    document.getElementById('cameraToggleBtn').onclick = toggleVoiceCamera;
-		    document.getElementById('switchCameraBtn').onclick = switchCamera;
-		
-		    const savedActiveID = localStorage.getItem(ACTIVE_SESSION_KEY);
-		    if (savedActiveID) {
-		        currentSessionId = savedActiveID;
-		        loadSession(currentSessionId);
-		    } else {
-		        startNewSession();
-		    }
-		    
-		    loadSidebarHistory();
-		
-		    const chatContainer = document.getElementById('chatContainer');
-		    const adminScroller = document.getElementById('adminScroller');
-		    const historyList = document.getElementById('historyList');
-		
-		    const setupPreventStick = (el) => {
-		        if (!el) return;
-		        el.addEventListener('touchstart', () => {
-		            const top = el.scrollTop;
-		            const totalScroll = el.scrollHeight;
-		            const currentScroll = top + el.offsetHeight;
-		            if (top === 0) {
-		                el.scrollTop = 1;
-		            } else if (currentScroll >= totalScroll) {
-		                el.scrollTop = top - 1;
-		            }
-		        }, { passive: true });
-		    };
-		
-		    setupPreventStick(chatContainer);
-		    setupPreventStick(adminScroller);
-		    setupPreventStick(historyList);
+			const loadingOverlay = document.getElementById('loadingOverlay');
+			const { data: { session } } = await _supabase.auth.getSession();
+
+			if (!session) {
+				if (loadingOverlay) loadingOverlay.remove();
+				loginScreen.style.display = 'flex';
+			} else {
+				if (session.user && session.user.email) sidebarEmail.innerText = session.user.email;
+
+				setTimeout(() => {
+					if (loadingOverlay) {
+						loadingOverlay.style.opacity = '0';
+						loadingOverlay.style.visibility = 'hidden';
+
+						setTimeout(() => {
+							showApp();
+							loadingOverlay.remove();
+						}, 500);
+					} else {
+						showApp();
+					}
+				}, 2000);
+			}
+
+			const savedLevel = localStorage.getItem('alisa_thinking') || "2";
+			const savedPrompt = localStorage.getItem('alisa_prompt') || MAIN_SYSTEM_PROMPT;
+			const savedModel = localStorage.getItem('alisa_model') || "gemini-3-flash-preview";
+			const savedTemp = localStorage.getItem('alisa_temp') || "1.0";
+			const savedTokens = localStorage.getItem('alisa_tokens') || "65536";
+			const savedVoice = localStorage.getItem('alisa_voice') || "Kore";
+
+			document.getElementById('settings-thinking').value = savedLevel;
+			document.getElementById('label-thinking').innerText = ["LOW", "MEDIUM", "HIGH"][savedLevel - 1];
+			document.getElementById('systemPromptInput').value = savedPrompt;
+			document.getElementById('settings-temp').value = savedTemp;
+			document.getElementById('label-temp').innerText = savedTemp;
+			document.getElementById('settings-tokens').value = savedTokens;
+			document.getElementById('label-tokens').innerText = savedTokens;
+
+			currentSelectedModel = savedModel;
+			const modelMapping = {
+				"gemini-2.5-pro": "Gemini 2.5 Pro",
+				"gemini-2.5-flash": "Gemini 2.5 Flash",
+				"gemini-2.5-flash-lite": "Gemini 2.5 Flash Lite",
+				"gemini-3-flash-preview": "Gemini 3 Flash",
+				"gemini-3-pro-preview": "Gemini 3 Pro",
+				"gemini-3-deep-think-preview": "Gemini 3 Deep Think"
+			};
+			const modelLabelEl = document.getElementById('selected-model-text');
+			if (modelLabelEl) modelLabelEl.innerText = modelMapping[savedModel] || "Gemini 3 Flash";
+
+			currentVoice = savedVoice;
+			const voiceLabelEl = document.getElementById('selected-voice-text');
+			if (voiceLabelEl) {
+				const vMap = { "Kore": "Kore (Default)", "Aoede": "Aoede", "Zephyr": "Zephyr", "Leda": "Leda", "Fenrir": "Fenrir" };
+				voiceLabelEl.innerText = vMap[savedVoice] || "Kore (Default)";
+			}
+
+			document.getElementById('voice-trigger').onclick = (e) => {
+				e.stopPropagation();
+				const menu = document.getElementById('voice-menu');
+				const icon = document.getElementById('voice-icon');
+				const isHidden = menu.classList.toggle('hidden');
+				if (icon) {
+					icon.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(180deg)';
+				}
+			};
+
+			document.querySelectorAll('.voice-option').forEach(opt => {
+				opt.onclick = function (e) {
+					e.stopPropagation();
+					currentVoice = this.getAttribute('data-value');
+					document.getElementById('selected-voice-text').innerText = this.innerText;
+					document.getElementById('voice-menu').classList.add('hidden');
+					saveAdminSettings();
+				};
+			});
+
+			document.getElementById('voiceBtn').onclick = openVoiceMode;
+			document.getElementById('backFromVoice').onclick = closeVoiceMode;
+			document.getElementById('endCallBtn').onclick = closeVoiceMode;
+			document.getElementById('cameraToggleBtn').onclick = toggleVoiceCamera;
+			document.getElementById('switchCameraBtn').onclick = switchCamera;
+
+			const savedActiveID = localStorage.getItem(ACTIVE_SESSION_KEY);
+			if (savedActiveID) {
+				currentSessionId = savedActiveID;
+				loadSession(currentSessionId);
+			} else {
+				startNewSession();
+			}
+
+			loadSidebarHistory();
+
+			const chatContainer = document.getElementById('chatContainer');
+			const adminScroller = document.getElementById('adminScroller');
+			const historyList = document.getElementById('historyList');
+
+			const setupPreventStick = (el) => {
+				if (!el) return;
+				el.addEventListener('touchstart', () => {
+					const top = el.scrollTop;
+					const totalScroll = el.scrollHeight;
+					const currentScroll = top + el.offsetHeight;
+					if (top === 0) {
+						el.scrollTop = 1;
+					} else if (currentScroll >= totalScroll) {
+						el.scrollTop = top - 1;
+					}
+				}, { passive: true });
+			};
+
+			setupPreventStick(chatContainer);
+			setupPreventStick(adminScroller);
+			setupPreventStick(historyList);
 		}
-		
+
 		function updateStartLoading() {
-		    const bar = document.getElementById('loadBar');
-		    const text = document.getElementById('loadingText');
-		    let progress = 0;
-		    
-		    const interval = setInterval(() => {
-		        progress += Math.floor(Math.random() * 15) + 5;
-		        if (progress > 100) progress = 100;
-		        
-		        if (bar) bar.style.width = progress + '%';
-		        if (text) text.innerText = progress + '%';
-		        
-		        if (progress >= 100) {
-		            clearInterval(interval);
-		        }
-		    }, 150);
+			const bar = document.getElementById('loadBar');
+			const text = document.getElementById('loadingText');
+			let progress = 0;
+
+			const interval = setInterval(() => {
+				progress += Math.floor(Math.random() * 15) + 5;
+				if (progress > 100) progress = 100;
+
+				if (bar) bar.style.width = progress + '%';
+				if (text) text.innerText = progress + '%';
+
+				if (progress >= 100) {
+					clearInterval(interval);
+				}
+			}, 150);
 		}
 		updateStartLoading();
-		
+
 		init();
+		// --- KB FUNCTIONS ---
+		async function getEmbedding(text, token) {
+			const res = await fetch(`${PROXY_URL}?model=text-embedding-004&action=embedContent`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${token}` },
+				body: JSON.stringify({ content: { parts: [{ text: text }] } })
+			});
+			const data = await res.json();
+			return data.embedding.values;
+		}
+
+		async function uploadToSupabaseKB(file) {
+			const { data: { session } } = await _supabase.auth.getSession();
+			if (!session) throw new Error("LOGIN DIBUTUHKAN");
+			const token = session.access_token;
+
+			const text = await file.rawFile.text();
+			const sumRes = await fetch(`${PROXY_URL}?model=gemini-3-flash-preview&action=generateContent`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${token}` },
+				body: JSON.stringify({
+					contents: [{
+						role: "user",
+						parts: [{
+							text: `Tugas: Lakukan ekstraksi informasi mendalam dan teknis dari dokumen berikut untuk basis data pengetahuan.
+			                
+			                Instruksi Khusus:
+			                1. IDENTITAS: Catat nomor surat, tanggal, nama lembaga, dan pejabat terkait jika ada.
+			                2. SUBSTANSI: Ringkas poin-poin utama, temuan, atau regulasi yang dibahas secara detail.
+			                3. DATA KRUSIAL: Jangan lewatkan angka, nilai nominal, atau batas waktu (deadline).
+			                4. KATA KUNCI: Ekstrak daftar istilah teknis, singkatan, dan frasa kunci yang kemungkinan besar akan dicari oleh user.
+			                5. FORMAT: Sajikan dalam struktur yang rapi agar mudah dipahami secara semantik.
+			
+			                Dokumen: ${text}`
+						}]
+					}]
+				})
+			});
+
+			const sumData = await sumRes.json();
+			const summary = sumData.candidates?.[0]?.content?.parts?.[0]?.text || text.substring(0, 200);
+			const embedding = await getEmbedding(summary, token);
+
+			const { error } = await _supabase.from('knowledge_base').insert([{
+				content_full: text,
+				summary_keywords: summary,
+				embedding: embedding,
+				metadata: { filename: file.name, type: "manual_upload" }
+			}]);
+
+			if (error) throw error;
+			return file.name;
+		}
+
+		async function searchKB(query, token) {
+			try {
+				const embedding = await getEmbedding(query, token);
+				const { data, error } = await _supabase.rpc('hybrid_search_kb', {
+					query_text: query, query_embedding: embedding, match_count: 2
+				});
+				return (data && data.length > 0) ? data.map(d => "[DOKUMEN KB: " + d.metadata.filename + "]\n" + d.content_full).join("\n\n") : "";
+			} catch (e) { return ""; }
+		}
+
+		async function handleKbUpload(e) {
+			const files = Array.from(e.target.files);
+			if (!files.length) return;
+
+			const statusArea = document.getElementById('kb-upload-status');
+			const bar = document.getElementById('kb-progress');
+			const percentTxt = document.getElementById('kb-percent');
+			const nameTxt = document.getElementById('kb-filename');
+
+			statusArea.classList.remove('hidden');
+
+			for (const file of files) {
+				nameTxt.innerText = file.name;
+				bar.style.width = '30%';
+				percentTxt.innerText = '30%';
+				bar.className = "h-full bg-purple-600 transition-all duration-300";
+
+				try {
+					await uploadToSupabaseKB({ name: file.name, rawFile: file });
+					bar.style.width = '100%';
+					percentTxt.innerText = '100%';
+					nameTxt.innerText = "BERHASIL: " + file.name;
+					await new Promise(r => setTimeout(r, 800));
+				} catch (err) {
+					console.error(err);
+					bar.style.width = '100%';
+					bar.className = "h-full bg-red-500 transition-all duration-300";
+					nameTxt.innerText = "GAGAL: " + file.name;
+					await new Promise(r => setTimeout(r, 1500));
+				}
+			}
+
+			statusArea.classList.add('hidden');
+			bar.style.width = '0%';
+			e.target.value = '';
+		}
+
+		// Init toggles
+		const savedGoogle = localStorage.getItem('alisa_google_search');
+		if (savedGoogle !== null) document.getElementById('google-search-toggle').checked = (savedGoogle === 'true');
+
+		const savedKB = localStorage.getItem('alisa_kb_toggle');
+		if (savedKB !== null) document.getElementById('kb-toggle').checked = (savedKB === 'true');
+
+		document.getElementById('google-search-toggle').addEventListener('change', saveAdminSettings);
+		document.getElementById('kb-toggle').addEventListener('change', saveAdminSettings);
+
 	</script>
 </body>
 
