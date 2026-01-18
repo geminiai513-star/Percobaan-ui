@@ -25,70 +25,31 @@
 		rel="stylesheet">
 	<style>
 		html,
-body {
-    margin: 0;
-    padding: 0;
-    height: 100dvh;
-    width: 100vw;
-    overflow: hidden;
-    background-color: #ffffff;
-    font-family: 'Inter', sans-serif;
-    -webkit-text-size-adjust: none;
-    touch-action: none;
-    -webkit-user-select: none;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
-    position: fixed;
-}
-
-#loadingOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 100vw;
-    height: 100dvh;
-    background: #ffffff;
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    touch-action: none;
-    pointer-events: all;
-    user-select: none;
-    -webkit-user-select: none;
-}
-
-#loadingOverlay img {
-    width: 80px;
-    height: 80px;
-    object-fit: contain;
-    pointer-events: none;
-    -webkit-user-drag: none;
-    user-drag: none;
-}
-
-footer {
-    flex: 0 0 auto;
-    background-color: #ffffff;
-    z-index: 100;
-    padding-bottom: 12px;
-    /* Menutup celah sub-pixel dengan border tipis warna sangat terang */
-    border-top: 1px solid #f8fafc; 
-}
-
-.footer-content {
-    width: 100%;
-    max-width: 48rem;
-    margin: 0 auto;
-    padding: 12px 1rem;
-    background-color: #ffffff;
-}
+		body {
+		    margin: 0;
+		    padding: 0;
+		    height: 100%;
+		    height: -webkit-fill-available;
+		    height: 100dvh;
+		    width: 100vw;
+		    overflow: hidden;
+		    background-color: #ffffff;
+		    font-family: 'Inter', sans-serif;
+		    -webkit-text-size-adjust: none;
+		    touch-action: none;
+		    -webkit-user-select: none;
+		    user-select: none;
+		    -webkit-tap-highlight-color: transparent;
+		    position: fixed;
+		    top: 0;
+		    left: 0;
+		}
 		
 		#appInterface {
 		    width: 100%;
 		    height: 100%;
+		    height: -webkit-fill-available;
+		    height: 100dvh;
 		    display: none;
 		    flex-direction: column;
 		    background-color: #ffffff;
@@ -97,6 +58,64 @@ footer {
 		    left: 0;
 		    right: 0;
 		    bottom: 0;
+		}
+		
+		#loadingOverlay {
+		    position: fixed;
+		    inset: 0;
+		    width: 100vw;
+		    height: 100%;
+		    height: 100dvh;
+		    background: #ffffff;
+		    z-index: 9999;
+		    display: flex;
+		    align-items: center;
+		    justify-content: center;
+		    touch-action: none;
+		    user-select: none;
+		    -webkit-user-select: none;
+		    overscroll-behavior: none;
+		    pointer-events: all;
+		    transition: opacity 0.4s ease-out, visibility 0.4s;
+		}
+		
+		#loadingOverlay img {
+		    width: 80px;
+		    height: 80px;
+		    object-fit: contain;
+		    pointer-events: none;
+		    -webkit-user-drag: none;
+		}
+		
+		#mainSidebar {
+		    display: flex;
+		    flex-direction: column;
+		    overscroll-behavior: contain;
+		}
+		
+		#historyList {
+		    flex: 1 1 auto;
+		    overflow-y: auto;
+		    -webkit-overflow-scrolling: touch;
+		    overscroll-behavior-y: contain;
+		    padding-bottom: 32px;
+		}
+		
+		.sidebar-bottom-controls {
+		    flex: 0 0 auto;
+		    background-color: #ffffff;
+		    border-top: 1px solid #f8fafc; 
+		    padding: 12px 1rem;
+		    padding-bottom: 24px; 
+		}
+		
+		footer {
+		    flex: 0 0 auto;
+		    background-color: #ffffff;
+		    z-index: 100;
+		    padding-bottom: 12px;
+		    border-top: 1px solid #f8fafc;
+		    margin-top: -1px;
 		}
 		
 		main {
@@ -113,7 +132,6 @@ footer {
 		    will-change: transform;
 		}
 
-		/* Global disable drag and selection */
 		*,
 		*::before,
 		*::after {
@@ -128,7 +146,6 @@ footer {
 			user-select: none;
 		}
 
-		/* Allow selection only in specific areas */
 		.prose,
 		.prose *,
 		input,
@@ -139,13 +156,11 @@ footer {
 			user-select: text;
 		}
 
-		/* Prevent interaction with images and icons */
 		img,
 		svg {
 			pointer-events: none;
 		}
 
-		/* Allow interaction with content images */
 		.prose img {
 			pointer-events: auto;
 		}
