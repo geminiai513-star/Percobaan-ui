@@ -528,7 +528,7 @@
 							<i data-lucide="plus" class="w-6 h-6"></i>
 						</button>
 						<textarea id="userInput" placeholder="Tulis pesan..." rows="1"
-							class="flex-1 w-full bg-transparent border-none outline-none resize-none px-2 text-sm font-medium text-slate-900 leading-[24px] max-h-[150px] block placeholder:text-slate-400"></textarea>
+							class="flex-1 w-full bg-transparent border-none outline-none resize-none px-2 text-sm font-medium text-slate-900 leading-[24px] max-h-[150px] block placeholder:text-slate-400 pl-4"></textarea>
 						<button type="submit" id="sendBtn"
 							class="p-2 text-slate-800 hover:text-indigo-600 transition-colors shrink-0">
 							<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6"
@@ -688,6 +688,81 @@
 								<i data-lucide="upload" class="w-4 h-4"></i>
 								Upload Dokumen Baru
 							</button>
+						</div>
+					</div>
+				</div>
+
+				<div class="w-full bg-slate-50 rounded-2xl p-5 shadow-sm border-none mb-4">
+					<div class="mb-4">
+						<span class="text-xs font-black text-slate-500 uppercase tracking-widest">Fitur & Media</span>
+					</div>
+					<div class="space-y-4">
+						<!-- Voice Mode Switch -->
+						<div class="flex items-center justify-between bg-white p-3 rounded-xl border border-slate-100">
+							<div class="flex items-center gap-3">
+								<div
+									class="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center text-green-600">
+									<i data-lucide="mic" class="w-4 h-4"></i>
+								</div>
+								<span class="text-sm font-bold text-slate-700">Voice Mode</span>
+							</div>
+							<label class="relative inline-flex items-center cursor-pointer">
+								<input type="checkbox" id="voice-feature-toggle" class="sr-only peer" checked>
+								<div
+									class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600">
+								</div>
+							</label>
+						</div>
+
+						<!-- Image Generation Switch -->
+						<div class="flex items-center justify-between bg-white p-3 rounded-xl border border-slate-100">
+							<div class="flex items-center gap-3">
+								<div
+									class="w-8 h-8 rounded-full bg-pink-50 flex items-center justify-center text-pink-600">
+									<i data-lucide="image" class="w-4 h-4"></i>
+								</div>
+								<span class="text-sm font-bold text-slate-700">Image Generation</span>
+							</div>
+							<label class="relative inline-flex items-center cursor-pointer">
+								<input type="checkbox" id="image-feature-toggle" class="sr-only peer" checked>
+								<div
+									class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-pink-600">
+								</div>
+							</label>
+						</div>
+
+						<!-- YouTube Search Switch -->
+						<div class="flex items-center justify-between bg-white p-3 rounded-xl border border-slate-100">
+							<div class="flex items-center gap-3">
+								<div
+									class="w-8 h-8 rounded-full bg-red-50 flex items-center justify-center text-red-600">
+									<i data-lucide="youtube" class="w-4 h-4"></i>
+								</div>
+								<span class="text-sm font-bold text-slate-700">YouTube Search</span>
+							</div>
+							<label class="relative inline-flex items-center cursor-pointer">
+								<input type="checkbox" id="youtube-feature-toggle" class="sr-only peer" checked>
+								<div
+									class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600">
+								</div>
+							</label>
+						</div>
+
+						<!-- Upload File Switch -->
+						<div class="flex items-center justify-between bg-white p-3 rounded-xl border border-slate-100">
+							<div class="flex items-center gap-3">
+								<div
+									class="w-8 h-8 rounded-full bg-orange-50 flex items-center justify-center text-orange-600">
+									<i data-lucide="upload-cloud" class="w-4 h-4"></i>
+								</div>
+								<span class="text-sm font-bold text-slate-700">Upload File</span>
+							</div>
+							<label class="relative inline-flex items-center cursor-pointer">
+								<input type="checkbox" id="upload-feature-toggle" class="sr-only peer" checked>
+								<div
+									class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600">
+								</div>
+							</label>
 						</div>
 					</div>
 				</div>
@@ -893,6 +968,37 @@ Jangan pernah membuat gambar atau mencari video youtube KECUALI jika user MEMINT
 			localStorage.setItem('alisa_tokens', document.getElementById('settings-tokens').value);
 			localStorage.setItem('alisa_google_search', document.getElementById('google-search-toggle').checked);
 			localStorage.setItem('alisa_kb_toggle', document.getElementById('kb-toggle').checked);
+
+			// New Features
+			const voiceEnabled = document.getElementById('voice-feature-toggle').checked;
+			localStorage.setItem('alisa_voice_enabled', voiceEnabled);
+			localStorage.setItem('alisa_image_enabled', document.getElementById('image-feature-toggle').checked);
+			localStorage.setItem('alisa_youtube_enabled', document.getElementById('youtube-feature-toggle').checked);
+
+			const uploadEnabled = document.getElementById('upload-feature-toggle').checked;
+			localStorage.setItem('alisa_upload_enabled', uploadEnabled);
+			const voiceBtn = document.getElementById('voiceBtn');
+			if (voiceBtn) voiceBtn.style.display = voiceEnabled ? 'block' : 'none';
+
+			const uploadBtn = document.getElementById('uploadBtn');
+			const inputField = document.getElementById('userInput');
+			if (uploadBtn) {
+				if (uploadEnabled) {
+					uploadBtn.style.display = 'block';
+					uploadBtn.classList.remove('hidden');
+					if (inputField) {
+						inputField.classList.remove('pl-4');
+						inputField.classList.add('px-2');
+					}
+				} else {
+					uploadBtn.style.display = 'none';
+					uploadBtn.classList.add('hidden');
+					if (inputField) {
+						inputField.classList.add('pl-4');
+						inputField.classList.remove('px-2');
+					}
+				}
+			}
 		}
 
 		if (settingsBtn && adminScreen) {
@@ -1039,7 +1145,12 @@ Jangan pernah membuat gambar atau mencari video youtube KECUALI jika user MEMINT
 			saveCurrentSession();
 			showTyping();
 
-			const combinedSystemInstruction = `${dynamicMainPrompt}\n\n${IMAGE_GEN_PROMPT}\n\n${VIDEO_GEN_PROMPT}`;
+			const useImageGen = document.getElementById('image-feature-toggle').checked;
+			const useYoutube = document.getElementById('youtube-feature-toggle').checked;
+
+			let combinedSystemInstruction = dynamicMainPrompt;
+			if (useImageGen) combinedSystemInstruction += `\n\n${IMAGE_GEN_PROMPT}`;
+			if (useYoutube) combinedSystemInstruction += `\n\n${VIDEO_GEN_PROMPT}`;
 
 			const useGoogleSearch = document.getElementById('google-search-toggle').checked;
 			const useKB = document.getElementById('kb-toggle').checked;
@@ -1134,16 +1245,18 @@ Jangan pernah membuat gambar atau mencari video youtube KECUALI jika user MEMINT
 								messageBody.appendChild(div);
 								currentProseEl = div;
 							}
-							const streamedText = await streamText(currentProseEl, part);
-							if (streamedText) {
-								proseUsed = true;
-								const lastMsg = chatHistory[chatHistory.length - 1];
-								lastMsg.parts[0].text += (lastMsg.parts[0].text ? "\n\n" : "") + streamedText;
-								saveCurrentSession();
-							}
+							const lastMsg = chatHistory[chatHistory.length - 1];
+							lastMsg.parts[0].text += (lastMsg.parts[0].text ? "\n\n" : "") + part;
+							saveCurrentSession();
+
+							proseUsed = true;
+							await streamText(currentProseEl, part);
 						}
 					}
 					if (!proseUsed && aiContainerTop) aiContainerTop.remove();
+
+					// Force save to ensure AI response is persisted
+					saveCurrentSession();
 
 					if (chatHistory.length === 2) {
 						const aiResponse = chatHistory[1].parts[0].text;
@@ -1346,7 +1459,7 @@ Jangan pernah membuat gambar atau mencari video youtube KECUALI jika user MEMINT
 						});
 					}
 				} else {
-					textToShow = msg.parts[0].text;
+					textToShow = msg.parts.map(p => p.text || "").join("");
 				}
 
 				appendMessageToUI(role, textToShow, false, false, cardsHTML);
@@ -1357,26 +1470,26 @@ Jangan pernah membuat gambar atau mencari video youtube KECUALI jika user MEMINT
 			try {
 				const sessions = getAllSessions();
 				const existingIndex = sessions.findIndex(s => s.id === currentSessionId);
+				const firstMsg = chatHistory[0];
 
 				let title = "Percakapan Baru";
 
 				if (existingIndex >= 0 && sessions[existingIndex].title && sessions[existingIndex].title !== "Percakapan Baru") {
 					const oldTitle = sessions[existingIndex].title;
-					let firstMsgText = chatHistory[0]?.parts.find(p => p.text)?.text || "";
+					let firstMsgText = firstMsg?.parts.find(p => p.text)?.text || "";
 					firstMsgText = firstMsgText.split("\n\nKONTEKS DOKUMEN:")[0].split("GUNAKAN REFERENSI BERIKUT UNTUK MENJAWAB:")[0];
 					const defaultTitleFallback = firstMsgText.substring(0, 30);
 
 					if (oldTitle !== defaultTitleFallback && oldTitle !== "Lampiran Dokumen") {
 						title = oldTitle;
 					} else {
-						const userText = firstMsg.trim();
+						const userText = firstMsgText.trim();
 						if (userText) title = userText.substring(0, 30) + (userText.length > 30 ? "..." : "");
-						else if (chatHistory[0]?.fileMetadata) title = "Lampiran Dokumen";
+						else if (firstMsg?.fileMetadata) title = "Lampiran Dokumen";
 					}
 				} else {
-					const firstUserMsg = chatHistory.find(m => m.role === 'user');
-					if (firstUserMsg && firstUserMsg.parts) {
-						const textPart = firstUserMsg.parts.find(p => p.text);
+					if (firstMsg && firstMsg.parts) {
+						const textPart = firstMsg.parts.find(p => p.text);
 						if (textPart) {
 							let cleanTitle = textPart.text.split("\n\nKONTEKS DOKUMEN:")[0];
 							cleanTitle = cleanTitle.split("GUNAKAN REFERENSI BERIKUT UNTUK MENJAWAB:")[0].trim();
@@ -1392,21 +1505,21 @@ Jangan pernah membuat gambar atau mencari video youtube KECUALI jika user MEMINT
 					parts: msg.parts.map(part => {
 						if (part.inline_data || part.data) return { text: "" };
 
-						// PASTIKAN TIDAK MENYIMPAN KONTEKS KB DI LOCALSTORAGE
-						// Bersihkan jika masih ada sisa-sisa konteks (untuk jaga-jaga)
 						let text = part.text || "";
-						if (text.includes("GUNAKAN REFERENSI BERIKUT UNTUK MENJAWAB:")) {
-							if (text.includes("\n\nPERTANYAAN: ")) {
-								text = text.split("\n\nPERTANYAAN: ").pop();
-							} else {
-								text = text.split("GUNAKAN REFERENSI BERIKUT UNTUK MENJAWAB:")[0];
+						if (msg.role === 'user') {
+							if (text.includes("GUNAKAN REFERENSI BERIKUT UNTUK MENJAWAB:")) {
+								if (text.includes("\n\nPERTANYAAN: ")) {
+									text = text.split("\n\nPERTANYAAN: ").pop();
+								} else {
+									text = text.split("GUNAKAN REFERENSI BERIKUT UNTUK MENJAWAB:")[0];
+								}
+							}
+							if (text.includes("\n\nKONTEKS DOKUMEN:")) {
+								text = text.split("\n\nKONTEKS DOKUMEN:")[0];
 							}
 						}
-						if (text.includes("\n\nKONTEKS DOKUMEN:")) {
-							text = text.split("\n\nKONTEKS DOKUMEN:")[0];
-						}
 
-						return { text: text.trim() };
+						return { text: text };
 					})
 				}));
 
@@ -2943,7 +3056,6 @@ Jangan pernah membuat gambar atau mencari video youtube KECUALI jika user MEMINT
 		updateStartLoading();
 
 		init();
-		// --- KB FUNCTIONS ---
 		async function getEmbedding(text, token) {
 			const res = await fetch(`${PROXY_URL}?model=text-embedding-004&action=embedContent`, {
 				method: 'POST',
@@ -2997,22 +3109,17 @@ Jangan pernah membuat gambar atau mencari video youtube KECUALI jika user MEMINT
 			return file.name;
 		}
 
-		// --- FUNGSI PENCARIAN KB YANG DIPERBARUI ---
 		async function searchKB(query, token) {
 			try {
-				// 1. Cek Cepat: Jika query terlalu pendek (sapaan), abaikan pencarian.
 				if (query.trim().length < 5) return "";
 
-				// 2. Lakukan Semantic Search
 				const embedding = await getEmbedding(query, token);
 
-				// Panggil RPC baru dengan parameter strict
-				// match_count: 2 (Cukup 2 dokumen terbaik)
 				const { data, error } = await _supabase.rpc('hybrid_search_kb', {
 					query_text: query,
 					query_embedding: embedding,
 					match_count: 2,
-					similarity_threshold: 0.55 // Batas minimal kemiripan
+					similarity_threshold: 0.55
 				});
 
 				if (error) {
@@ -3020,12 +3127,7 @@ Jangan pernah membuat gambar atau mencari video youtube KECUALI jika user MEMINT
 					return "";
 				}
 
-				// 3. Validasi Hasil: Hanya kembalikan jika ada data
 				if (data && data.length > 0) {
-					// Opsional: Cek skor similarity di sisi klien jika perlu screening tambahan
-					// const bestMatch = data[0];
-					// if (bestMatch.similarity < 0.5) return ""; 
-
 					return data.map(d => `[DOKUMEN KB: ${d.metadata.filename}]\n${d.content_full}`).join("\n\n");
 				}
 
@@ -3073,15 +3175,54 @@ Jangan pernah membuat gambar atau mencari video youtube KECUALI jika user MEMINT
 			e.target.value = '';
 		}
 
-		// Init toggles
 		const savedGoogle = localStorage.getItem('alisa_google_search');
 		if (savedGoogle !== null) document.getElementById('google-search-toggle').checked = (savedGoogle === 'true');
 
 		const savedKB = localStorage.getItem('alisa_kb_toggle');
 		if (savedKB !== null) document.getElementById('kb-toggle').checked = (savedKB === 'true');
 
+		const savedVoiceEnabled = localStorage.getItem('alisa_voice_enabled');
+		const isVoiceOn = savedVoiceEnabled !== null ? (savedVoiceEnabled === 'true') : true;
+		document.getElementById('voice-feature-toggle').checked = isVoiceOn;
+		if (voiceBtn) voiceBtn.style.display = isVoiceOn ? 'block' : 'none';
+
+		const savedImageEnabled = localStorage.getItem('alisa_image_enabled');
+		if (savedImageEnabled !== null) document.getElementById('image-feature-toggle').checked = (savedImageEnabled === 'true');
+
+		const savedYoutubeEnabled = localStorage.getItem('alisa_youtube_enabled');
+		if (savedYoutubeEnabled !== null) document.getElementById('youtube-feature-toggle').checked = (savedYoutubeEnabled === 'true');
+
+		const savedUploadEnabled = localStorage.getItem('alisa_upload_enabled');
+		const isUploadOn = savedUploadEnabled !== null ? (savedUploadEnabled === 'true') : true;
+		document.getElementById('upload-feature-toggle').checked = isUploadOn;
+
+		const uploadBtn = document.getElementById('uploadBtn');
+		const inputEl = document.getElementById('userInput');
+		if (uploadBtn) {
+			if (isUploadOn) {
+				uploadBtn.style.display = 'block';
+				uploadBtn.classList.remove('hidden');
+				if (inputEl) {
+					inputEl.classList.remove('pl-4');
+					inputEl.classList.add('px-2');
+				}
+			} else {
+				uploadBtn.style.display = 'none';
+				uploadBtn.classList.add('hidden');
+				if (inputEl) {
+					inputEl.classList.add('pl-4');
+					inputEl.classList.remove('px-2');
+				}
+			}
+		}
+
 		document.getElementById('google-search-toggle').addEventListener('change', saveAdminSettings);
 		document.getElementById('kb-toggle').addEventListener('change', saveAdminSettings);
+
+		document.getElementById('voice-feature-toggle').addEventListener('change', saveAdminSettings);
+		document.getElementById('image-feature-toggle').addEventListener('change', saveAdminSettings);
+		document.getElementById('youtube-feature-toggle').addEventListener('change', saveAdminSettings);
+		document.getElementById('upload-feature-toggle').addEventListener('change', saveAdminSettings);
 
 	</script>
 </body>
