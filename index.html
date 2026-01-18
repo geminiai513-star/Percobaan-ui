@@ -61,31 +61,67 @@
 		}
 		
 		#loadingOverlay {
-		    position: fixed;
-		    inset: 0;
-		    width: 100vw;
-		    height: 100%;
-		    height: 100dvh;
-		    background: #ffffff;
-		    z-index: 9999;
-		    display: flex;
-		    align-items: center;
-		    justify-content: center;
-		    touch-action: none;
-		    user-select: none;
-		    -webkit-user-select: none;
-		    overscroll-behavior: none;
-		    pointer-events: all;
-		    transition: opacity 0.4s ease-out, visibility 0.4s;
-		}
-		
-		#loadingOverlay img {
-		    width: 80px;
-		    height: 80px;
-		    object-fit: contain;
-		    pointer-events: none;
-		    -webkit-user-drag: none;
-		}
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100%;
+    height: 100dvh;
+    background: #ffffff;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    overscroll-behavior: none;
+    pointer-events: all;
+    transition: opacity 0.4s ease-out, visibility 0.4s;
+}
+
+.loading-wrapper {
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.loading-container {
+    width: 100%;
+    height: 24px;
+    background-color: #f1f5f9;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid #f1f5f9;
+}
+
+.loading-bar {
+    width: 0%;
+    height: 100%;
+    background-color: #000000;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: width 0.3s ease-out;
+}
+
+#loadingText {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 800;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 1px;
+    mix-blend-mode: difference;
+    color: #ffffff;
+    z-index: 10;
+}
 		
 		#mainSidebar {
 		    display: flex;
@@ -104,18 +140,17 @@
 		.sidebar-bottom-controls {
 		    flex: 0 0 auto;
 		    background-color: #ffffff;
-		    border-top: 1px solid #f8fafc; 
+		    border-top: 1px solid #f8fafc;
 		    padding: 12px 1rem;
-		    padding-bottom: 24px; 
+		    padding-bottom: 24px;
 		}
 		
-		footer {
+		header {
 		    flex: 0 0 auto;
-		    background-color: #ffffff;
+		    background: white;
+		    border-bottom: 1px solid #f1f5f9;
+		    padding-top: env(safe-area-inset-top, 0px);
 		    z-index: 100;
-		    padding-bottom: 12px;
-		    border-top: 1px solid #f8fafc;
-		    margin-top: -1px;
 		}
 		
 		main {
@@ -131,137 +166,130 @@
 		    -webkit-backface-visibility: hidden;
 		    will-change: transform;
 		}
-
+		
+		footer {
+		    flex: 0 0 auto;
+		    background-color: #ffffff;
+		    z-index: 100;
+		    padding-bottom: 12px;
+		    border-top: 1px solid #f8fafc;
+		    margin-top: -1px;
+		}
+		
+		.footer-content {
+		    width: 100%;
+		    max-width: 48rem;
+		    margin: 0 auto;
+		    padding: 12px 1rem;
+		}
+		
 		*,
 		*::before,
 		*::after {
-			-webkit-user-drag: none;
-			-khtml-user-drag: none;
-			-moz-user-drag: none;
-			-o-user-drag: none;
-			user-drag: none;
-			-webkit-user-select: none;
-			-moz-user-select: none;
-			-ms-user-select: none;
-			user-select: none;
+		    -webkit-user-drag: none;
+		    -khtml-user-drag: none;
+		    -moz-user-drag: none;
+		    -o-user-drag: none;
+		    user-drag: none;
+		    -webkit-user-select: none;
+		    -moz-user-select: none;
+		    -ms-user-select: none;
+		    user-select: none;
 		}
-
+		
 		.prose,
 		.prose *,
 		input,
 		textarea {
-			-webkit-user-select: text;
-			-moz-user-select: text;
-			-ms-user-select: text;
-			user-select: text;
+		    -webkit-user-select: text;
+		    -moz-user-select: text;
+		    -ms-user-select: text;
+		    user-select: text;
 		}
-
+		
 		img,
 		svg {
-			pointer-events: none;
+		    pointer-events: none;
 		}
-
+		
 		.prose img {
-			pointer-events: auto;
+		    pointer-events: auto;
 		}
-
-		header {
-			flex: 0 0 auto;
-			background: white;
-			border-bottom: 1px solid #f1f5f9;
-			padding-top: env(safe-area-inset-top, 0px);
-			z-index: 100;
-		}
-
-		footer {
-			flex: 0 0 auto;
-			background-color: #ffffff;
-			z-index: 100;
-			padding-bottom: 12px;
-			border-top: none;
-		}
-
-		.footer-content {
-			width: 100%;
-			max-width: 48rem;
-			margin: 0 auto;
-			padding: 12px 1rem;
-		}
-
+		
 		#userInput {
-			width: 100%;
-			background: transparent;
-			border: none;
-			outline: none;
-			resize: none;
-			padding: 12px 8px;
-			font-size: 16px;
-			font-weight: 500;
-			color: #1f2937;
-			line-height: 20px;
-			max-height: 150px;
-			display: block;
+		    width: 100%;
+		    background: transparent;
+		    border: none;
+		    outline: none;
+		    resize: none;
+		    padding: 12px 8px;
+		    font-size: 16px;
+		    font-weight: 500;
+		    color: #1f2937;
+		    line-height: 20px;
+		    max-height: 150px;
+		    display: block;
 		}
-
+		
 		#userInput::placeholder {
-			font-size: 15px;
-			color: #94a3b8;
+		    font-size: 15px;
+		    color: #94a3b8;
 		}
-
+		
 		#loginScreen {
-			position: fixed;
-			inset: 0;
-			background: white;
-			z-index: 100;
-			display: none;
-			align-items: center;
-			justify-content: center;
-			padding: 2rem;
+		    position: fixed;
+		    inset: 0;
+		    background: white;
+		    z-index: 100;
+		    display: none;
+		    align-items: center;
+		    justify-content: center;
+		    padding: 2rem;
 		}
-
+		
 		code {
-			font-family: 'JetBrains Mono', monospace;
+		    font-family: 'JetBrains Mono', monospace;
 		}
-
+		
 		.prose pre {
-			background: #f3f4f6 !important;
-			padding: 1rem !important;
-			border-radius: 1rem !important;
-			margin: 0.75rem 0;
-			overflow-x: auto;
-
+		    background: #f3f4f6 !important;
+		    padding: 1rem !important;
+		    border-radius: 1rem !important;
+		    margin: 0.75rem 0;
+		    overflow-x: auto;
 		}
-
+		
 		.prose table {
-			display: block;
-			width: 100%;
-			overflow-x: auto;
-			border-collapse: collapse;
-			margin: 0.75rem 0;
+		    display: block;
+		    width: 100%;
+		    overflow-x: auto;
+		    border-collapse: collapse;
+		    margin: 0.75rem 0;
 		}
-
+		
 		.prose code {
-			background-color: #f1f5f9 !important;
-			color: #475569 !important;
-			padding: 2px 5px !important;
-			border-radius: 4px !important;
-			font-weight: 600 !important;
-			font-size: 0.85em !important;
-			font-family: 'JetBrains Mono', monospace !important;
-			vertical-align: 1px;
+		    background-color: #f1f5f9 !important;
+		    color: #475569 !important;
+		    padding: 2px 5px !important;
+		    border-radius: 4px !important;
+		    font-weight: 600 !important;
+		    font-size: 0.85em !important;
+		    font-family: 'JetBrains Mono', monospace !important;
+		    vertical-align: 1px;
 		}
-
+		
 		.prose pre code {
-			background-color: transparent !important;
-			padding: 0 !important;
-			font-weight: 500 !important;
+		    background-color: transparent !important;
+		    padding: 0 !important;
+		    font-weight: 500 !important;
 		}
-
+		
 		.prose-container {
 		    overflow-x: visible;
 		}
 		
-		.prose ul, .prose ol {
+		.prose ul,
+		.prose ol {
 		    padding-left: 2.2rem;
 		    margin-bottom: 0.75rem;
 		    list-style-position: outside;
@@ -270,126 +298,73 @@
 		.prose li {
 		    margin-bottom: 0.2rem;
 		}
-
+		
 		.prose ul {
-			list-style-type: disc;
+		    list-style-type: disc;
 		}
-
+		
 		.prose ol {
-			list-style-type: decimal;
+		    list-style-type: decimal;
 		}
-
+		
 		.prose th,
 		.prose td {
-			border: 1px solid #e5e7eb;
-			padding: 0.5rem 0.75rem;
-			font-size: 14px !important;
+		    border: 1px solid #e5e7eb;
+		    padding: 0.5rem 0.75rem;
+		    font-size: 14px !important;
 		}
-
+		
 		.prose p {
-			margin-bottom: 0.5rem;
+		    margin-bottom: 0.5rem;
 		}
-
+		
 		::-webkit-scrollbar {
-			display: none;
-			width: 0;
-			height: 0;
-			background: transparent;
+		    display: none;
+		    width: 0;
+		    height: 0;
+		    background: transparent;
 		}
-
-		html,
-		body,
-		* {
-			-ms-overflow-style: none;
-			scrollbar-width: none;
-		}
-
+		
 		.custom-scroll {
-			scrollbar-width: none;
-			-ms-overflow-style: none;
+		    scrollbar-width: none;
+		    -ms-overflow-style: none;
 		}
-
+		
 		.content-width {
-			width: 100%;
-			max-width: 48rem;
-			margin: 0 auto;
-			padding: 0 1rem;
+		    width: 100%;
+		    max-width: 48rem;
+		    margin: 0 auto;
+		    padding: 0 1rem;
 		}
-
-		textarea:focus,
-		input:focus {
-			outline: none !important;
-			box-shadow: none !important;
-			border: none !important;
-		}
-
+		
 		@keyframes appearance {
-
-			0%,
-			100% {
-				opacity: 0.3;
-				transform: scale(0.8);
-			}
-
-			50% {
-				opacity: 1;
-				transform: scale(1);
-			}
+		    0%, 100% { opacity: 0.3; transform: scale(0.8); }
+		    50% { opacity: 1; transform: scale(1); }
 		}
-
+		
 		.typing-indicator {
-			display: flex;
-			align-items: center;
-			gap: 4px;
-			height: 22px;
-			margin-top: 2px;
-		}
-
-		.typing-dot {
-			width: 4px;
-			height: 4px;
-			background-color: #94a3b8;
-			border-radius: 50%;
-			animation: appearance 1.4s infinite ease-in-out;
-		}
-
-		.typing-dot:nth-child(1) {
-			animation-delay: 0s;
-		}
-
-		.typing-dot:nth-child(2) {
-			animation-delay: 0.2s;
-		}
-
-		.typing-dot:nth-child(3) {
-			animation-delay: 0.4s;
-		}
-
-		.media-container>* {
-			margin-top: 0 !important;
-		}
-		
-		#mainSidebar {
 		    display: flex;
-		    flex-direction: column;
-		    overscroll-behavior: contain;
+		    align-items: center;
+		    gap: 4px;
+		    height: 22px;
+		    margin-top: 2px;
 		}
 		
-		#historyList {
-		    flex: 1 1 auto;
-		    overflow-y: auto;
-		    -webkit-overflow-scrolling: touch;
-		    overscroll-behavior-y: contain;
+		.typing-dot {
+		    width: 4px;
+		    height: 4px;
+		    background-color: #94a3b8;
+		    border-radius: 50%;
+		    animation: appearance 1.4s infinite ease-in-out;
 		}
 		
-		.sidebar-bottom-controls {
-		    flex: 0 0 auto;
-		    background-color: #ffffff;
-		    border-top: 1px solid #f8fafc; 
-		    padding: 12px 1rem;
-		    padding-bottom: 26px; 
-		}
+		.typing-dot:nth-child(1) { animation-delay: 0s; }
+		.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+		.typing-dot:nth-child(3) { animation-delay: 0.4s; }
 		
+		.media-container>* {
+		    margin-top: 0 !important;
+		}
 	</style>
 </head>
 
@@ -397,7 +372,12 @@
 	
 	<!-- Loading Spiner -->
 	<div id="loadingOverlay">
-	    <img src="icon/icon.GIF" class="w-20 h-20 object-contain">
+	    <div class="loading-wrapper">
+	        <div class="loading-container">
+	            <div id="loadingText">0%</div>
+	            <div class="loading-bar" id="loadBar"></div>
+	        </div>
+	    </div>
 	</div>
 	
 	<!-- Sidebar Overlay -->
@@ -2702,6 +2682,26 @@
 		    setupPreventStick(chatContainer);
 		    setupPreventStick(adminScroller);
 		}
+		
+		function updateStartLoading() {
+		    const bar = document.getElementById('loadBar');
+		    const text = document.getElementById('loadingText');
+		    let progress = 0;
+		    
+		    const interval = setInterval(() => {
+		        progress += Math.floor(Math.random() * 15) + 5;
+		        if (progress > 100) progress = 100;
+		        
+		        if (bar) bar.style.width = progress + '%';
+		        if (text) text.innerText = progress + '%';
+		        
+		        if (progress >= 100) {
+		            clearInterval(interval);
+		        }
+		    }, 150);
+		}
+		updateStartLoading();
+		
 		init();
 	</script>
 </body>
