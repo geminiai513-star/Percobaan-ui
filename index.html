@@ -61,72 +61,80 @@
 		}
 		
 		#loadingOverlay {
-    position: fixed;
-    inset: 0;
-    width: 100vw;
-    height: 100%;
-    height: 100dvh;
-    background: #ffffff;
-    z-index: 9999;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    touch-action: none;
-    user-select: none;
-    -webkit-user-select: none;
-    overscroll-behavior: none;
-    pointer-events: all;
-    transition: opacity 0.4s ease-out, visibility 0.4s;
-}
-
-.loading-wrapper {
-    width: 200px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-}
-
-.loading-container {
-    width: 100%;
-    height: 24px;
-    background-color: #f1f5f9;
-    border-radius: 12px;
-    overflow: hidden;
-    position: relative;
-    border: 1px solid #f1f5f9;
-}
-
-.loading-bar {
-    width: 0%;
-    height: 100%;
-    background-color: #000000;
-    position: absolute;
-    top: 0;
-    left: 0;
-    transition: width 0.3s ease-out;
-}
-
-#loadingText {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 10px;
-    font-weight: 800;
-    font-family: 'Inter', sans-serif;
-    letter-spacing: 1px;
-    mix-blend-mode: difference;
-    color: #ffffff;
-    z-index: 10;
-}
+		    position: fixed;
+		    inset: 0;
+		    width: 100vw;
+		    height: 100%;
+		    height: 100dvh;
+		    background: #ffffff;
+		    z-index: 9999;
+		    display: flex;
+		    flex-direction: column;
+		    align-items: center;
+		    justify-content: center;
+		    touch-action: none;
+		    user-select: none;
+		    -webkit-user-select: none;
+		    overscroll-behavior: none;
+		    pointer-events: all;
+		    transition: opacity 0.4s ease-out, visibility 0.4s;
+		}
+		
+		.loading-wrapper {
+		    width: 200px;
+		    display: flex;
+		    flex-direction: column;
+		    align-items: center;
+		    gap: 12px;
+		}
+		
+		.loading-container {
+		    width: 100%;
+		    height: 24px;
+		    background-color: #f1f5f9;
+		    border-radius: 12px;
+		    overflow: hidden;
+		    position: relative;
+		    border: 1px solid #f1f5f9;
+		}
+		
+		.loading-bar {
+		    width: 0%;
+		    height: 100%;
+		    background-color: #000000;
+		    position: absolute;
+		    top: 0;
+		    left: 0;
+		    transition: width 0.3s ease-out;
+		}
+		
+		#loadingText {
+		    position: absolute;
+		    inset: 0;
+		    display: flex;
+		    align-items: center;
+		    justify-content: center;
+		    font-size: 10px;
+		    font-weight: 800;
+		    font-family: 'Inter', sans-serif;
+		    letter-spacing: 1px;
+		    mix-blend-mode: difference;
+		    color: #ffffff;
+		    z-index: 10;
+		}
 		
 		#mainSidebar {
 		    display: flex;
 		    flex-direction: column;
 		    overscroll-behavior: contain;
+		}
+		
+		.sidebar-bottom-controls {
+		    flex: 0 0 auto;
+		    background-color: #ffffff;
+		    border-top: 1px solid #f1f5f9; 
+		    padding: 12px 1rem;
+		    padding-bottom: 24px; 
 		}
 		
 		#historyList {
@@ -135,14 +143,6 @@
 		    -webkit-overflow-scrolling: touch;
 		    overscroll-behavior-y: contain;
 		    padding-bottom: 32px;
-		}
-		
-		.sidebar-bottom-controls {
-		    flex: 0 0 auto;
-		    background-color: #ffffff;
-		    border-top: 1px solid #f8fafc;
-		    padding: 12px 1rem;
-		    padding-bottom: 24px;
 		}
 		
 		header {
@@ -2664,6 +2664,7 @@
 		
 		    const chatContainer = document.getElementById('chatContainer');
 		    const adminScroller = document.getElementById('adminScroller');
+		    const historyList = document.getElementById('historyList');
 		
 		    const setupPreventStick = (el) => {
 		        if (!el) return;
@@ -2681,6 +2682,7 @@
 		
 		    setupPreventStick(chatContainer);
 		    setupPreventStick(adminScroller);
+		    setupPreventStick(historyList);
 		}
 		
 		function updateStartLoading() {
