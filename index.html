@@ -500,8 +500,8 @@
 						</svg>
 					</button>
 					<button id="menuBtn"
-						class="p-2.5 hover:bg-slate-50 text-slate-400 rounded-xl transition-all active:scale-95 ml-1">
-						<i data-lucide="menu" class="w-6 h-6"></i>
+					    class="p-2.5 hover:bg-slate-50 text-slate-400 rounded-xl transition-all active:scale-95 -mr-2.5">
+					    <i data-lucide="menu" class="w-6 h-6"></i>
 					</button>
 				</div>
 			</div>
@@ -2464,81 +2464,80 @@ function startNewSession() {
 		});
 
 		function openVoiceMode() {
-    const screen = document.getElementById('voiceScreen');
-    if (!screen) return;
-
-    isAISpeaking = false;
-    voiceNextTime = 0;
-    voiceInterrupted = false;
-    activeVoiceSources = [];
-    energyCounter = 0;
-
-    screen.classList.remove('hidden');
-    screen.classList.add('flex');
-
-    setTimeout(() => {
-        resizeVoiceCanvas();
-        initVoiceSession(); // initVoiceSession tidak perlu panggil initVoiceAudio lagi
-    }, 200);
-}
+		    const screen = document.getElementById('voiceScreen');
+		    if (!screen) return;
+		
+		    isAISpeaking = false;
+		    voiceNextTime = 0;
+		    voiceInterrupted = false;
+		    activeVoiceSources = [];
+		    energyCounter = 0;
+		
+		    screen.classList.remove('hidden');
+		    screen.classList.add('flex');
+		
+		    setTimeout(() => {
+		        resizeVoiceCanvas();
+		        initVoiceSession();
+		    }, 200);
+		}
 
 		async function initVoiceAudio() {
-    try {
-        // Baris ini harus paling atas untuk iPhone
-        voiceStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        
-        if (voiceInCtx) await voiceInCtx.close();
-        if (voiceOutCtx) await voiceOutCtx.close();
-
-        voiceInCtx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 16000 });
-        voiceOutCtx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 24000 });
-
-        await voiceInCtx.resume();
-        await voiceOutCtx.resume();
-
-        aiAnalyser = voiceOutCtx.createAnalyser();
-        aiAnalyser.fftSize = 1024;
-        aiAnalyser.connect(voiceOutCtx.destination);
-
-        const source = voiceInCtx.createMediaStreamSource(voiceStream);
-        voiceAnalyser = voiceInCtx.createAnalyser();
-        voiceAnalyser.fftSize = 1024;
-        voiceDataArray = new Uint8Array(voiceAnalyser.frequencyBinCount);
-        source.connect(voiceAnalyser);
-
-        const workletJS = `class P extends AudioWorkletProcessor { process(inputs) { if (inputs[0][0]) this.port.postMessage(inputs[0][0]); return true; } }; registerProcessor('p', P);`;
-        const url = 'data:application/javascript,' + encodeURIComponent(workletJS);
-        await voiceInCtx.audioWorklet.addModule(url);
-
-        const node = new AudioWorkletNode(voiceInCtx, 'p');
-        node.port.onmessage = (e) => {
-            if (voiceWs && voiceWs.readyState === WebSocket.OPEN) {
-                let sum = 0;
-                for (let i = 0; i < e.data.length; i++) sum += Math.abs(e.data[i]);
-                let energy = sum / e.data.length;
-                if (isAISpeaking && energy > 0.04) {
-                    energyCounter++;
-                    if (energyCounter > 8) { interruptVoice(); energyCounter = 0; }
-                } else { energyCounter = 1; }
-                if (energy > 0.01 && voiceInterrupted) { voiceInterrupted = false; voiceSessionId++; }
-                if (!voiceInterrupted && !isAISpeaking) {
-                    const int16 = new Int16Array(e.data.length);
-                    for (let i = 0; i < e.data.length; i++) int16[i] = e.data[i] * 0x7FFF;
-                    voiceWs.send(JSON.stringify({
-                        type: 'audio',
-                        data: { data: btoa(String.fromCharCode(...new Uint8Array(int16.buffer))), mimeType: 'audio/pcm;rate=16000' }
-                    }));
-                }
-            }
-        };
-        source.connect(node);
-        return true;
-    } catch (err) {
-        console.error("Mic Error:", err);
-        alert("Izin mikrofon diperlukan untuk mode suara.");
-        return false;
-    }
-}
+		    try {
+		        voiceStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+		        
+		        if (voiceInCtx) await voiceInCtx.close();
+		        if (voiceOutCtx) await voiceOutCtx.close();
+		
+		        voiceInCtx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 16000 });
+		        voiceOutCtx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 24000 });
+		
+		        await voiceInCtx.resume();
+		        await voiceOutCtx.resume();
+		
+		        aiAnalyser = voiceOutCtx.createAnalyser();
+		        aiAnalyser.fftSize = 1024;
+		        aiAnalyser.connect(voiceOutCtx.destination);
+		
+		        const source = voiceInCtx.createMediaStreamSource(voiceStream);
+		        voiceAnalyser = voiceInCtx.createAnalyser();
+		        voiceAnalyser.fftSize = 1024;
+		        voiceDataArray = new Uint8Array(voiceAnalyser.frequencyBinCount);
+		        source.connect(voiceAnalyser);
+		
+		        const workletJS = `class P extends AudioWorkletProcessor { process(inputs) { if (inputs[0][0]) this.port.postMessage(inputs[0][0]); return true; } }; registerProcessor('p', P);`;
+		        const url = 'data:application/javascript,' + encodeURIComponent(workletJS);
+		        await voiceInCtx.audioWorklet.addModule(url);
+		
+		        const node = new AudioWorkletNode(voiceInCtx, 'p');
+		        node.port.onmessage = (e) => {
+		            if (voiceWs && voiceWs.readyState === WebSocket.OPEN) {
+		                let sum = 0;
+		                for (let i = 0; i < e.data.length; i++) sum += Math.abs(e.data[i]);
+		                let energy = sum / e.data.length;
+		                if (isAISpeaking && energy > 0.04) {
+		                    energyCounter++;
+		                    if (energyCounter > 8) { interruptVoice(); energyCounter = 0; }
+		                } else { energyCounter = 1; }
+		                if (energy > 0.01 && voiceInterrupted) { voiceInterrupted = false; voiceSessionId++; }
+		                if (!voiceInterrupted && !isAISpeaking) {
+		                    const int16 = new Int16Array(e.data.length);
+		                    for (let i = 0; i < e.data.length; i++) int16[i] = e.data[i] * 0x7FFF;
+		                    voiceWs.send(JSON.stringify({
+		                        type: 'audio',
+		                        data: { data: btoa(String.fromCharCode(...new Uint8Array(int16.buffer))), mimeType: 'audio/pcm;rate=16000' }
+		                    }));
+		                }
+		            }
+		        };
+		        source.connect(node);
+		        return true;
+		    } catch (err) {
+		        console.error("Mic Error:", err);
+		        alert("Izin mikrofon diperlukan untuk mode suara.");
+		        return false;
+		    }
+		}
 
 		async function initVoiceSession() {
 			if (voiceWs) {
