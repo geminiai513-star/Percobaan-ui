@@ -26,23 +26,42 @@
 	<style>
 		html,
 		body {
-			margin: 0;
-			padding: 0;
-			height: 100%;
-			height: -webkit-fill-available;
-			height: 100dvh;
-			width: 100vw;
-			overflow: hidden;
-			background-color: #ffffff;
-			font-family: 'Inter', sans-serif;
-			-webkit-text-size-adjust: none;
-			touch-action: none;
-			-webkit-user-select: none;
-			user-select: none;
-			-webkit-tap-highlight-color: transparent;
-			position: fixed;
-			top: 0;
-			left: 0;
+		    margin: 0;
+		    padding: 0;
+		    height: 100%;
+		    height: 100dvh;
+		    width: 100vw;
+		    overflow: hidden !important;
+		    background-color: #ffffff;
+		    font-family: 'Inter', sans-serif;
+		    -webkit-text-size-adjust: none;
+		    touch-action: none;
+		    -webkit-user-select: none;
+		    user-select: none;
+		    -webkit-tap-highlight-color: transparent;
+		    position: fixed;
+		    top: 0;
+		    left: 0;
+		    overscroll-behavior: none !important;
+		}
+		
+		#loadingOverlay {
+		    position: fixed;
+		    inset: 0;
+		    width: 100vw;
+		    height: 100dvh;
+		    background: #ffffff;
+		    z-index: 99999;
+		    display: flex;
+		    flex-direction: column;
+		    align-items: center;
+		    justify-content: center;
+		    touch-action: none;
+		    user-select: none;
+		    -webkit-user-select: none;
+		    overscroll-behavior: none;
+		    overflow: hidden; 
+		    pointer-events: all;
 		}
 
 		#appInterface {
@@ -60,28 +79,6 @@
 			bottom: 0;
 		}
 
-		#loadingOverlay {
-		    position: fixed;
-		    inset: 0;
-		    width: 100vw;
-		    height: 100dvh;
-		    background: #ffffff;
-		    z-index: 99999;
-		    display: flex;
-		    flex-direction: column;
-		    align-items: center;
-		    justify-content: center;
-		    touch-action: none; 
-		    user-select: none;
-		    -webkit-user-select: none;
-		    overscroll-behavior: none;
-		    overflow: hidden; 
-		    pointer-events: all;
-		    top: 0;
-		    left: 0;
-		    transition: opacity 0.4s ease-out, visibility 0.4s;
-		}
-
 		.loading-wrapper {
 			width: 200px;
 			display: flex;
@@ -94,7 +91,7 @@
 			width: 100%;
 			height: 30px;
 			background-color: #f1f5f9;
-			border-radius: 24px;
+			border-radius: 2px;
 			overflow: hidden;
 			position: relative;
 			border: 1px solid #f1f5f9;
@@ -116,7 +113,7 @@
 		    display: flex;
 		    align-items: center;
 		    justify-content: center;
-		    font-size: 11px;
+		    font-size: 10px;
 		    font-weight: 900;
 		    font-family: 'Inter', sans-serif;
 		    letter-spacing: 2px;
@@ -220,17 +217,19 @@
 		}
 
 		#userInput {
-			width: 100%;
-			background: transparent;
-			border: none;
-			outline: none;
-			resize: none;
-			font-size: 16px;
-			font-weight: 500;
-			color: #1f2937;
-			line-height: 20px;
-			max-height: 150px;
-			display: block;
+		    width: 100%;
+		    background: transparent;
+		    border: none;
+		    outline: none;
+		    resize: none;
+		    font-size: 16px;
+		    font-weight: 500;
+		    color: #1f2937;
+		    line-height: 24px;
+		    max-height: 150px;
+		    display: block;
+		    padding-top: 12px;
+		    padding-bottom: 12px;
 		}
 
 		#userInput::placeholder {
@@ -903,17 +902,36 @@
 		const STREAM_SPEED = 8;
 		const STREAM_CHUNK_SIZE = 5;
 
-		const MAIN_SYSTEM_PROMPT = `Anda adalah ALISA, Asisten Inspektorat Provinsi Lampung yang ramah, Profesional, dan sangat membantu, selalu berikan informasi yang akurat dan terbaru.
+		const MAIN_SYSTEM_PROMPT = `Anda adalah ALISA, Asisten Inspektorat Provinsi Lampung yang ramah dan profesional.
 
-PANDUAN KONTEKS & DATABASE (PENTING):
-1. Jika Anda menerima informasi dari "Knowledge Base" (Konteks Dokumen) atau Google Search, JANGAN menyebutkan "Berdasarkan dokumen", "Menurut data yang diunggah", atau frasa sejenis.
-2. Anggaplah semua informasi tersebut adalah pengetahuan internal Anda sendiri. Sampaikan jawaban secara langsung, percaya diri, dan natural.
-3. Jika konteks tidak menjawab pertanyaan user, gunakan pengetahuan umum Anda atau Google Search (jika aktif), tetap dengan nada profesional Inspektorat.
-
-PENGGUNAAN MEDIA:
-Jangan pernah membuat gambar atau mencari video youtube KECUALI jika user MEMINTANYA secara spesifik. Gunakan fitur tersebut sebijak mungkin.`;
-		const IMAGE_GEN_PROMPT = "Untuk Membuat Gunakan tag [image]english description[/image].";
-		const VIDEO_GEN_PROMPT = "Untuk Mencari video youtube Gunakan tag [youtube]query pencarian spesifik[/youtube].";
+		PANDUAN KONTEKS & DATABASE (PENTING):
+		1. Jika Anda menerima informasi dari "Knowledge Base" atau Google Search, sampaikan secara langsung dan natural seolah itu pengetahuan Anda sendiri.
+		2. JANGAN menyebutkan frasa "Berdasarkan dokumen" atau "Menurut pencarian saya".`;
+		
+		const TOOL_DECLARATIONS = [
+		    {
+		        name: "generate_image",
+		        description: "Generate a new image based on a detailed English visual description.",
+		        parameters: {
+		            type: "OBJECT",
+		            properties: {
+		                prompt: { type: "STRING", description: "Detailed visual description in English." }
+		            },
+		            required: ["prompt"]
+		        }
+		    },
+		    {
+		        name: "search_youtube",
+		        description: "Search for and display relevant YouTube videos.",
+		        parameters: {
+		            type: "OBJECT",
+		            properties: {
+		                query: { type: "STRING", description: "Search keywords for the video." }
+		            },
+		            required: ["query"]
+		        }
+		    }
+		];
 
 		const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -964,6 +982,22 @@ Jangan pernah membuat gambar atau mencari video youtube KECUALI jika user MEMINT
 		const thinkingMap = { "1": 4000, "2": 16000, "3": 32000 };
 		let currentSelectedModel = localStorage.getItem('alisa_model') || "gemini-3-flash-preview";
 
+		(function() {
+		    const blockScroll = (e) => {
+		        if (document.getElementById('loadingOverlay')) {
+		            e.preventDefault();
+		        }
+		    };
+		
+		    window.addEventListener('touchmove', blockScroll, { passive: false });
+		    window.addEventListener('wheel', blockScroll, { passive: false });
+		    window.addEventListener('keydown', (e) => {
+		        if (document.getElementById('loadingOverlay') && ['ArrowUp', 'ArrowDown', ' ', 'PageUp', 'PageDown', 'Home', 'End'].includes(e.key)) {
+		            e.preventDefault();
+		        }
+		    }, { passive: false });
+		})();
+		
 		function saveAdminSettings() {
 			localStorage.setItem('alisa_model', currentSelectedModel);
 			localStorage.setItem('alisa_voice', currentVoice);
@@ -1073,12 +1107,11 @@ Jangan pernah membuat gambar atau mencari video youtube KECUALI jika user MEMINT
 		});
 
 		document.getElementById('voiceBtn').onclick = async () => {
-    // LANGKAH 1: Paksa panggil audio di awal klik agar izin keluar di iPhone
-    const success = await initVoiceAudio();
-    if (success) {
-        openVoiceMode();
-    }
-};
+		    const success = await initVoiceAudio();
+		    if (success) {
+		        openVoiceMode();
+		    }
+		};
 		const voiceScreen = document.getElementById('voiceScreen');
 		const backFromVoice = document.getElementById('backFromVoice');
 
@@ -1108,21 +1141,16 @@ Jangan pernah membuat gambar atau mencari video youtube KECUALI jika user MEMINT
 		    if (!rawInput && pendingFiles.length === 0) return;
 		
 		    const filesToProcess = [...pendingFiles];
-		    let fileMetadata = filesToProcess.map(f => ({ name: f.name, size: f.size }));
+		    const { data: { session } } = await _supabase.auth.getSession();
+		    if (!session) return;
+		    const userToken = session.access_token;
+		
 		    let fileCardsHTML = "";
 		    filesToProcess.forEach(f => {
 		        fileCardsHTML += getFileCardHTML(f.name, f.size);
 		    });
 		
-		    const dynamicMainPrompt = document.getElementById('systemPromptInput').value || MAIN_SYSTEM_PROMPT;
-		    const sliderVal = document.getElementById('settings-thinking').value;
-		    const currentBudget = thinkingMap[sliderVal] || 16000;
-		    const currentTemp = parseFloat(document.getElementById('settings-temp').value) || 1.0;
-		    const currentMaxTokens = parseInt(document.getElementById('settings-tokens').value) || 65536;
-		
-		    const { data: { session } } = await _supabase.auth.getSession();
-		    if (!session) return;
-		    const userToken = session.access_token;
+		    appendMessageToUI('user', rawInput, true, false, fileCardsHTML);
 		
 		    userInput.blur();
 		    userInput.value = '';
@@ -1133,151 +1161,141 @@ Jangan pernah membuat gambar atau mencari video youtube KECUALI jika user MEMINT
 		
 		    let apiParts = [];
 		    let textContext = "";
+		    let fileMetadata = [];
 		    pendingFiles = [];
 		    renderPreviews();
 		
-		    for (const f of filesToProcess) {
-		        const ext = f.name.split('.').pop().toLowerCase();
-		        if (f.mime.startsWith('image/') || f.mime === 'application/pdf') {
-		            const cleanBase64 = f.base64.includes(',') ? f.base64.split(',')[1] : f.base64;
-		            apiParts.push({ inline_data: { mime_type: f.mime, data: cleanBase64 } });
-		        } else {
-		            textContext += await (['docx', 'xlsx', 'xls', 'pptx'].includes(ext) ? extractTextFromOffice(f) : readCodeFile(f));
-		        }
-		    }
-		
-		    const finalPrompt = rawInput + (textContext ? "\n\nKONTEKS DOKUMEN:\n" + textContext : "");
-		    const userMessageParts = apiParts.length > 0 ? [...apiParts, { text: finalPrompt }] : [{ text: finalPrompt }];
-		
-		    chatHistory.push({ role: "user", parts: userMessageParts, fileMetadata: fileMetadata });
-		    appendMessageToUI('user', rawInput, true, false, fileCardsHTML);
-		
-		    await saveMessageToSupabase('user', rawInput, fileMetadata);
-		
-		    showTyping();
-		
-		    const useImageGen = document.getElementById('image-feature-toggle').checked;
-		    const useYoutube = document.getElementById('youtube-feature-toggle').checked;
-		
-		    let combinedSystemInstruction = dynamicMainPrompt;
-		    if (useImageGen) combinedSystemInstruction += `\n\n${IMAGE_GEN_PROMPT}`;
-		    if (useYoutube) combinedSystemInstruction += `\n\n${VIDEO_GEN_PROMPT}`;
-		
-		    const useGoogleSearch = document.getElementById('google-search-toggle').checked;
-		    const useKB = document.getElementById('kb-toggle').checked;
-		
-		    let contextPrompt = finalPrompt;
-		
-		    if (useKB) {
-		        const kbResults = await searchKB(rawInput, userToken);
-		        if (kbResults) {
-		            contextPrompt = "GUNAKAN REFERENSI BERIKUT UNTUK MENJAWAB:\n" + kbResults + "\n\nPERTANYAAN: " + finalPrompt;
-		        }
-		    }
-		
-		    const apiContents = [
-		        ...chatHistory.slice(0, -1).map(h => ({ role: h.role, parts: h.parts })),
-		        {
-		            role: "user",
-		            parts: apiParts.length > 0 ? [...apiParts, { text: contextPrompt }] : [{ text: contextPrompt }]
-		        }
-		    ];
-		
 		    try {
+		        for (const f of filesToProcess) {
+		            const ext = f.name.split('.').pop().toLowerCase();
+		            const fileName = `user_${Date.now()}_${f.name}`;
+		            const publicUrl = await uploadImageToSupabase(f.base64, fileName, f.mime);
+		            
+		            fileMetadata.push({ 
+		                name: f.name, 
+		                size: f.size, 
+		                url: publicUrl,
+		                type: f.mime 
+		            });
+		
+		            if (f.mime.startsWith('image/') || f.mime === 'application/pdf') {
+		                apiParts.push({ 
+		                    inlineData: { mimeType: f.mime, data: f.base64 } 
+		                });
+		            } else {
+		                textContext += await (['docx', 'xlsx', 'xls', 'pptx'].includes(ext) ? extractTextFromOffice(f) : readCodeFile(f));
+		            }
+		        }
+		
+		        const finalPrompt = rawInput + (textContext ? "\n\nKONTEKS DOKUMEN:\n" + textContext : "");
+		        const userMessageParts = [...apiParts];
+		        if (finalPrompt.trim() !== "" || userMessageParts.length === 0) {
+		            userMessageParts.push({ text: finalPrompt || "Tolong analisis file ini." });
+		        }
+		
+		        chatHistory.push({ role: "user", parts: userMessageParts, fileMetadata: fileMetadata });
+		        await saveMessageToSupabase('user', rawInput, fileMetadata);
+		
+		        showTyping();
+		
+		        const useImageGen = document.getElementById('image-feature-toggle').checked;
+		        const useYoutube = document.getElementById('youtube-feature-toggle').checked;
+		        const useGoogleSearch = document.getElementById('google-search-toggle').checked;
+		        const useKB = document.getElementById('kb-toggle').checked;
+		
+		        const apiContents = chatHistory.map(h => ({
+		            role: h.role,
+		            parts: h.parts.map(p => {
+		                const part = { ...p };
+		                delete part._isVoice;
+		                return part;
+		            })
+		        }));
+		
+		        if (useKB) {
+		            const kbResults = await searchKB(rawInput, userToken);
+		            if (kbResults) {
+		                const lastIdx = apiContents.length - 1;
+		                const textPart = apiContents[lastIdx].parts.find(p => p.text);
+		                if (textPart) {
+		                    textPart.text = `REFERENSI DATABASE:\n${kbResults}\n\nPERTANYAAN USER: ${textPart.text}`;
+		                }
+		            }
+		        }
+		
+		        const tools = [];
+		        if (useGoogleSearch) tools.push({ google_search: {} });
+		        const functions = [];
+		        if (useImageGen) functions.push(TOOL_DECLARATIONS[0]);
+		        if (useYoutube) functions.push(TOOL_DECLARATIONS[1]);
+		        if (functions.length > 0) tools.push({ function_declarations: functions });
+		
 		        const payload = {
-		            system_instruction: { parts: [{ text: combinedSystemInstruction }] },
+		            system_instruction: { parts: [{ text: document.getElementById('systemPromptInput').value || MAIN_SYSTEM_PROMPT }] },
 		            contents: apiContents,
+		            tools: tools.length > 0 ? tools : undefined,
 		            generation_config: {
-		                temperature: currentTemp,
-		                max_output_tokens: currentMaxTokens
+		                temperature: parseFloat(document.getElementById('settings-temp').value) || 1.0,
+		                max_output_tokens: parseInt(document.getElementById('settings-tokens').value) || 65536
 		            }
 		        };
 		
-		        if (useGoogleSearch) {
-		            payload.tools = [{ google_search: {} }];
-		        }
-		
-		        if (currentSelectedModel.includes('think')) {
-		            payload.thinking_config = { include_thoughts: true, thinking_budget_tokens: currentBudget };
-		        }
-		
 		        const response = await fetch(PROXY_URL + `?model=${currentSelectedModel}&action=generateContent`, {
 		            method: 'POST',
-		            headers: {
-		                'Content-Type': 'application/json',
-		                'apikey': SUPABASE_KEY,
-		                'Authorization': `Bearer ${userToken}`
-		            },
+		            headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${userToken}` },
 		            signal: abortController.signal,
 		            body: JSON.stringify(payload)
 		        });
 		
 		        const data = await response.json();
-		        if (!response.ok) throw new Error(data.error?.message || `HTTP ${response.status}`);
-		
-		        const parts = data.candidates?.[0]?.content?.parts || [];
-		        let finalResponse = "";
-		        parts.forEach(part => { if (part.text && !part.thought) finalResponse += part.text; });
-		
 		        hideTyping();
 		
-		        if (finalResponse) {
-		            const mediaSplitRegex = /(\[image\][\s\S]*?\[\/image\]|\[youtube\][\s\S]*?\[\/youtube\])/gi;
-		            const resParts = finalResponse.split(mediaSplitRegex);
-		            const aiContainerTop = appendMessageToUI('model', "");
-		            let currentProseEl = aiContainerTop;
-		            const messageBody = aiContainerTop.parentElement;
-		            let proseUsed = false;
+		        if (!response.ok) throw new Error(data.error?.message || "Koneksi API Gagal");
 		
+		        const parts = data.candidates?.[0]?.content?.parts || [];
+		        if (parts.length > 0) {
+		            const aiWrapper = appendMessageToUI('model', "");
+		            const messageBody = aiWrapper.parentElement;
+		            aiWrapper.remove(); 
+		
+		            let historyText = "";
 		            chatHistory.push({ role: "model", parts: [{ text: "" }] });
 		
-		            for (let i = 0; i < resParts.length; i++) {
+		            for (const part of parts) {
 		                if (!isGenerating) break;
-		                const part = resParts[i];
-		                if (!part.trim()) continue;
-		
-		                const imgMatch = part.match(/\[image\]([\s\S]*?)\[\/image\]/i);
-		                const vidMatch = part.match(/\[youtube\]([\s\S]*?)\[\/youtube\]/i);
-		
-		                if (imgMatch) {
-		                    const mediaDiv = document.createElement('div');
-		                    mediaDiv.className = "media-container w-full flex flex-col";
-		                    messageBody.appendChild(mediaDiv);
-		                    await generateImage(imgMatch[1].trim(), mediaDiv);
-		                } else if (vidMatch) {
-		                    const mediaDiv = document.createElement('div');
-		                    mediaDiv.className = "media-container w-full flex flex-col";
-		                    messageBody.appendChild(mediaDiv);
-		                    await generateYoutubeVideo(vidMatch[1].trim(), mediaDiv);
-		                } else {
-		                    if (i > 0) {
-		                        const div = document.createElement('div');
-		                        div.className = "w-full prose-container prose max-w-none text-slate-600 text-[15px] leading-relaxed font-medium";
-		                        messageBody.appendChild(div);
-		                        currentProseEl = div;
+		                if (part.text) {
+		                    const textEl = document.createElement('div');
+		                    textEl.className = "w-full prose-container prose max-w-none text-slate-600 text-[15px] leading-relaxed font-medium mb-4 last:mb-0";
+		                    messageBody.appendChild(textEl);
+		                    const streamed = await streamText(textEl, part.text);
+		                    historyText += streamed;
+		                }
+		                if (part.functionCall) {
+		                    const call = part.functionCall;
+		                    const mediaBox = document.createElement('div');
+		                    mediaBox.className = "media-container w-full flex flex-col mb-4 last:mb-0";
+		                    messageBody.appendChild(mediaBox);
+		                    if (call.name === "generate_image") {
+		                        const imgHtml = await generateImage(call.args.prompt, mediaBox);
+		                        historyText += imgHtml;
+		                    } else if (call.name === "search_youtube") {
+		                        const vidHtml = await generateYoutubeVideo(call.args.query, mediaBox);
+		                        historyText += vidHtml;
 		                    }
-		                    const lastMsg = chatHistory[chatHistory.length - 1];
-		                    lastMsg.parts[0].text += (lastMsg.parts[0].text ? "\n\n" : "") + part;
-		
-		                    proseUsed = true;
-		                    await streamText(currentProseEl, part);
 		                }
 		            }
-		            if (!proseUsed && aiContainerTop) aiContainerTop.remove();
+		            chatHistory[chatHistory.length - 1].parts[0].text = historyText;
+		            await saveMessageToSupabase('model', historyText);
 		
-		            const finalAiText = chatHistory[chatHistory.length - 1].parts[0].text;
-		            await saveMessageToSupabase('model', finalAiText);
-		
-		            if (chatHistory.length === 2) {
-		                const aiResponse = chatHistory[1].parts[0].text;
-		                const newTitle = await generateAiTitle(aiResponse);
-		                await updateSessionTitle(currentSessionId, newTitle);
+		            if (chatHistory.length <= 2) {
+		                const aiTitle = await generateAiTitle(historyText);
+		                await updateSessionTitle(currentSessionId, aiTitle);
 		            }
 		        }
 		    } catch (error) {
 		        hideTyping();
 		        if (error.name !== 'AbortError') {
-		            appendMessageToUI('error', "Gagal menghubungi AI. Silakan coba lagi.");
+		            appendMessageToUI('error', `Gagal memproses permintaan: ${error.message}`);
 		        }
 		    } finally {
 		        setGeneratingState(false);
@@ -1285,18 +1303,23 @@ Jangan pernah membuat gambar atau mencari video youtube KECUALI jika user MEMINT
 		        abortController = null;
 		    }
 		}
-
+		
 		async function saveMessageToSupabase(role, content, fileMetadata = null) {
 		    try {
 		        const { data: { session } } = await _supabase.auth.getSession();
 		        if (!session) return;
 		
-		        const { error: sessionError } = await _supabase.from('chat_sessions').upsert({
+		        const sessionData = {
 		            id: currentSessionId,
 		            user_id: session.user.id,
-		            title: chatHistory[0]?.parts[0]?.text?.substring(0, 50).replace(/\n/g, ' ') || "Percakapan Baru",
 		            timestamp: Date.now()
-		        }, { onConflict: 'id' });
+		        };
+		
+		        if (chatHistory.length <= 2) {
+		            sessionData.title = chatHistory[0]?.parts[0]?.text?.substring(0, 50).replace(/\n/g, ' ') || "Percakapan Baru";
+		        }
+		
+		        const { error: sessionError } = await _supabase.from('chat_sessions').upsert(sessionData, { onConflict: 'id' });
 		
 		        if (sessionError) throw sessionError;
 		
@@ -1312,7 +1335,7 @@ Jangan pernah membuat gambar atau mencari video youtube KECUALI jika user MEMINT
 		
 		        await loadSidebarHistory();
 		    } catch (err) {
-		        console.error("ALISA Database Error:", err.message);
+		        console.error(err.message);
 		    }
 		}
 		
@@ -1419,7 +1442,7 @@ Jangan pernah membuat gambar atau mencari video youtube KECUALI jika user MEMINT
 		        fileMetadata: m.file_metadata
 		    }));
 		
-		    messagesArea.innerHTML = ''; // Pastikan ini ada untuk membersihkan layar
+		    messagesArea.innerHTML = '';
 		    renderHistory();
 		    await loadSidebarHistory();
 		    toggleSidebar(false);
@@ -1427,11 +1450,46 @@ Jangan pernah membuat gambar atau mencari video youtube KECUALI jika user MEMINT
 		
 		async function deleteSession(id, event) {
 		    if (event) event.stopPropagation();
-		    if (!confirm("Hapus percakapan ini secara permanen?")) return;
 		
-		    await _supabase.from('chat_sessions').delete().eq('id', id);
-		    if (id === currentSessionId) startNewSession();
-		    else await loadSidebarHistory();
+		    try {
+		        const { data: messages } = await _supabase
+		            .from('chat_messages')
+		            .select('file_metadata')
+		            .eq('session_id', id);
+		
+		        if (messages && messages.length > 0) {
+		            const filesToDelete = [];
+		            messages.forEach(msg => {
+		                if (msg.file_metadata && Array.isArray(msg.file_metadata)) {
+		                    msg.file_metadata.forEach(file => {
+		                        if (file.url) {
+		                            const path = file.url.split('/storage/v1/object/public/media/')[1];
+		                            if (path) filesToDelete.push(path);
+		                        }
+		                    });
+		                }
+		            });
+		
+		            if (filesToDelete.length > 0) {
+		                await _supabase.storage
+		                    .from('media')
+		                    .remove(filesToDelete);
+		            }
+		        }
+		
+		        const { error } = await _supabase.from('chat_sessions').delete().eq('id', id);
+		        
+		        if (error) throw error;
+		
+		        if (id === currentSessionId) {
+		            startNewSession();
+		        } else {
+		            await loadSidebarHistory();
+		        }
+		
+		    } catch (err) {
+		        console.error(err);
+		    }
 		}
 		
 		function startNewSession() {
@@ -1443,33 +1501,33 @@ Jangan pernah membuat gambar atau mencari video youtube KECUALI jika user MEMINT
 		}
 
 		async function generateAiTitle(aiMsg) {
-			const { data: { session } } = await _supabase.auth.getSession();
-			if (!session) return "Percakapan Baru";
-			try {
-				const response = await fetch(PROXY_URL + "?model=gemini-2.5-flash-lite&action=generateContent", {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-						'apikey': SUPABASE_KEY,
-						'Authorization': `Bearer ${session.access_token}`
-					},
-					body: JSON.stringify({
-						contents: [{
-							role: "user",
-							parts: [{
-								text: `Buat judul singkat (2-4 kata) tanpa tanda baca seperti ':' atau label kategori. Jika isinya sapaan (seperti halo, hai, selamat pagi/siang/malam), buat judul sapaan natural seperti 'Hai ALISA' atau 'Selamat Pagi'. Jika isinya informasi, rangkum intinya secara langsung. Jawaban AI: "${aiMsg}"`
-							}]
-						}],
-						generation_config: { temperature: 0.7, max_output_tokens: 20 }
-					})
-				});
-				const data = await response.json();
-				const resText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-				return resText ? resText.replace(/[:"'*./]/g, '').trim() : "Percakapan Baru";
-			} catch (e) {
-				return "Percakapan Baru";
-			}
-		}
+    const { data: { session } } = await _supabase.auth.getSession();
+    if (!session) return "Percakapan Baru";
+    try {
+        const response = await fetch(PROXY_URL + "?model=gemini-2.5-flash-lite&action=generateContent", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'apikey': SUPABASE_KEY,
+                'Authorization': `Bearer ${session.access_token}`
+            },
+            body: JSON.stringify({
+                contents: [{
+                    role: "user",
+                    parts: [{
+                        text: `Buat judul sangat singkat (2-4 kata) untuk percakapan ini berdasarkan jawaban AI berikut: "${aiMsg.substring(0, 500)}". JANGAN gunakan tanda baca, JANGAN gunakan awalan seperti 'Judul:', langsung berikan judulnya saja.`
+                    }]
+                }],
+                generation_config: { temperature: 0.7, max_output_tokens: 20 }
+            })
+        });
+        const data = await response.json();
+        const resText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        return resText ? resText.replace(/[:"'*./]/g, '').trim() : "Percakapan Baru";
+    } catch (e) {
+        return "Percakapan Baru";
+    }
+}
 
 		function initDB() {
 			return new Promise((resolve, reject) => {
@@ -1721,10 +1779,10 @@ Jangan pernah membuat gambar atau mencari video youtube KECUALI jika user MEMINT
 		            <div class="media-container w-full mt-2 empty:hidden gap-3 flex flex-col"></div>
 		            <div class="prose-container-bottom w-full prose prose-container max-w-none text-slate-600 text-[15px] leading-relaxed font-medium mt-4 empty:hidden"></div>
 		            ${!isUser && !isError ? `
-		                <button class="copy-btn absolute bottom-2 right-2 p-1 text-slate-400 hover:text-slate-600 rounded-md opacity-0 group-hover:opacity-100 transition-opacity" title="Salin pesan">
-		                    <i data-lucide="copy" class="w-3 h-3"></i>
-		                </button>
-		            ` : ''}
+					    <button class="copy-btn absolute bottom-2 right-2 p-1.5 text-slate-300 hover:text-slate-500 active:text-blue-500 transition-colors" title="Salin pesan">
+					        <i data-lucide="copy" class="w-3 h-3"></i>
+					    </button>
+					` : ''}
 		        </div>
 		    `;
 
@@ -2003,212 +2061,126 @@ Jangan pernah membuat gambar atau mencari video youtube KECUALI jika user MEMINT
 			renderPreviews();
 		}
 
-		async function generateImage(prompt, targetContainer = null) {
-			const { data: { session } } = await _supabase.auth.getSession();
-			if (!session) return;
-
-			const userToken = session.access_token;
-			let loaderId = `loader-${Date.now()}`;
-			if (targetContainer) {
-				const loaderHTML = `
-				    <div id="${loaderId}" class="mt-2 flex items-center gap-1.5 animate-in fade-in duration-300">
-				        <i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin text-blue-600"></i>
-				        <span class="text-[13px] font-medium text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">Membuat Gambar</span>
-				        <div class="flex gap-0.5 items-center pt-1">
-				            <span class="w-1 h-1 bg-blue-400 rounded-full animate-bounce"></span>
-				            <span class="w-1 h-1 bg-blue-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></span>
-				            <span class="w-1 h-1 bg-blue-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></span>
-				        </div>
-				    </div>
-				`;
-				targetContainer.insertAdjacentHTML('beforeend', loaderHTML);
-				lucide.createIcons();
-				scrollBottom(true, 'auto');
-			} else {
-				showTyping();
-			}
-
-			const response = await fetch(PROXY_URL + `?model=${IMAGE_MODEL_NAME}&action=generateContent`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					'apikey': SUPABASE_KEY,
-					'Authorization': `Bearer ${userToken}`
-				},
-				signal: abortController.signal,
-				body: JSON.stringify({
-					contents: [{ role: "user", parts: [{ text: prompt }] }],
-					generationConfig: {
-						response_modalities: ["IMAGE"]
-					}
-				})
-			});
-
-			const data = await response.json();
-			if (!response.ok) throw new Error(data.error?.message || `HTTP ${response.status}`);
-
-			let base64Image = null;
-			let mimeType = "image/jpeg";
-			const parts = data.candidates?.[0]?.content?.parts || [];
-			const imagePart = parts.find(p => p.inlineData);
-
-			if (imagePart) {
-				base64Image = imagePart.inlineData.data;
-				mimeType = imagePart.inlineData.mimeType || mimeType;
-			} else {
-				throw new Error("No image data found in response.");
-			}
-
-			const fileName = `sinta_gen_${Date.now()}`;
-			let imageUrl = `idb://${fileName}`;
-
-			try {
-				const byteCharacters = atob(base64Image);
-				const byteNumbers = new Array(byteCharacters.length);
-				for (let i = 0; i < byteCharacters.length; i++) {
-					byteNumbers[i] = byteCharacters.charCodeAt(i);
-				}
-				const byteArray = new Uint8Array(byteNumbers);
-				const blob = new Blob([byteArray], { type: mimeType });
-				await saveImageToIDB(fileName, blob);
-			} catch (writeError) {
-				imageUrl = `data:${mimeType};base64,${base64Image}`;
-			}
-
-			hideTyping();
-			const imageHTML = `<div class="relative w-full my-4 rounded-xl overflow-hidden border border-slate-100 shadow-sm group"><img src="${imageUrl}" alt="Generated Image" class="w-full h-auto block"><button onclick="downloadImageFromBtn(this, event)" class="absolute top-1 right-1 p-1 bg-black/50 hover:bg-black/70 rounded-full text-white backdrop-blur-sm transition-all opacity-0 group-hover:opacity-100 flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-down-to-line"><path d="M12 17V3"/><path d="m6 11 6 6 6-6"/><path d="M19 21H5"/></svg></button></div>`;
-
-			if (targetContainer) {
-				const loader = document.getElementById(loaderId);
-				if (loader) loader.outerHTML = imageHTML;
-				else targetContainer.insertAdjacentHTML('beforeend', imageHTML);
-				resolveIdbImages(targetContainer, true);
-				if (isGenerating) {
-					const lastMsgIndex = chatHistory.findLastIndex(m => m.role === 'model');
-					if (lastMsgIndex !== -1) {
-						chatHistory[lastMsgIndex].parts[0].text += `\n${imageHTML}`;
-						saveCurrentSession();
-					}
-				}
-			} else {
-				const container = appendMessageToUI('model', imageHTML, true, true);
-				if (isGenerating) {
-					chatHistory.push({ role: "model", parts: [{ text: imageHTML }] });
-					saveCurrentSession();
-				}
-			}
-			scrollBottom(true, 'auto');
+		async function generateImage(prompt, targetContainer) {
+		    const { data: { session } } = await _supabase.auth.getSession();
+		    const userToken = session.access_token;
+		    let loaderId = `loader-${Date.now()}`;
+		    
+		    const loaderHTML = `
+		        <div id="${loaderId}" class="mt-2 flex items-center gap-1.5 animate-in fade-in duration-300">
+		            <i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin text-blue-600"></i>
+		            <span class="text-[13px] font-medium text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">Membuat Gambar</span>
+		        </div>`;
+		        
+		    targetContainer.insertAdjacentHTML('beforeend', loaderHTML);
+		    lucide.createIcons();
+		
+		    try {
+		        const response = await fetch(PROXY_URL + `?model=${IMAGE_MODEL_NAME}&action=generateContent`, {
+		            method: 'POST',
+		            headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${userToken}` },
+		            body: JSON.stringify({
+		                contents: [{ role: "user", parts: [{ text: prompt }] }],
+		                generationConfig: { response_modalities: ["IMAGE"] }
+		            })
+		        });
+		
+		        const data = await response.json();
+		        const imagePart = data.candidates?.[0]?.content?.parts?.find(p => p.inlineData);
+		        if (!imagePart) throw new Error("Gagal generate");
+		
+		        const fileName = `ai_${Date.now()}.png`;
+		        const publicUrl = await uploadImageToSupabase(imagePart.inlineData.data, fileName, imagePart.inlineData.mimeType);
+		
+		        const imageHTML = `
+		            <div class="relative w-full my-4 rounded-xl overflow-hidden border border-slate-100 shadow-sm group">
+		                <img src="${publicUrl}" class="w-full h-auto block">
+		                <button onclick="window.open('${publicUrl}', '_blank')" class="absolute top-2 right-2 p-2 bg-black/50 rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity">
+		                    <i data-lucide="download" class="w-4 h-4"></i>
+		                </button>
+		            </div>`;
+		
+		        const loader = document.getElementById(loaderId);
+		        if (loader) loader.outerHTML = imageHTML;
+		        lucide.createIcons();
+		        
+		        return `\n${imageHTML}\n`;
+		    } catch (e) {
+		        const loader = document.getElementById(loaderId);
+		        if (loader) loader.innerHTML = `<span class="text-red-500 text-[11px] font-bold uppercase">Gagal membuat gambar</span>`;
+		        return "";
+		    }
 		}
-
-		async function generateYoutubeVideo(query, targetContainer = null) {
-			const { data: { session } } = await _supabase.auth.getSession();
-			if (!session) return;
-
-			const userToken = session.access_token;
-			let loaderId = `vid-loader-${Date.now()}`;
-
-			if (targetContainer) {
-				const loaderHTML = `
-				    <div id="${loaderId}" class="mt-2 flex items-center gap-1.5 animate-in fade-in duration-300">
-				        <i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin text-blue-600"></i>
-				        <span class="text-[13px] font-medium text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">Mencari Youtube Video</span>
-				        <div class="flex gap-0.5 items-center pt-1">
-				            <span class="w-1 h-1 bg-blue-400 rounded-full animate-bounce"></span>
-				            <span class="w-1 h-1 bg-blue-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></span>
-				            <span class="w-1 h-1 bg-blue-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></span>
-				        </div>
-				    </div>
-				`;
-				targetContainer.insertAdjacentHTML('beforeend', loaderHTML);
-				lucide.createIcons();
-				scrollBottom(true, 'auto');
-			}
-
-			try {
-				const response = await fetch(YOUTUBE_PROXY_URL, {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-						'apikey': SUPABASE_KEY,
-						'Authorization': `Bearer ${userToken}`
-					},
-					body: JSON.stringify({ query: query })
-				});
-
-				const data = await response.json();
-				if (!response.ok) {
-					const errorMsg = (typeof data.error === 'object' && data.error !== null)
-						? (data.error.message || JSON.stringify(data.error))
-						: (data.error || 'Failed to fetch video');
-					throw new Error(errorMsg);
-				}
-
-				const items = data.items || [];
-				let videoHTML = '';
-				var videoToken = '';
-
-				if (items.length > 0) {
-					const videoId = items[0].id.videoId;
-					videoHTML = getYoutubeEmbedHTML(videoId);
-					videoToken = `\n\n[VIDEO_EMBED:${videoId}]\n\n`;
-				} else {
-					videoHTML = `<div class="mt-2 text-xs text-red-500 font-bold bg-red-50 p-2 rounded-lg border border-red-100">Video tidak ditemukan.</div>`;
-					videoToken = videoHTML;
-				}
-
-				if (targetContainer) {
-					const loader = document.getElementById(loaderId);
-					if (loader) loader.outerHTML = videoHTML;
-					else targetContainer.insertAdjacentHTML('beforeend', videoHTML);
-
-					if (isGenerating) {
-						const lastMsgIndex = chatHistory.findLastIndex(m => m.role === 'model');
-						if (lastMsgIndex !== -1) {
-							chatHistory[lastMsgIndex].parts[0].text += videoToken;
-							saveCurrentSession();
-						}
-					}
-				} else {
-					if (isGenerating) {
-						chatHistory.push({ role: "model", parts: [{ text: videoToken }] });
-						saveCurrentSession();
-					}
-				}
-				scrollBottom(true, 'auto');
-
-			} catch (error) {
-				console.error("Youtube Error:", error);
-				if (targetContainer) {
-					const loader = document.getElementById(loaderId);
-					if (loader) loader.innerHTML = `<span class="text-red-500">Gagal memuat video: ${error.message}</span>`;
-				}
-			}
+		
+		async function generateYoutubeVideo(query, targetContainer) {
+		    const { data: { session } } = await _supabase.auth.getSession();
+		    const userToken = session.access_token;
+		    let loaderId = `vid-loader-${Date.now()}`;
+		
+		    const loaderHTML = `
+		        <div id="${loaderId}" class="mt-2 flex items-center gap-1.5 animate-in fade-in duration-300">
+		            <i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin text-blue-600"></i>
+		            <span class="text-[13px] font-medium text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">Mencari Youtube Video</span>
+		            <div class="flex gap-0.5 items-center pt-1">
+		                <span class="w-1 h-1 bg-blue-400 rounded-full animate-bounce"></span>
+		                <span class="w-1 h-1 bg-blue-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></span>
+		                <span class="w-1 h-1 bg-blue-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></span>
+		            </div>
+		        </div>`;
+		
+		    targetContainer.insertAdjacentHTML('beforeend', loaderHTML);
+		    lucide.createIcons();
+		
+		    try {
+		        const response = await fetch(YOUTUBE_PROXY_URL, {
+		            method: 'POST',
+		            headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${userToken}` },
+		            body: JSON.stringify({ query: query })
+		        });
+		
+		        const data = await response.json();
+		        const videoId = data.items?.[0]?.id?.videoId;
+		        
+		        if (videoId) {
+		            const videoHTML = getYoutubeEmbedHTML(videoId);
+		            const loader = document.getElementById(loaderId);
+		            if (loader) loader.outerHTML = videoHTML;
+		            return `\n\n[VIDEO_EMBED:${videoId}]\n\n`;
+		        } else {
+		            throw new Error("Video tidak ditemukan");
+		        }
+		    } catch (error) {
+		        const loader = document.getElementById(loaderId);
+		        if (loader) loader.innerHTML = `<span class="text-red-500 text-[11px] font-bold uppercase">Video tidak ditemukan</span>`;
+		        return "";
+		    }
 		}
 
 		async function uploadImageToSupabase(base64Data, fileName, mimeType) {
-			const byteCharacters = atob(base64Data);
-			const byteNumbers = new Array(byteCharacters.length);
-			for (let i = 0; i < byteCharacters.length; i++) {
-				byteNumbers[i] = byteCharacters.charCodeAt(i);
-			}
-			const byteArray = new Uint8Array(byteNumbers);
-			const blob = new Blob([byteArray], { type: mimeType });
-			const filePath = `ai_generated/${fileName}`;
-
-			const { data, error } = await _supabase.storage
-				.from('aura_media')
-				.upload(filePath, blob, {
-					contentType: mimeType,
-					upsert: false
-				});
-
-			if (error) throw error;
-
-			const { data: { publicUrl } } = _supabase.storage
-				.from('aura_media')
-				.getPublicUrl(filePath);
-
-			return publicUrl;
+		    const pureBase64 = base64Data.includes(',') ? base64Data.split(',')[1] : base64Data;
+		    const byteCharacters = atob(pureBase64);
+		    const byteNumbers = new Array(byteCharacters.length);
+		    for (let i = 0; i < byteCharacters.length; i++) {
+		        byteNumbers[i] = byteCharacters.charCodeAt(i);
+		    }
+		    const byteArray = new Uint8Array(byteNumbers);
+		    const blob = new Blob([byteArray], { type: mimeType });
+		    const filePath = `media/${fileName}`;
+		
+		    const { data, error } = await _supabase.storage
+		        .from('media')
+		        .upload(filePath, blob, {
+		            contentType: mimeType,
+		            upsert: true
+		        });
+		
+		    if (error) throw error;
+		
+		    const { data: { publicUrl } } = _supabase.storage
+		        .from('media')
+		        .getPublicUrl(filePath);
+		
+		    return publicUrl;
 		}
 
 		sendBtn.addEventListener('pointerdown', (e) => {
@@ -2817,9 +2789,14 @@ Jangan pernah membuat gambar atau mencari video youtube KECUALI jika user MEMINT
 		async function init() {
 			const loadingOverlay = document.getElementById('loadingOverlay');
 			if (loadingOverlay) {
-		        loadingOverlay.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
-		        loadingOverlay.addEventListener('wheel', (e) => e.preventDefault(), { passive: false });
-		    }
+			    loadingOverlay.addEventListener('touchmove', (e) => {
+			        e.preventDefault();
+			    }, { passive: false });
+			
+			    loadingOverlay.addEventListener('wheel', (e) => {
+			        e.preventDefault();
+			    }, { passive: false });
+			}
 			
 			const { data: { session } } = await _supabase.auth.getSession();
 
@@ -3127,16 +3104,29 @@ Jangan pernah membuat gambar atau mencari video youtube KECUALI jika user MEMINT
 		    if (!btn) return;
 		
 		    const container = btn.parentElement;
-		    const textElement = container.querySelector('.prose-container') || container.querySelector('.prose');
+		    const textElement = container.querySelector('.prose-container');
 		    
 		    if (textElement) {
 		        const textToCopy = textElement.innerText;
 		
 		        try {
-		            await navigator.clipboard.writeText(textToCopy);
+		            if (navigator.clipboard && window.isSecureContext) {
+		                await navigator.clipboard.writeText(textToCopy);
+		            } else {
+		                const textArea = document.createElement("textarea");
+		                textArea.value = textToCopy;
+		                textArea.style.position = "fixed";
+		                textArea.style.left = "-999999px";
+		                textArea.style.top = "-999999px";
+		                document.body.appendChild(textArea);
+		                textArea.focus();
+		                textArea.select();
+		                document.execCommand('copy');
+		                textArea.remove();
+		            }
 		            
 		            const originalHTML = btn.innerHTML;
-		            btn.innerHTML = '<i data-lucide="check" class="w-3 h-3 text-green-500"></i>';
+		            btn.innerHTML = '<i data-lucide="check" class="w-3.5 h-3.5 text-green-500"></i>';
 		            lucide.createIcons();
 		
 		            setTimeout(() => {
@@ -3144,8 +3134,7 @@ Jangan pernah membuat gambar atau mencari video youtube KECUALI jika user MEMINT
 		                lucide.createIcons();
 		            }, 2000);
 		        } catch (err) {
-		            console.error('Gagal menyalin teks: ', err);
-		            alert('Gagal menyalin teks.');
+		            console.error(err);
 		        }
 		    }
 		});
