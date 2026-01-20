@@ -2428,9 +2428,11 @@
 		            document.body.removeChild(a);
 		        }
 		
-		        setTimeout(() => window.URL.revokeObjectURL(blobUrl), 200);
+		        setTimeout(() => {
+		            window.URL.revokeObjectURL(blobUrl);
+		        }, 500);
 		    } catch (err) {
-		        console.error(err);
+		        console.error("Proses unduhan dihentikan atau gagal.");
 		    }
 		}
 
