@@ -2400,39 +2400,34 @@
 		
 		    try {
 		        const response = await fetch(url);
+		        if (!response.ok) return;
+		        
 		        const blob = await response.blob();
 		        const blobUrl = window.URL.createObjectURL(blob);
-		
 		        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 		
 		        if (isIOS && navigator.share) {
 		            const file = new File([blob], filename, { type: blob.type });
 		            try {
-		                await navigator.share({
-		                    files: [file]
-		                });
+		                await navigator.share({ files: [file] });
 		            } catch (shareErr) {
-		                const a = document.createElement('a');
-		                a.href = blobUrl;
-		                a.download = filename;
-		                document.body.appendChild(a);
-		                a.click();
-		                document.body.removeChild(a);
+		                window.URL.revokeObjectURL(blobUrl);
+		                return;
 		            }
 		        } else {
 		            const a = document.createElement('a');
 		            a.href = blobUrl;
 		            a.download = filename;
+		            a.style.display = 'none';
 		            document.body.appendChild(a);
 		            a.click();
-		            document.body.removeChild(a);
+		            setTimeout(() => {
+		                document.body.removeChild(a);
+		                window.URL.revokeObjectURL(blobUrl);
+		            }, 200);
 		        }
-		
-		        setTimeout(() => {
-		            window.URL.revokeObjectURL(blobUrl);
-		        }, 500);
 		    } catch (err) {
-		        console.error("Proses unduhan dihentikan atau gagal.");
+		        console.error(err);
 		    }
 		}
 
