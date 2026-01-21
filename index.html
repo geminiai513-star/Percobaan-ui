@@ -712,40 +712,6 @@
 							</label>
 						</div>
 
-						<!-- Image Generation Switch -->
-						<div class="flex items-center justify-between bg-white p-3 rounded-xl border border-slate-100">
-							<div class="flex items-center gap-3">
-								<div
-									class="w-8 h-8 rounded-full bg-pink-50 flex items-center justify-center text-pink-600">
-									<i data-lucide="image" class="w-4 h-4"></i>
-								</div>
-								<span class="text-sm font-bold text-slate-700">Image Generation</span>
-							</div>
-							<label class="relative inline-flex items-center cursor-pointer">
-								<input type="checkbox" id="image-feature-toggle" class="sr-only peer" checked>
-								<div
-									class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-pink-600">
-								</div>
-							</label>
-						</div>
-
-						<!-- YouTube Search Switch -->
-						<div class="flex items-center justify-between bg-white p-3 rounded-xl border border-slate-100">
-							<div class="flex items-center gap-3">
-								<div
-									class="w-8 h-8 rounded-full bg-red-50 flex items-center justify-center text-red-600">
-									<i data-lucide="youtube" class="w-4 h-4"></i>
-								</div>
-								<span class="text-sm font-bold text-slate-700">YouTube Search</span>
-							</div>
-							<label class="relative inline-flex items-center cursor-pointer">
-								<input type="checkbox" id="youtube-feature-toggle" class="sr-only peer" checked>
-								<div
-									class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600">
-								</div>
-							</label>
-						</div>
-
 						<!-- Upload File Switch -->
 						<div class="flex items-center justify-between bg-white p-3 rounded-xl border border-slate-100">
 							<div class="flex items-center gap-3">
@@ -900,17 +866,12 @@
 		const STREAM_SPEED = 8;
 		const STREAM_CHUNK_SIZE = 5;
 
-		const MAIN_SYSTEM_PROMPT = `Anda adalah ALISA, Asisten Inspektorat Provinsi Lampung yang ramah, Profesional, dan sangat membantu, selalu berikan informasi yang akurat dan terbaru.
+		const MAIN_SYSTEM_PROMPT = `Kamu adalah Asisten Virtual yang Profesional, Ramah dan sangat membantu.`;
 
-			PANDUAN KONTEKS & DATABASE (PENTING):
-			1. Jika Anda menerima informasi dari "Knowledge Base" (Konteks Dokumen) atau Google Search, JANGAN menyebutkan "Berdasarkan dokumen", "Menurut data yang diunggah", atau frasa sejenis.
-			2. Anggaplah semua informasi tersebut adalah pengetahuan internal Anda sendiri. Sampaikan jawaban secara langsung, percaya diri, dan natural.
-			3. Jika konteks tidak menjawab pertanyaan user, gunakan pengetahuan umum Anda atau Google Search (jika aktif), tetap dengan nada profesional Inspektorat.
-			
-			PENGGUNAAN MEDIA:
-			Jangan pernah membuat gambar atau mencari video youtube KECUALI jika user MEMINTANYA secara spesifik. Gunakan fitur tersebut sebijak mungkin.`;
-		const IMAGE_GEN_PROMPT = "Untuk Membuat Gunakan tag [image]Deskripsi dalam bahasa Indonesia[/image].";
-		const VIDEO_GEN_PROMPT = "Untuk Mencari video youtube Gunakan tag [youtube]query pencarian spesifik[/youtube].";
+		const MEDIA_GEN_PROMPT = `PANDUAN PEMBUATAN MEDIA:
+		- Untuk membuat gambar, gunakan tag [image]Deskripsi visual dalam Bahasa Indonesia[/image].
+		- Untuk mencari video YouTube, gunakan tag [youtube]Query pencarian spesifik[/youtube].
+		- PENTING!!! Jangan pernah membuat gambar ataupun mencari video di youtube jika User tidak memintanya secara eksplisit.`;
 
 		const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -962,46 +923,43 @@
 		let currentSelectedModel = localStorage.getItem('alisa_model') || "gemini-3-flash-preview";
 
 		function saveAdminSettings() {
-			localStorage.setItem('alisa_model', currentSelectedModel);
-			localStorage.setItem('alisa_voice', currentVoice);
-			localStorage.setItem('alisa_thinking', document.getElementById('settings-thinking').value);
-			localStorage.setItem('alisa_prompt', document.getElementById('systemPromptInput').value);
-			localStorage.setItem('alisa_temp', document.getElementById('settings-temp').value);
-			localStorage.setItem('alisa_tokens', document.getElementById('settings-tokens').value);
-			localStorage.setItem('alisa_google_search', document.getElementById('google-search-toggle').checked);
-			localStorage.setItem('alisa_kb_toggle', document.getElementById('kb-toggle').checked);
+    localStorage.setItem('alisa_model', currentSelectedModel);
+    localStorage.setItem('alisa_voice', currentVoice);
+    localStorage.setItem('alisa_thinking', document.getElementById('settings-thinking').value);
+    localStorage.setItem('alisa_prompt', document.getElementById('systemPromptInput').value);
+    localStorage.setItem('alisa_temp', document.getElementById('settings-temp').value);
+    localStorage.setItem('alisa_tokens', document.getElementById('settings-tokens').value);
+    localStorage.setItem('alisa_google_search', document.getElementById('google-search-toggle').checked);
+    localStorage.setItem('alisa_kb_toggle', document.getElementById('kb-toggle').checked);
 
-			// New Features
-			const voiceEnabled = document.getElementById('voice-feature-toggle').checked;
-			localStorage.setItem('alisa_voice_enabled', voiceEnabled);
-			localStorage.setItem('alisa_image_enabled', document.getElementById('image-feature-toggle').checked);
-			localStorage.setItem('alisa_youtube_enabled', document.getElementById('youtube-feature-toggle').checked);
+    const voiceEnabled = document.getElementById('voice-feature-toggle').checked;
+    localStorage.setItem('alisa_voice_enabled', voiceEnabled);
 
-			const uploadEnabled = document.getElementById('upload-feature-toggle').checked;
-			localStorage.setItem('alisa_upload_enabled', uploadEnabled);
-			const voiceBtn = document.getElementById('voiceBtn');
-			if (voiceBtn) voiceBtn.style.display = voiceEnabled ? 'block' : 'none';
+    const uploadEnabled = document.getElementById('upload-feature-toggle').checked;
+    localStorage.setItem('alisa_upload_enabled', uploadEnabled);
+    const voiceBtn = document.getElementById('voiceBtn');
+    if (voiceBtn) voiceBtn.style.display = voiceEnabled ? 'block' : 'none';
 
-			const uploadBtn = document.getElementById('uploadBtn');
-			const inputField = document.getElementById('userInput');
-			if (uploadBtn) {
-				if (uploadEnabled) {
-					uploadBtn.style.display = 'block';
-					uploadBtn.classList.remove('hidden');
-					if (inputField) {
-						inputField.classList.remove('pl-4');
-						inputField.classList.add('px-2');
-					}
-				} else {
-					uploadBtn.style.display = 'none';
-					uploadBtn.classList.add('hidden');
-					if (inputField) {
-						inputField.classList.add('pl-4');
-						inputField.classList.remove('px-2');
-					}
-				}
-			}
-		}
+    const uploadBtn = document.getElementById('uploadBtn');
+    const inputField = document.getElementById('userInput');
+    if (uploadBtn) {
+        if (uploadEnabled) {
+            uploadBtn.style.display = 'block';
+            uploadBtn.classList.remove('hidden');
+            if (inputField) {
+                inputField.classList.remove('pl-4');
+                inputField.classList.add('px-2');
+            }
+        } else {
+            uploadBtn.style.display = 'none';
+            uploadBtn.classList.add('hidden');
+            if (inputField) {
+                inputField.classList.add('pl-4');
+                inputField.classList.remove('px-2');
+            }
+        }
+    }
+}
 
 		if (settingsBtn && adminScreen) {
 			settingsBtn.addEventListener('click', () => {
@@ -1093,177 +1051,168 @@
 		}
 
 		async function sendMessage(e) {
-		    if (e) e.preventDefault();
-		    if (isGenerating) {
-		        if (abortController) abortController.abort();
-		        setGeneratingState(false);
-		        return;
-		    }
-		
-		    const rawInput = userInput.value.trim();
-		    if (!rawInput && pendingFiles.length === 0) return;
-		
-		    const filesToProcess = [...pendingFiles];
-		    let fileMetadata = filesToProcess.map(f => ({ name: f.name, size: f.size }));
-		    let fileCardsHTML = "";
-		    filesToProcess.forEach(f => {
-		        fileCardsHTML += getFileCardHTML(f.name, f.size);
-		    });
-		
-		    const dynamicMainPrompt = document.getElementById('systemPromptInput').value || MAIN_SYSTEM_PROMPT;
-		    const sliderVal = document.getElementById('settings-thinking').value;
-		    const currentBudget = thinkingMap[sliderVal] || 16000;
-		    const currentTemp = parseFloat(document.getElementById('settings-temp').value) || 1.0;
-		    const currentMaxTokens = parseInt(document.getElementById('settings-tokens').value) || 65536;
-		
-		    const { data: { session } } = await _supabase.auth.getSession();
-		    if (!session) return;
-		    const userToken = session.access_token;
-		
-		    userInput.blur();
-		    userInput.value = '';
-		    userInput.style.height = 'auto';
-		    userInput.disabled = true;
-		    setGeneratingState(true);
-		    abortController = new AbortController();
-		
-		    let apiParts = [];
-		    let textContext = "";
-		    pendingFiles = [];
-		    renderPreviews();
-		
-		    for (const f of filesToProcess) {
-		        const ext = f.name.split('.').pop().toLowerCase();
-		        if (f.mime.startsWith('image/') || f.mime === 'application/pdf') {
-		            const cleanBase64 = f.base64.includes(',') ? f.base64.split(',')[1] : f.base64;
-		            apiParts.push({ inline_data: { mime_type: f.mime, data: cleanBase64 } });
-		        } else {
-		            textContext += await (['docx', 'xlsx', 'xls', 'pptx'].includes(ext) ? extractTextFromOffice(f) : readCodeFile(f));
-		        }
-		    }
-		
-		    const finalPrompt = rawInput + (textContext ? "\n\nKONTEKS DOKUMEN:\n" + textContext : "");
-		    const userMessageParts = apiParts.length > 0 ? [...apiParts, { text: finalPrompt }] : [{ text: finalPrompt }];
-		
-		    chatHistory.push({ role: "user", parts: userMessageParts, fileMetadata: fileMetadata });
-		    appendMessageToUI('user', rawInput, true, false, fileCardsHTML);
-		    await saveMessageToSupabase('user', rawInput, fileMetadata);
-		
-		    showTyping();
-		
-		    const useImageGen = document.getElementById('image-feature-toggle').checked;
-		    const useYoutube = document.getElementById('youtube-feature-toggle').checked;
-		    let combinedSystemInstruction = dynamicMainPrompt;
-		    if (useImageGen) combinedSystemInstruction += `\n\n${IMAGE_GEN_PROMPT}`;
-		    if (useYoutube) combinedSystemInstruction += `\n\n${VIDEO_GEN_PROMPT}`;
-		
-		    const useGoogleSearch = document.getElementById('google-search-toggle').checked;
-		    const useKB = document.getElementById('kb-toggle').checked;
-		    let contextPrompt = finalPrompt;
-		
-		    if (useKB) {
-		        const kbResults = await searchKB(rawInput, userToken);
-		        if (kbResults) contextPrompt = "GUNAKAN REFERENSI BERIKUT UNTUK MENJAWAB:\n" + kbResults + "\n\nPERTANYAAN: " + finalPrompt;
-		    }
-		
-		    const apiContents = [
-		        ...chatHistory.slice(0, -1).map(h => ({ role: h.role, parts: h.parts })),
-		        { role: "user", parts: apiParts.length > 0 ? [...apiParts, { text: contextPrompt }] : [{ text: contextPrompt }] }
-		    ];
-		
-		    try {
-		        const payload = {
-		            system_instruction: { parts: [{ text: combinedSystemInstruction }] },
-		            contents: apiContents,
-		            generation_config: { temperature: currentTemp, max_output_tokens: currentMaxTokens }
-		        };
-		        if (useGoogleSearch) payload.tools = [{ google_search: {} }];
-		        if (currentSelectedModel.includes('think')) {
-		            payload.thinking_config = { include_thoughts: true, thinking_budget_tokens: currentBudget };
-		        }
-		
-		        const response = await fetch(PROXY_URL + `?model=${currentSelectedModel}&action=generateContent`, {
-		            method: 'POST',
-		            headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${userToken}` },
-		            signal: abortController.signal,
-		            body: JSON.stringify(payload)
-		        });
-		
-		        const data = await response.json();
-		        hideTyping();
-		        if (!response.ok) throw new Error(data.error?.message || "Error");
-		
-		        const parts = data.candidates?.[0]?.content?.parts || [];
-		        let finalResponse = "";
-		        parts.forEach(part => { if (part.text && !part.thought) finalResponse += part.text; });
-		
-		        if (finalResponse) {
-		            // Buat gelembung pesan utama
-		            const initialContainer = appendMessageToUI('model', "");
-		            const messageBody = initialContainer.parentElement;
-		            
-		            // Bersihkan kontainer bawaan agar urutan benar-benar dari nol
-		            messageBody.querySelector('.prose-container').remove();
-		            messageBody.querySelector('.media-container').remove();
-		            messageBody.querySelector('.prose-container-bottom').remove();
-		
-		            const mediaSplitRegex = /(\[image\][\s\S]*?\[\/image\]|\[youtube\][\s\S]*?\[\/youtube\])/gi;
-		            const resParts = finalResponse.split(mediaSplitRegex);
-		            
-		            chatHistory.push({ role: "model", parts: [{ text: "" }] });
-		
-		            for (let i = 0; i < resParts.length; i++) {
-		                if (!isGenerating) break;
-		                const part = resParts[i];
-		                if (!part.trim()) continue;
-		
-		                const imgMatch = part.match(/\[image\]([\s\S]*?)\[\/image\]/i);
-		                const vidMatch = part.match(/\[youtube\]([\s\S]*?)\[\/youtube\]/i);
-		
-		                if (imgMatch) {
-		                    // Buat kontainer media baru di akhir antrian
-		                    const newMediaBox = document.createElement('div');
-		                    newMediaBox.className = "media-container w-full flex flex-col mb-4";
-		                    messageBody.appendChild(newMediaBox);
-		                    
-		                    const tag = await generateImage(imgMatch[1].trim(), newMediaBox);
-		                    chatHistory[chatHistory.length - 1].parts[0].text += tag;
-		                } else if (vidMatch) {
-		                    // Buat kontainer media baru di akhir antrian
-		                    const newMediaBox = document.createElement('div');
-		                    newMediaBox.className = "media-container w-full flex flex-col mb-4";
-		                    messageBody.appendChild(newMediaBox);
-		                    
-		                    const tag = await generateYoutubeVideo(vidMatch[1].trim(), newMediaBox);
-		                    chatHistory[chatHistory.length - 1].parts[0].text += tag;
-		                } else {
-		                    // Buat kontainer teks baru di akhir antrian
-		                    const newTextEl = document.createElement('div');
-		                    newTextEl.className = "w-full prose-container prose max-w-none text-slate-600 text-[15px] leading-relaxed font-medium mb-4";
-		                    messageBody.appendChild(newTextEl);
-		                    
-		                    chatHistory[chatHistory.length - 1].parts[0].text += part;
-		                    await streamText(newTextEl, part);
-		                }
-		            }
-		
-		            const finalAiText = chatHistory[chatHistory.length - 1].parts[0].text;
-		            await saveMessageToSupabase('model', finalAiText);
-		            
-		            if (chatHistory.length === 2) {
-		                const newTitle = await generateAiTitle(finalAiText);
-		                await updateSessionTitle(currentSessionId, newTitle);
-		            }
-		        }
-		    } catch (error) {
-		        hideTyping();
-		        if (error.name !== 'AbortError') appendMessageToUI('error', "Gagal menghubungi AI.");
-		    } finally {
-		        setGeneratingState(false);
-		        userInput.disabled = false;
-		        abortController = null;
-		    }
-		}
+    if (e) e.preventDefault();
+    if (isGenerating) {
+        if (abortController) abortController.abort();
+        setGeneratingState(false);
+        return;
+    }
+
+    const rawInput = userInput.value.trim();
+    if (!rawInput && pendingFiles.length === 0) return;
+
+    const filesToProcess = [...pendingFiles];
+    let fileMetadata = filesToProcess.map(f => ({ name: f.name, size: f.size }));
+    let fileCardsHTML = "";
+    filesToProcess.forEach(f => {
+        fileCardsHTML += getFileCardHTML(f.name, f.size);
+    });
+
+    const dynamicMainPrompt = document.getElementById('systemPromptInput').value || MAIN_SYSTEM_PROMPT;
+    const combinedSystemInstruction = `${dynamicMainPrompt}\n\n${MEDIA_GEN_PROMPT}`;
+    
+    const sliderVal = document.getElementById('settings-thinking').value;
+    const currentBudget = thinkingMap[sliderVal] || 16000;
+    const currentTemp = parseFloat(document.getElementById('settings-temp').value) || 1.0;
+    const currentMaxTokens = parseInt(document.getElementById('settings-tokens').value) || 65536;
+
+    const { data: { session } } = await _supabase.auth.getSession();
+    if (!session) return;
+    const userToken = session.access_token;
+
+    userInput.blur();
+    userInput.value = '';
+    userInput.style.height = 'auto';
+    userInput.disabled = true;
+    setGeneratingState(true);
+    abortController = new AbortController();
+
+    let apiParts = [];
+    let textContext = "";
+    pendingFiles = [];
+    renderPreviews();
+
+    for (const f of filesToProcess) {
+        const ext = f.name.split('.').pop().toLowerCase();
+        if (f.mime.startsWith('image/') || f.mime === 'application/pdf') {
+            const cleanBase64 = f.base64.includes(',') ? f.base64.split(',')[1] : f.base64;
+            apiParts.push({ inline_data: { mime_type: f.mime, data: cleanBase64 } });
+        } else {
+            textContext += await (['docx', 'xlsx', 'xls', 'pptx'].includes(ext) ? extractTextFromOffice(f) : readCodeFile(f));
+        }
+    }
+
+    const finalPrompt = rawInput + (textContext ? "\n\nKONTEKS DOKUMEN:\n" + textContext : "");
+    const userMessageParts = apiParts.length > 0 ? [...apiParts, { text: finalPrompt }] : [{ text: finalPrompt }];
+
+    chatHistory.push({ role: "user", parts: userMessageParts, fileMetadata: fileMetadata });
+    appendMessageToUI('user', rawInput, true, false, fileCardsHTML);
+    await saveMessageToSupabase('user', rawInput, fileMetadata);
+
+    showTyping();
+
+    const useGoogleSearch = document.getElementById('google-search-toggle').checked;
+    const useKB = document.getElementById('kb-toggle').checked;
+    let contextPrompt = finalPrompt;
+
+    if (useKB) {
+        const kbResults = await searchKB(rawInput, userToken);
+        if (kbResults) contextPrompt = "GUNAKAN REFERENSI BERIKUT UNTUK MENJAWAB:\n" + kbResults + "\n\nPERTANYAAN: " + finalPrompt;
+    }
+
+    const apiContents = [
+        ...chatHistory.slice(0, -1).map(h => ({ role: h.role, parts: h.parts })),
+        { role: "user", parts: apiParts.length > 0 ? [...apiParts, { text: contextPrompt }] : [{ text: contextPrompt }] }
+    ];
+
+    try {
+        const payload = {
+            system_instruction: { parts: [{ text: combinedSystemInstruction }] },
+            contents: apiContents,
+            generation_config: { temperature: currentTemp, max_output_tokens: currentMaxTokens }
+        };
+        if (useGoogleSearch) payload.tools = [{ google_search: {} }];
+        if (currentSelectedModel.includes('think')) {
+            payload.thinking_config = { include_thoughts: true, thinking_budget_tokens: currentBudget };
+        }
+
+        const response = await fetch(PROXY_URL + `?model=${currentSelectedModel}&action=generateContent`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${userToken}` },
+            signal: abortController.signal,
+            body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+        hideTyping();
+        if (!response.ok) throw new Error(data.error?.message || "Error");
+
+        const parts = data.candidates?.[0]?.content?.parts || [];
+        let finalResponse = "";
+        parts.forEach(part => { if (part.text && !part.thought) finalResponse += part.text; });
+
+        if (finalResponse) {
+            const initialContainer = appendMessageToUI('model', "");
+            const messageBody = initialContainer.parentElement;
+            
+            messageBody.querySelector('.prose-container').remove();
+            messageBody.querySelector('.media-container').remove();
+            messageBody.querySelector('.prose-container-bottom').remove();
+
+            const mediaSplitRegex = /(\[image\][\s\S]*?\[\/image\]|\[youtube\][\s\S]*?\[\/youtube\])/gi;
+            const resParts = finalResponse.split(mediaSplitRegex);
+            
+            chatHistory.push({ role: "model", parts: [{ text: "" }] });
+
+            for (let i = 0; i < resParts.length; i++) {
+                if (!isGenerating) break;
+                const part = resParts[i];
+                if (!part.trim()) continue;
+
+                const imgMatch = part.match(/\[image\]([\s\S]*?)\[\/image\]/i);
+                const vidMatch = part.match(/\[youtube\]([\s\S]*?)\[\/youtube\]/i);
+
+                if (imgMatch) {
+                    const newMediaBox = document.createElement('div');
+                    newMediaBox.className = "media-container w-full flex flex-col mb-4";
+                    messageBody.appendChild(newMediaBox);
+                    
+                    const tag = await generateImage(imgMatch[1].trim(), newMediaBox);
+                    chatHistory[chatHistory.length - 1].parts[0].text += tag;
+                } else if (vidMatch) {
+                    const newMediaBox = document.createElement('div');
+                    newMediaBox.className = "media-container w-full flex flex-col mb-4";
+                    messageBody.appendChild(newMediaBox);
+                    
+                    const tag = await generateYoutubeVideo(vidMatch[1].trim(), newMediaBox);
+                    chatHistory[chatHistory.length - 1].parts[0].text += tag;
+                } else {
+                    const newTextEl = document.createElement('div');
+                    newTextEl.className = "w-full prose-container prose max-w-none text-slate-600 text-[15px] leading-relaxed font-medium mb-4";
+                    messageBody.appendChild(newTextEl);
+                    
+                    chatHistory[chatHistory.length - 1].parts[0].text += part;
+                    await streamText(newTextEl, part);
+                }
+            }
+
+            const finalAiText = chatHistory[chatHistory.length - 1].parts[0].text;
+            await saveMessageToSupabase('model', finalAiText);
+            
+            if (chatHistory.length === 2) {
+                const newTitle = await generateAiTitle(finalAiText);
+                await updateSessionTitle(currentSessionId, newTitle);
+            }
+        }
+    } catch (error) {
+        hideTyping();
+        if (error.name !== 'AbortError') appendMessageToUI('error', "Gagal menghubungi AI.");
+    } finally {
+        setGeneratingState(false);
+        userInput.disabled = false;
+        abortController = null;
+    }
+}
 
 		async function saveMessageToSupabase(role, content, fileMetadata = null) {
 		    try {
@@ -3079,12 +3028,6 @@
 		document.getElementById('voice-feature-toggle').checked = isVoiceOn;
 		if (voiceBtn) voiceBtn.style.display = isVoiceOn ? 'block' : 'none';
 
-		const savedImageEnabled = localStorage.getItem('alisa_image_enabled');
-		if (savedImageEnabled !== null) document.getElementById('image-feature-toggle').checked = (savedImageEnabled === 'true');
-
-		const savedYoutubeEnabled = localStorage.getItem('alisa_youtube_enabled');
-		if (savedYoutubeEnabled !== null) document.getElementById('youtube-feature-toggle').checked = (savedYoutubeEnabled === 'true');
-
 		const savedUploadEnabled = localStorage.getItem('alisa_upload_enabled');
 		const isUploadOn = savedUploadEnabled !== null ? (savedUploadEnabled === 'true') : true;
 		document.getElementById('upload-feature-toggle').checked = isUploadOn;
@@ -3113,8 +3056,6 @@
 		document.getElementById('kb-toggle').addEventListener('change', saveAdminSettings);
 
 		document.getElementById('voice-feature-toggle').addEventListener('change', saveAdminSettings);
-		document.getElementById('image-feature-toggle').addEventListener('change', saveAdminSettings);
-		document.getElementById('youtube-feature-toggle').addEventListener('change', saveAdminSettings);
 		document.getElementById('upload-feature-toggle').addEventListener('change', saveAdminSettings);
 		
 		document.addEventListener('click', async (e) => {
