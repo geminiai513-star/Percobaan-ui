@@ -41,6 +41,36 @@
 			left: 0;
 			overscroll-behavior: none !important;
 			touch-action: manipulation;
+			touch-action: pan-x pan-y;
+   			 -webkit-text-size-adjust: 100%;
+		}
+		
+		*, *::before, *::after {
+		    -webkit-user-select: none;
+		    user-select: none;
+		    -webkit-touch-callout: none;
+		    -webkit-tap-highlight-color: transparent;
+		}
+		
+		.prose, .prose * {
+		    -webkit-user-select: text !important;
+		    user-select: text !important;
+		    cursor: text;
+		}
+		
+		input, textarea {
+		    -webkit-user-select: text !important;
+		    user-select: text !important;
+		    -webkit-touch-callout: default;
+		}
+		
+		img {
+		    -webkit-user-drag: none;
+		    pointer-events: none;
+		}
+		
+		.prose img {
+		    pointer-events: auto;
 		}
 
 		#appInterface {
@@ -842,6 +872,34 @@
 				saveAdminSettings();
 			};
 		}
+		
+		document.addEventListener('touchmove', function(event) {
+		    if (event.scale !== 1) {
+		        event.preventDefault();
+		    }
+		}, { passive: false });
+		
+		let lastTouchEnd = 0;
+		document.addEventListener('touchend', function(event) {
+		    const now = (new Date()).getTime();
+		    if (now - lastTouchEnd <= 300) {
+		        event.preventDefault();
+		    }
+		    lastTouchEnd = now;
+		}, false);
+		
+		const metaViewport = document.querySelector('meta[name=viewport]');
+		document.addEventListener('focus', function(event) {
+		    if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') {
+		        metaViewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+		    }
+		}, true);
+		
+		document.addEventListener('blur', function(event) {
+		    if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') {
+		        metaViewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+		    }
+		}, true);
 
 
 		function formatBytes(bytes, decimals = 2) {
@@ -1441,6 +1499,7 @@
 				document.getElementById('loginScreen').style.display = 'flex';
 				document.getElementById('appInterface').style.display = 'none';
 			}
+			applyNativeKeyboardFix();
 		}
 
 		document.addEventListener('click', (e) => {
@@ -1476,6 +1535,21 @@
 			if (!form.classList.contains('hidden')) {
 				document.getElementById('newUserEmail').focus();
 			}
+		}
+		
+		function applyNativeKeyboardFix() {
+		    // Cari semua input teks, email, password, dan textarea
+		    const inputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="password"], textarea');
+		
+		    inputs.forEach(el => {
+		        // 1. Tambahkan attribute 'required' secara otomatis
+		        el.required = true;
+		
+		        // 2. Tambahkan event listener untuk fix bug scroll iOS
+		        el.addEventListener('blur', () => {
+		            window.scrollTo(0, 0);
+		        });
+		    });
 		}
 
 		async function fetchUsers() {
@@ -1608,10 +1682,6 @@
 
 		async function toggleBanUser(userId, iscurrentlyBanned) {
 			const action = iscurrentlyBanned ? "unfreeze" : "freeze";
-			// If we want to freeze, we set ban duration to a long time (e.g. 100 years ~ 876000 hours).
-			// If unfreeze, we send 'none' or handle it in backend. My backend logic expects banDuration string. 
-			// '876600h' is roughly 100 years. '0h' to unban.
-
 			const duration = iscurrentlyBanned ? '0s' : '876600h';
 
 			if (!confirm(`Yakin ingin ${action} user ini?`)) return;
