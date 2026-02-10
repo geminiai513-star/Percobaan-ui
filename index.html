@@ -39,7 +39,6 @@
 			top: 0;
 			left: 0;
 			overscroll-behavior: none !important;
-			touch-action: manipulation;
 			touch-action: pan-x pan-y;
 			-webkit-text-size-adjust: 100%;
 		}
@@ -319,9 +318,10 @@
 
 <body class="text-slate-900">
 	<div id="sidebarOverlay"
-    class="fixed inset-0 bg-black/20 z-[150] hidden backdrop-blur-sm transition-opacity duration-300 opacity-0 cursor-pointer"></div>
+		class="fixed inset-0 bg-black/20 z-[150] hidden backdrop-blur-sm transition-opacity duration-300 opacity-0 cursor-pointer">
+	</div>
 	<div id="mainSidebar"
-    class="fixed inset-y-0 left-0 w-[280px] bg-white z-[160] transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col border-r border-slate-100 shadow-2xl">
+		class="fixed inset-y-0 left-0 w-[280px] bg-white z-[160] transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col border-r border-slate-100 shadow-2xl">
 		<div class="h-16 flex items-center px-4 border-b border-slate-50 shrink-0">
 			<div class="flex items-center gap-3 w-full">
 				<div
@@ -405,7 +405,7 @@
 						<textarea id="userInput" placeholder="Tulis pesan..." rows="1"
 							class="flex-1 min-h-[40px] max-h-[150px] py-2.5 px-2 bg-transparent border-none outline-none resize-none text-[15px] font-medium text-slate-700 placeholder:text-slate-400 leading-tight"></textarea>
 
-						<button type="submit" id="sendBtn" ontouchstart="sendMessage(event)"
+						<button type="submit" id="sendBtn"
 							class="w-10 h-10 flex items-center justify-center bg-transparent text-black shrink-0 active:scale-90 transition-transform">
 							<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6"
 								fill="currentColor">
@@ -489,50 +489,17 @@
 						<div class="flex items-center justify-between bg-white p-3 rounded-xl border border-slate-100">
 							<div class="flex items-center gap-3">
 								<div
-									class="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600">
-									<i data-lucide="database" class="w-4 h-4"></i>
+									class="w-8 h-8 rounded-full bg-purple-50 flex items-center justify-center text-purple-600">
+									<i data-lucide="paperclip" class="w-4 h-4"></i>
 								</div>
-								<span class="text-sm font-bold text-slate-700">Knowledge Base</span>
+								<span class="text-sm font-bold text-slate-700">Upload File</span>
 							</div>
 							<label class="relative inline-flex items-center cursor-pointer">
-								<input type="checkbox" id="kb-search-toggle" class="sr-only peer">
+								<input type="checkbox" id="upload-toggle" class="sr-only peer" checked>
 								<div
-									class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600">
+									class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600">
 								</div>
 							</label>
-						</div>
-						<div class="flex items-center justify-between bg-white p-3 rounded-xl border border-slate-100">
-						    <div class="flex items-center gap-3">
-						        <div class="w-8 h-8 rounded-full bg-purple-50 flex items-center justify-center text-purple-600">
-						            <i data-lucide="paperclip" class="w-4 h-4"></i>
-						        </div>
-						        <span class="text-sm font-bold text-slate-700">Upload File</span>
-						    </div>
-						    <label class="relative inline-flex items-center cursor-pointer">
-						        <input type="checkbox" id="upload-toggle" class="sr-only peer" checked>
-						        <div class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600">
-						        </div>
-						    </label>
-						</div>
-						<div class="mt-2">
-							<input type="file" id="kb-file-upload" accept=".txt,.md" class="hidden"
-								onchange="handleKbUpload(event)">
-							<button onclick="document.getElementById('kb-file-upload').click()"
-								class="w-full border border-dashed border-slate-300 hover:border-emerald-500 hover:bg-emerald-50/30 transition-colors rounded-2xl py-4 flex items-center justify-center gap-2 group">
-								<i data-lucide="upload-cloud"
-									class="w-5 h-5 text-slate-400 group-hover:text-emerald-600 transition-colors"></i>
-								<span
-									class="text-sm font-bold text-slate-500 group-hover:text-emerald-700 tracking-wide">Upload
-									Knowledge Base</span>
-							</button>
-							<div id="kb-upload-status" class="hidden mt-3 text-center">
-								<div class="w-full bg-slate-200 rounded-full h-1.5 mb-2 overflow-hidden">
-									<div id="kb-progress-bar" class="bg-emerald-500 h-1.5 rounded-full"
-										style="width: 0%"></div>
-								</div>
-								<span id="kb-status-text"
-									class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Memproses...</span>
-							</div>
 						</div>
 					</div>
 				</div>
@@ -604,7 +571,7 @@
 						</div>
 
 						<div class="pt-2">
-							<button onclick="createNewUser()"
+							<button onclick="createNewUser(event)"
 								class="w-full py-4 bg-blue-50 text-blue-600 rounded-2xl font-bold text-sm uppercase hover:bg-blue-100 active:scale-95 transition-all">
 								TAMBAH
 							</button>
@@ -627,7 +594,7 @@
 		const SUPABASE_URL = "https://wddsihtjvntvipswmbtp.supabase.co";
 		const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndkZHNpaHRqdm50dmlwc3dtYnRwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkwMjg2NDMsImV4cCI6MjA4NDYwNDY0M30.fyz5Uv7eOUb9zQIbH2OBuZbGu1FZ1_2aYT6deOmojrY";
 		const PROXY_URL = `${SUPABASE_URL}/functions/v1/gemini-proxy`;
-		const EMBEDDING_URL = `${SUPABASE_URL}/functions/v1/gemini-embedding`;
+
 		const USER_MGMT_URL = `${SUPABASE_URL}/functions/v1/user-management`;
 		const SELECTED_MODEL = "gemini-3-flash-preview";
 		const SYSTEM_PROMPT = "Kamu adalah Asisten Virtual yang Ramah, Profesional, dan Sangat Membantu.";
@@ -649,276 +616,121 @@
 		const thinkingMap = { "1": 4000, "2": 16000, "3": 32000 };
 
 		async function saveAdminSettings() {
-		    const isUploadEnabled = document.getElementById('upload-toggle').checked;
-		    localStorage.setItem('awas_allow_upload', isUploadEnabled);
-		
-		    const settings = {
-		        model: currentSelectedModel,
-		        temperature: parseFloat(document.getElementById('settings-temp').value),
-		        max_tokens: parseInt(document.getElementById('settings-tokens').value),
-		        thinking_level: parseInt(document.getElementById('settings-thinking').value),
-		        system_prompt: document.getElementById('systemPromptInput').value,
-		        use_google_search: document.getElementById('google-search-toggle').checked,
-		        use_kb_search: document.getElementById('kb-search-toggle') ? document.getElementById('kb-search-toggle').checked : false,
-		        allow_file_upload: isUploadEnabled,
-		        updated_at: new Date()
-		    };
-		
-		    try {
-		        const { error } = await _supabase
-		            .from('app_settings')
-		            .update(settings)
-		            .eq('id', 1);
-		
-		        if (error) throw error;
-		        applyUploadUIState(isUploadEnabled);
-		    } catch (e) {
-		        console.error(e);
-		    }
-		}
-		
-		async function loadAdminSettings() {
-		    try {
-		        const { data, error } = await _supabase
-		            .from('app_settings')
-		            .select('*')
-		            .eq('id', 1)
-		            .single();
-		
-		        if (error || !data) return;
-		
-		        currentSelectedModel = data.model;
-		        localStorage.setItem('awas_allow_upload', data.allow_file_upload);
-		        applyUploadUIState(data.allow_file_upload);
-		
-		        const elModel = document.getElementById('selected-model-text');
-		        if (elModel) {
-		            const modelLabels = {
-		                "gemini-2.5-pro": "Gemini 2.5 Pro",
-		                "gemini-2.5-flash": "Gemini 2.5 Flash",
-		                "gemini-3-flash-preview": "Gemini 3 Flash",
-		                "gemini-3-pro-preview": "Gemini 3 Pro"
-		            };
-		            elModel.innerText = modelLabels[data.model] || data.model;
-		        }
-		        
-		        const elTemp = document.getElementById('settings-temp');
-		        if (elTemp) { 
-		            elTemp.value = data.temperature; 
-		            document.getElementById('label-temp').innerText = data.temperature; 
-		        }
-		        
-		        const elToken = document.getElementById('settings-tokens');
-		        if (elToken) { 
-		            elToken.value = data.max_tokens; 
-		            document.getElementById('label-tokens').innerText = data.max_tokens; 
-		        }
-		        
-		        const elThink = document.getElementById('settings-thinking');
-		        if (elThink) { 
-		            elThink.value = data.thinking_level; 
-		            document.getElementById('label-thinking').innerText = ["LOW", "MEDIUM", "HIGH"][data.thinking_level - 1]; 
-		        }
-		        
-		        const elPrompt = document.getElementById('systemPromptInput');
-		        if (elPrompt) elPrompt.value = data.system_prompt;
-		        
-		        const elGoogle = document.getElementById('google-search-toggle');
-		        if (elGoogle) elGoogle.checked = data.use_google_search;
-		
-		        const elKb = document.getElementById('kb-search-toggle');
-		        if (elKb) elKb.checked = data.use_kb_search;
-		        
-		        const elUploadToggle = document.getElementById('upload-toggle');
-		        if (elUploadToggle) elUploadToggle.checked = data.allow_file_upload;
-		
-		    } catch (e) {
-		        console.error(e);
-		    }
-		}
-		
-		function applyUploadUIState(isEnabled) {
-		    const uploadBtn = document.getElementById('uploadBtn');
-		    const inputWrapper = document.getElementById('inputWrapper');
-		    
-		    if (isEnabled) {
-		        uploadBtn.style.display = 'flex';
-		        inputWrapper.style.paddingLeft = '6px';
-		    } else {
-		        uploadBtn.style.display = 'none';
-		        inputWrapper.style.paddingLeft = '16px';
-		    }
-		}
+			const isUploadEnabled = document.getElementById('upload-toggle').checked;
+			localStorage.setItem('awas_allow_upload', isUploadEnabled);
 
-		async function handleKbUpload(event) {
-			const file = event.target.files[0];
-			if (!file) return;
+			const settings = {
+				model: currentSelectedModel,
+				temperature: parseFloat(document.getElementById('settings-temp').value),
+				max_tokens: parseInt(document.getElementById('settings-tokens').value),
+				thinking_level: parseInt(document.getElementById('settings-thinking').value),
+				system_prompt: document.getElementById('systemPromptInput').value,
+				use_google_search: document.getElementById('google-search-toggle').checked,
 
-			const statusDiv = document.getElementById('kb-upload-status');
-			const progressBar = document.getElementById('kb-progress-bar');
-			const statusText = document.getElementById('kb-status-text');
-
-			statusDiv.classList.remove('hidden');
-			progressBar.style.width = '5%';
-			statusText.innerText = "MEMBACA FILE...";
-			statusText.classList.remove('text-red-500', 'text-emerald-600');
+				allow_file_upload: isUploadEnabled,
+				updated_at: new Date()
+			};
 
 			try {
-				const text = await file.text();
-				const chunks = splitTextIdeally(text, 1000, 200);
+				const { error } = await _supabase
+					.from('app_settings')
+					.update(settings)
+					.eq('id', 1);
 
-				statusText.innerText = `MEMPROSES ${chunks.length} POTONGAN...`;
+				if (error) throw error;
+				applyUploadUIState(isUploadEnabled);
+			} catch (e) {
+				console.error(e);
+			}
+		}
 
-				let successCount = 0;
-				const { data: { session } } = await _supabase.auth.getSession();
-				const token = session?.access_token;
+		async function loadAdminSettings() {
+			try {
+				const { data, error } = await _supabase
+					.from('app_settings')
+					.select('*')
+					.eq('id', 1)
+					.single();
 
-				for (let i = 0; i < chunks.length; i++) {
-					const chunkContent = chunks[i];
+				if (error || !data) return;
 
-					const res = await fetch(EMBEDDING_URL, {
-						method: 'POST',
-						headers: {
-							'Content-Type': 'application/json',
-							'Authorization': `Bearer ${token}`
-						},
-						body: JSON.stringify({
-							action: 'embed',
-							text: chunkContent
-						})
-					});
+				currentSelectedModel = data.model;
+				localStorage.setItem('awas_allow_upload', data.allow_file_upload);
+				applyUploadUIState(data.allow_file_upload);
 
-					if (!res.ok) {
-						console.error("Gagal embed chunk ke-", i);
-						continue;
-					}
-
-					const { embedding } = await res.json();
-
-					const { error } = await _supabase.from('documents').insert({
-						content: chunkContent,
-						embedding: embedding,
-						metadata: {
-							source: file.name,
-							chunk_index: i,
-							type: "text_upload"
-						}
-					});
-
-					if (!error) successCount++;
-
-					const percent = Math.floor(((i + 1) / chunks.length) * 100);
-					progressBar.style.width = `${percent}%`;
-					statusText.innerText = `UPLOAD: ${percent}%`;
+				const elModel = document.getElementById('selected-model-text');
+				if (elModel) {
+					const modelLabels = {
+						"gemini-2.5-pro": "Gemini 2.5 Pro",
+						"gemini-2.5-flash": "Gemini 2.5 Flash",
+						"gemini-3-flash-preview": "Gemini 3 Flash",
+						"gemini-3-pro-preview": "Gemini 3 Pro"
+					};
+					elModel.innerText = modelLabels[data.model] || data.model;
 				}
 
-				statusText.innerText = "SELESAI!";
-				statusText.classList.add('text-emerald-600');
-				setTimeout(() => {
-					statusDiv.classList.add('hidden');
-					event.target.value = '';
-					alert(`Sukses! ${successCount} data masuk ke Knowledge Base.`);
-				}, 1000);
+				const elTemp = document.getElementById('settings-temp');
+				if (elTemp) {
+					elTemp.value = data.temperature;
+					document.getElementById('label-temp').innerText = data.temperature;
+				}
+
+				const elToken = document.getElementById('settings-tokens');
+				if (elToken) {
+					elToken.value = data.max_tokens;
+					document.getElementById('label-tokens').innerText = data.max_tokens;
+				}
+
+				const elThink = document.getElementById('settings-thinking');
+				if (elThink) {
+					elThink.value = data.thinking_level;
+					document.getElementById('label-thinking').innerText = ["LOW", "MEDIUM", "HIGH"][data.thinking_level - 1];
+				}
+
+				const elPrompt = document.getElementById('systemPromptInput');
+				if (elPrompt) elPrompt.value = data.system_prompt;
+
+				const elGoogle = document.getElementById('google-search-toggle');
+				if (elGoogle) elGoogle.checked = data.use_google_search;
+
+
+
+				const elUploadToggle = document.getElementById('upload-toggle');
+				if (elUploadToggle) elUploadToggle.checked = data.allow_file_upload;
 
 			} catch (e) {
 				console.error(e);
-				statusText.innerText = "ERROR KONEKSI";
-				statusText.classList.add('text-red-500');
 			}
 		}
 
-		function splitTextIdeally(text, maxLength, overlap) {
-			const chunks = [];
-			let startIndex = 0;
+		function applyUploadUIState(isEnabled) {
+			const uploadBtn = document.getElementById('uploadBtn');
+			const inputWrapper = document.getElementById('inputWrapper');
 
-			while (startIndex < text.length) {
-				let endIndex = startIndex + maxLength;
-
-				if (endIndex >= text.length) {
-					chunks.push(text.substring(startIndex).trim());
-					break;
-				}
-
-				const windowText = text.substring(startIndex, endIndex);
-				let splitIndex = -1;
-
-				const lastParagraph = windowText.lastIndexOf('\n\n');
-				if (lastParagraph > maxLength * 0.7) {
-					splitIndex = lastParagraph;
-				}
-
-				if (splitIndex === -1) {
-					const sentenceEnd = Math.max(
-						windowText.lastIndexOf('. '),
-						windowText.lastIndexOf('? '),
-						windowText.lastIndexOf('! '),
-						windowText.lastIndexOf('.\n')
-					);
-					if (sentenceEnd > maxLength * 0.5) {
-						splitIndex = sentenceEnd + 1;
-					}
-				}
-
-				if (splitIndex === -1) {
-					const lastEnter = windowText.lastIndexOf('\n');
-					if (lastEnter > maxLength * 0.5) {
-						splitIndex = lastEnter;
-					}
-				}
-
-				if (splitIndex === -1) {
-					const lastSpace = windowText.lastIndexOf(' ');
-					if (lastSpace > maxLength * 0.3) {
-						splitIndex = lastSpace;
-					}
-				}
-
-				if (splitIndex === -1) {
-					splitIndex = maxLength;
-				}
-
-				let realEndIndex = startIndex + splitIndex;
-
-				const chunk = text.substring(startIndex, realEndIndex).trim();
-				if (chunk.length > 0) {
-					chunks.push(chunk);
-				}
-
-				let nextStart = realEndIndex - overlap;
-
-				if (nextStart > 0 && nextStart < text.length) {
-					const spaceBefore = text.lastIndexOf(' ', nextStart);
-					const enterBefore = text.lastIndexOf('\n', nextStart);
-					const safeStart = Math.max(spaceBefore, enterBefore);
-
-					if (safeStart !== -1) {
-						nextStart = safeStart + 1;
-					}
-				}
-
-				if (nextStart <= startIndex) {
-					nextStart = realEndIndex;
-				}
-
-				startIndex = nextStart;
+			if (isEnabled) {
+				uploadBtn.style.display = 'flex';
+				inputWrapper.style.paddingLeft = '6px';
+			} else {
+				uploadBtn.style.display = 'none';
+				inputWrapper.style.paddingLeft = '16px';
 			}
-
-			return chunks;
 		}
 
-		document.getElementById('settings-tokens').oninput = function() {
-		    document.getElementById('label-tokens').innerText = this.value;
+
+
+		document.getElementById('settings-tokens').oninput = function () {
+			document.getElementById('label-tokens').innerText = this.value;
 		};
-		document.getElementById('settings-temp').oninput = function() {
-		    document.getElementById('label-temp').innerText = this.value;
+		document.getElementById('settings-temp').oninput = function () {
+			document.getElementById('label-temp').innerText = this.value;
 		};
-		document.getElementById('settings-thinking').oninput = function() {
-		    const labels = ["LOW", "MEDIUM", "HIGH"];
-		    document.getElementById('label-thinking').innerText = labels[this.value - 1];
+		document.getElementById('settings-thinking').oninput = function () {
+			const labels = ["LOW", "MEDIUM", "HIGH"];
+			document.getElementById('label-thinking').innerText = labels[this.value - 1];
 		};
-		
+
 		document.getElementById('upload-toggle').onchange = () => {
-		    saveAdminSettings();
+			saveAdminSettings();
 		};
 		document.getElementById('settings-tokens').onchange = saveAdminSettings;
 		document.getElementById('settings-temp').onchange = saveAdminSettings;
@@ -961,12 +773,7 @@
 		document.getElementById('google-search-toggle').onchange = () => {
 			saveAdminSettings();
 		};
-		const kbSearchToggle = document.getElementById('kb-search-toggle');
-		if (kbSearchToggle) {
-			kbSearchToggle.onchange = () => {
-				saveAdminSettings();
-			};
-		}
+
 
 		document.addEventListener('touchmove', function (event) {
 			if (event.scale !== 1) {
@@ -990,11 +797,6 @@
 			}
 		}, true);
 
-		document.addEventListener('blur', function (event) {
-			if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') {
-				metaViewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
-			}
-		}, true);
 
 
 		function formatBytes(bytes, decimals = 2) {
@@ -1218,7 +1020,7 @@
 			const sliderVal = document.getElementById('settings-thinking').value;
 			const currentBudget = thinkingMap[sliderVal] || 16000;
 			const useGoogleSearch = document.getElementById('google-search-toggle').checked;
-			const useKbSearch = document.getElementById('kb-search-toggle') ? document.getElementById('kb-search-toggle').checked : false;
+
 			let customSystemPrompt = document.getElementById('systemPromptInput').value || SYSTEM_PROMPT;
 
 			input.value = '';
@@ -1240,7 +1042,7 @@
 			currentStreamedText = "";
 
 			let textContext = "";
-			let kbContext = "";
+
 			let apiParts = [];
 			pendingFiles = [];
 			renderPreviews();
@@ -1258,52 +1060,15 @@
 				const { data: { session } } = await _supabase.auth.getSession();
 				const userToken = session.access_token;
 
-				if (useKbSearch && rawInput.length > 0) {
-					const embedRes = await fetch(EMBEDDING_URL, {
-						method: 'POST',
-						headers: {
-							'Content-Type': 'application/json',
-							'Authorization': `Bearer ${userToken}`
-						},
-						body: JSON.stringify({ action: 'embed', text: rawInput }),
-						signal: abortController.signal
-					});
-
-					if (embedRes.ok) {
-						const { embedding: queryVector } = await embedRes.json();
-						const { data: documents } = await _supabase.rpc('match_documents', {
-							query_embedding: queryVector,
-							match_threshold: 0.5,
-							match_count: 5
-						});
-						console.log("[KB DEBUG] Query User:", rawInput);
-						console.log("[KB DEBUG] Dokumen Knowledge Base yang ditemukan:", documents);
-						if (documents && documents.length > 0) {
-							kbContext = "\n\n[INFORMASI DARI KNOWLEDGE BASE]:\n" +
-								documents.map((d, i) => `Dokumen ${i + 1} (${d.metadata?.source || 'Unknown'}):\n${d.content}`).join("\n---\n");
-						}
-					}
-				}
-
-				const fullPrompt = `
-		        ${customSystemPrompt}
-		        [INSTRUKSI PENTING]
-		        1. Data di bawah "KNOWLEDGE BASE" adalah fakta mutlak.
-		        [KNOWLEDGE BASE (INGATAN)]
-		        ${kbContext || "Tidak ada ingatan spesifik."}
-		        [FILE LAMPIRAN]
-		        ${textContext}
-		        PERTANYAAN USER:
-		        ${rawInput}
-		        `;
-
-				console.log("[AI DEBUG] Full Prompt sent to Model:", fullPrompt);
-				if (kbContext) console.log("[AI DEBUG] KB Context used:", kbContext);
+				const userMessage = textContext
+					? `[FILE LAMPIRAN]\n${textContext}\n\nPERTANYAAN USER:\n${rawInput}`
+					: rawInput;
 
 				const payload = {
+					system_instruction: { parts: [{ text: customSystemPrompt }] },
 					contents: [
 						...chatHistory,
-						{ role: "user", parts: [...apiParts, { text: fullPrompt }] }
+						{ role: "user", parts: [...apiParts, { text: userMessage }] }
 					],
 					generationConfig: {
 						temperature: currentTemp,
@@ -1312,7 +1077,7 @@
 				};
 
 				if (useGoogleSearch) payload.tools = [{ google_search: {} }];
-				if (currentSelectedModel.includes('think')) {
+				if (currentSelectedModel.includes('2.5') || currentSelectedModel.includes('think')) {
 					payload.thinking_config = { include_thoughts: true, thinking_budget_tokens: currentBudget };
 				}
 
@@ -1328,7 +1093,8 @@
 				});
 
 				const data = await res.json();
-				const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Gagal memproses jawaban.";
+				const parts = data.candidates?.[0]?.content?.parts || [];
+				const aiText = parts.filter(p => p.text).map(p => p.text).join('') || "Gagal memproses jawaban.";
 
 				await typeWriter(currentLoadingMsgId, aiText);
 
@@ -1528,36 +1294,36 @@
 		}
 
 		async function loadSession(id, isInitialLoad = false) {
-		    currentSessionId = id;
-		    const { data: msgs } = await _supabase.from('chat_messages').select('*').eq('session_id', id).order('timestamp', { ascending: true });
-		    document.getElementById('messagesArea').innerHTML = '';
-		    chatHistory = msgs.map(m => {
-		        let text = m.content;
-		        if (m.content.includes(FILE_CARD_SEPARATOR)) {
-		            text = m.content.split(FILE_CARD_SEPARATOR)[0];
-		        }
-		        return { role: m.role, parts: [{ text: text }] };
-		    });
-		
-		    msgs.forEach(m => {
-		        let content = m.content;
-		        let fileCards = "";
-		        if (content.includes(FILE_CARD_SEPARATOR)) {
-		            const parts = content.split(FILE_CARD_SEPARATOR);
-		            content = parts[0];
-		            fileCards = parts[1];
-		        }
-		        appendMsg(m.role, content, m.timestamp, fileCards);
-		    });
-		    
-		    loadHistory();
-		
-		    if (!isInitialLoad) {
-		        const sidebar = document.getElementById('mainSidebar');
-		        if (!sidebar.classList.contains('-translate-x-full')) {
-		            toggleSidebar(false);
-		        }
-		    }
+			currentSessionId = id;
+			const { data: msgs } = await _supabase.from('chat_messages').select('*').eq('session_id', id).order('timestamp', { ascending: true });
+			document.getElementById('messagesArea').innerHTML = '';
+			chatHistory = msgs.map(m => {
+				let text = m.content;
+				if (m.content.includes(FILE_CARD_SEPARATOR)) {
+					text = m.content.split(FILE_CARD_SEPARATOR)[0];
+				}
+				return { role: m.role, parts: [{ text: text }] };
+			});
+
+			msgs.forEach(m => {
+				let content = m.content;
+				let fileCards = "";
+				if (content.includes(FILE_CARD_SEPARATOR)) {
+					const parts = content.split(FILE_CARD_SEPARATOR);
+					content = parts[0];
+					fileCards = parts[1];
+				}
+				appendMsg(m.role, content, m.timestamp, fileCards);
+			});
+
+			loadHistory();
+
+			if (!isInitialLoad) {
+				const sidebar = document.getElementById('mainSidebar');
+				if (!sidebar.classList.contains('-translate-x-full')) {
+					toggleSidebar(false);
+				}
+			}
 		}
 
 		function typeWriter(elementId, text) {
@@ -1619,25 +1385,25 @@
 		}
 
 		function toggleSidebar(s) {
-		    const sb = document.getElementById('mainSidebar');
-		    const ov = document.getElementById('sidebarOverlay');
-		    if (s) {
-		        sb.classList.remove('-translate-x-full');
-		        ov.classList.remove('hidden');
-		        setTimeout(() => ov.classList.remove('opacity-0'), 10);
-		    } else {
-		        sb.classList.add('-translate-x-full');
-		        ov.classList.add('opacity-0');
-		        setTimeout(() => ov.classList.add('hidden'), 300);
-		    }
+			const sb = document.getElementById('mainSidebar');
+			const ov = document.getElementById('sidebarOverlay');
+			if (s) {
+				sb.classList.remove('-translate-x-full');
+				ov.classList.remove('hidden');
+				setTimeout(() => ov.classList.remove('opacity-0'), 10);
+			} else {
+				sb.classList.add('-translate-x-full');
+				ov.classList.add('opacity-0');
+				setTimeout(() => ov.classList.add('hidden'), 300);
+			}
 		}
 
 		document.getElementById('menuBtn').onclick = () => toggleSidebar(true);
 
 		const overlay = document.getElementById('sidebarOverlay');
-		overlay.addEventListener('pointerdown', function(e) {
-		    e.preventDefault();
-		    toggleSidebar(false);
+		overlay.addEventListener('pointerdown', function (e) {
+			e.preventDefault();
+			toggleSidebar(false);
 		});
 
 		document.getElementById('settingsBtn').onclick = () => {
@@ -1667,44 +1433,44 @@
 		};
 
 		async function init() {
-		    lucide.createIcons();
-		    const cachedUpload = localStorage.getItem('awas_allow_upload');
-		    if (cachedUpload !== null) {
-		        applyUploadUIState(cachedUpload === 'true');
-		    }
-		
-		    const { data: { session } } = await _supabase.auth.getSession();
-		    
-		    if (session) {
-		        document.getElementById('loginScreen').style.display = 'none';
-		        document.getElementById('appInterface').style.display = 'flex';
-		        document.getElementById('sidebarEmail').innerText = session.user.email;
-		
-		        const settingsBtn = document.getElementById('settingsBtn');
-		        settingsBtn.style.display = 'none';
-		
-		        loadAdminSettings().then(() => {
-		            lucide.createIcons(); 
-		        });
-		
-		        const { data: profile } = await _supabase.from('profiles').select('role').eq('id', session.user.id).single();
-		
-		        if (profile && profile.role === 'admin') {
-		            settingsBtn.style.display = 'block';
-		        } 
-		
-		        const { data: sessions } = await _supabase.from('chat_sessions').select('*').eq('user_id', session.user.id).order('timestamp', { ascending: false }).limit(1);
-		        if (sessions && sessions.length > 0) {
-		            loadSession(sessions[0].id, true);
-		        } else {
-		            currentSessionId = Date.now().toString();
-		            loadHistory();
-		        }
-		    } else {
-		        document.getElementById('loginScreen').style.display = 'flex';
-		        document.getElementById('appInterface').style.display = 'none';
-		    }
-		    applyNativeKeyboardFix();
+			lucide.createIcons();
+			const cachedUpload = localStorage.getItem('awas_allow_upload');
+			if (cachedUpload !== null) {
+				applyUploadUIState(cachedUpload === 'true');
+			}
+
+			const { data: { session } } = await _supabase.auth.getSession();
+
+			if (session) {
+				document.getElementById('loginScreen').style.display = 'none';
+				document.getElementById('appInterface').style.display = 'flex';
+				document.getElementById('sidebarEmail').innerText = session.user.email;
+
+				const settingsBtn = document.getElementById('settingsBtn');
+				settingsBtn.style.display = 'none';
+
+				loadAdminSettings().then(() => {
+					lucide.createIcons();
+				});
+
+				const { data: profile } = await _supabase.from('profiles').select('role').eq('id', session.user.id).single();
+
+				if (profile && profile.role === 'admin') {
+					settingsBtn.style.display = 'block';
+				}
+
+				const { data: sessions } = await _supabase.from('chat_sessions').select('*').eq('user_id', session.user.id).order('timestamp', { ascending: false }).limit(1);
+				if (sessions && sessions.length > 0) {
+					loadSession(sessions[0].id, true);
+				} else {
+					currentSessionId = Date.now().toString();
+					loadHistory();
+				}
+			} else {
+				document.getElementById('loginScreen').style.display = 'flex';
+				document.getElementById('appInterface').style.display = 'none';
+			}
+			applyNativeKeyboardFix();
 		}
 
 		document.addEventListener('click', (e) => {
@@ -1825,13 +1591,13 @@
 			}
 		}
 
-		async function createNewUser() {
+		async function createNewUser(e) {
 			const email = document.getElementById('newUserEmail').value;
 			const password = document.getElementById('newUserPassword').value;
 
 			if (!email || !password) return alert("Email dan Password harus diisi!");
 
-			const btn = event.target;
+			const btn = e.target;
 			const originalText = btn.innerText;
 			btn.innerText = "PROSES...";
 			btn.disabled = true;
@@ -1914,4 +1680,5 @@
 		}
 	</script>
 </body>
+
 </html>
