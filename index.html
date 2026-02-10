@@ -89,6 +89,7 @@
 			display: flex;
 			flex-direction: column;
 			overscroll-behavior: contain;
+			-webkit-overflow-scrolling: touch;
 		}
 
 		.sidebar-bottom-controls {
@@ -102,6 +103,8 @@
 			flex: 1 1 auto;
 			overflow-y: auto;
 			padding-bottom: 32px;
+			overscroll-behavior: contain;
+			-webkit-overflow-scrolling: touch;
 		}
 
 		.history-item-container {
@@ -168,6 +171,7 @@
 			background-color: #ffffff;
 			position: relative;
 			overscroll-behavior: contain;
+			-webkit-overflow-scrolling: touch;
 		}
 
 		footer {
@@ -852,8 +856,59 @@
 		document.addEventListener('touchmove', function (event) {
 			if (event.scale !== 1) {
 				event.preventDefault();
+				return;
+			}
+
+			let target = event.target;
+			let scrollable = null;
+
+			while (target && target !== document.body && target !== document.documentElement) {
+				const style = window.getComputedStyle(target);
+				const overflowY = style.getPropertyValue('overflow-y');
+				if ((overflowY === 'auto' || overflowY === 'scroll') && target.scrollHeight > target.clientHeight) {
+					scrollable = target;
+					break;
+				}
+				target = target.parentElement;
+			}
+
+			if (!scrollable) {
+				event.preventDefault();
+				return;
+			}
+
+			const atTop = scrollable.scrollTop <= 0;
+			const atBottom = scrollable.scrollTop + scrollable.clientHeight >= scrollable.scrollHeight - 1;
+			const touch = event.touches[0];
+
+			if (!scrollable._lastTouchY) {
+				scrollable._lastTouchY = touch.clientY;
+				return;
+			}
+
+			const delta = touch.clientY - scrollable._lastTouchY;
+			scrollable._lastTouchY = touch.clientY;
+
+			if ((atTop && delta > 0) || (atBottom && delta < 0)) {
+				event.preventDefault();
 			}
 		}, { passive: false });
+
+		document.addEventListener('touchstart', function (event) {
+			let target = event.target;
+			while (target && target !== document.body) {
+				if (target._lastTouchY !== undefined) {
+					target._lastTouchY = event.touches[0].clientY;
+				}
+				target = target.parentElement;
+			}
+		}, { passive: true });
+
+		document.addEventListener('touchend', function () {
+			document.querySelectorAll('main, #historyList, #adminScreen main').forEach(el => {
+				delete el._lastTouchY;
+			});
+		}, { passive: true });
 
 		let lastTouchEnd = 0;
 		document.addEventListener('touchend', function (event) {
