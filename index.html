@@ -319,9 +319,9 @@
 
 <body class="text-slate-900">
 	<div id="sidebarOverlay"
-		class="fixed inset-0 bg-black/20 z-[150] hidden backdrop-blur-sm transition-opacity opacity-0"></div>
+    class="fixed inset-0 bg-black/20 z-[150] hidden backdrop-blur-sm transition-opacity duration-300 opacity-0 cursor-pointer"></div>
 	<div id="mainSidebar"
-		class="fixed inset-y-0 left-0 w-[280px] bg-white z-[160] transform -translate-x-full flex flex-col border-r border-slate-100 shadow-2xl">
+    class="fixed inset-y-0 left-0 w-[280px] bg-white z-[160] transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col border-r border-slate-100 shadow-2xl">
 		<div class="h-16 flex items-center px-4 border-b border-slate-50 shrink-0">
 			<div class="flex items-center gap-3 w-full">
 				<div
@@ -501,6 +501,19 @@
 								</div>
 							</label>
 						</div>
+						<div class="flex items-center justify-between bg-white p-3 rounded-xl border border-slate-100">
+						    <div class="flex items-center gap-3">
+						        <div class="w-8 h-8 rounded-full bg-purple-50 flex items-center justify-center text-purple-600">
+						            <i data-lucide="paperclip" class="w-4 h-4"></i>
+						        </div>
+						        <span class="text-sm font-bold text-slate-700">Upload File</span>
+						    </div>
+						    <label class="relative inline-flex items-center cursor-pointer">
+						        <input type="checkbox" id="upload-toggle" class="sr-only peer" checked>
+						        <div class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600">
+						        </div>
+						    </label>
+						</div>
 						<div class="mt-2">
 							<input type="file" id="kb-file-upload" accept=".txt,.md" class="hidden"
 								onchange="handleKbUpload(event)">
@@ -635,44 +648,106 @@
 		let currentSelectedModel = localStorage.getItem('awas_model') || "gemini-3-flash-preview";
 		const thinkingMap = { "1": 4000, "2": 16000, "3": 32000 };
 
-		function saveAdminSettings() {
-			localStorage.setItem('awas_model', currentSelectedModel);
-			localStorage.setItem('awas_temp', document.getElementById('settings-temp').value);
-			localStorage.setItem('awas_tokens', document.getElementById('settings-tokens').value);
-			localStorage.setItem('awas_thinking', document.getElementById('settings-thinking').value);
-			localStorage.setItem('awas_prompt', document.getElementById('systemPromptInput').value);
-			localStorage.setItem('awas_google_search', document.getElementById('google-search-toggle').checked);
-			localStorage.setItem('awas_kb_search', document.getElementById('kb-search-toggle').checked);
+		async function saveAdminSettings() {
+		    const isUploadEnabled = document.getElementById('upload-toggle').checked;
+		    localStorage.setItem('awas_allow_upload', isUploadEnabled);
+		
+		    const settings = {
+		        model: currentSelectedModel,
+		        temperature: parseFloat(document.getElementById('settings-temp').value),
+		        max_tokens: parseInt(document.getElementById('settings-tokens').value),
+		        thinking_level: parseInt(document.getElementById('settings-thinking').value),
+		        system_prompt: document.getElementById('systemPromptInput').value,
+		        use_google_search: document.getElementById('google-search-toggle').checked,
+		        use_kb_search: document.getElementById('kb-search-toggle') ? document.getElementById('kb-search-toggle').checked : false,
+		        allow_file_upload: isUploadEnabled,
+		        updated_at: new Date()
+		    };
+		
+		    try {
+		        const { error } = await _supabase
+		            .from('app_settings')
+		            .update(settings)
+		            .eq('id', 1);
+		
+		        if (error) throw error;
+		        applyUploadUIState(isUploadEnabled);
+		    } catch (e) {
+		        console.error(e);
+		    }
 		}
-
-		function loadAdminSettings() {
-			const savedModel = localStorage.getItem('awas_model') || "gemini-3-flash-preview";
-			const savedTemp = localStorage.getItem('awas_temp') || "1.0";
-			const savedTokens = localStorage.getItem('awas_tokens') || "65536";
-			const savedThinking = localStorage.getItem('awas_thinking') || "2";
-			const savedPrompt = localStorage.getItem('awas_prompt') || SYSTEM_PROMPT;
-			const savedGoogle = localStorage.getItem('awas_google_search') === 'true';
-			const savedKb = localStorage.getItem('awas_kb_search') === 'true';
-
-			currentSelectedModel = savedModel;
-			const modelLabels = {
-				"gemini-2.5-pro": "Gemini 2.5 Pro",
-				"gemini-2.5-flash": "Gemini 2.5 Flash",
-				"gemini-3-flash-preview": "Gemini 3 Flash",
-				"gemini-3-pro-preview": "Gemini 3 Pro"
-			};
-			document.getElementById('selected-model-text').innerText = modelLabels[savedModel] || "Gemini 3 Flash";
-			document.getElementById('settings-temp').value = savedTemp;
-			document.getElementById('label-temp').innerText = savedTemp;
-			document.getElementById('settings-tokens').value = savedTokens;
-			document.getElementById('label-tokens').innerText = savedTokens;
-			document.getElementById('settings-thinking').value = savedThinking;
-			document.getElementById('label-thinking').innerText = ["LOW", "MEDIUM", "HIGH"][savedThinking - 1];
-			document.getElementById('systemPromptInput').value = savedPrompt;
-			document.getElementById('google-search-toggle').checked = savedGoogle;
-
-			const kbToggle = document.getElementById('kb-search-toggle');
-			if (kbToggle) kbToggle.checked = savedKb;
+		
+		async function loadAdminSettings() {
+		    try {
+		        const { data, error } = await _supabase
+		            .from('app_settings')
+		            .select('*')
+		            .eq('id', 1)
+		            .single();
+		
+		        if (error || !data) return;
+		
+		        currentSelectedModel = data.model;
+		        localStorage.setItem('awas_allow_upload', data.allow_file_upload);
+		        applyUploadUIState(data.allow_file_upload);
+		
+		        const elModel = document.getElementById('selected-model-text');
+		        if (elModel) {
+		            const modelLabels = {
+		                "gemini-2.5-pro": "Gemini 2.5 Pro",
+		                "gemini-2.5-flash": "Gemini 2.5 Flash",
+		                "gemini-3-flash-preview": "Gemini 3 Flash",
+		                "gemini-3-pro-preview": "Gemini 3 Pro"
+		            };
+		            elModel.innerText = modelLabels[data.model] || data.model;
+		        }
+		        
+		        const elTemp = document.getElementById('settings-temp');
+		        if (elTemp) { 
+		            elTemp.value = data.temperature; 
+		            document.getElementById('label-temp').innerText = data.temperature; 
+		        }
+		        
+		        const elToken = document.getElementById('settings-tokens');
+		        if (elToken) { 
+		            elToken.value = data.max_tokens; 
+		            document.getElementById('label-tokens').innerText = data.max_tokens; 
+		        }
+		        
+		        const elThink = document.getElementById('settings-thinking');
+		        if (elThink) { 
+		            elThink.value = data.thinking_level; 
+		            document.getElementById('label-thinking').innerText = ["LOW", "MEDIUM", "HIGH"][data.thinking_level - 1]; 
+		        }
+		        
+		        const elPrompt = document.getElementById('systemPromptInput');
+		        if (elPrompt) elPrompt.value = data.system_prompt;
+		        
+		        const elGoogle = document.getElementById('google-search-toggle');
+		        if (elGoogle) elGoogle.checked = data.use_google_search;
+		
+		        const elKb = document.getElementById('kb-search-toggle');
+		        if (elKb) elKb.checked = data.use_kb_search;
+		        
+		        const elUploadToggle = document.getElementById('upload-toggle');
+		        if (elUploadToggle) elUploadToggle.checked = data.allow_file_upload;
+		
+		    } catch (e) {
+		        console.error(e);
+		    }
+		}
+		
+		function applyUploadUIState(isEnabled) {
+		    const uploadBtn = document.getElementById('uploadBtn');
+		    const inputWrapper = document.getElementById('inputWrapper');
+		    
+		    if (isEnabled) {
+		        uploadBtn.style.display = 'flex';
+		        inputWrapper.style.paddingLeft = '6px';
+		    } else {
+		        uploadBtn.style.display = 'none';
+		        inputWrapper.style.paddingLeft = '16px';
+		    }
 		}
 
 		async function handleKbUpload(event) {
@@ -831,21 +906,24 @@
 			return chunks;
 		}
 
-		document.getElementById('settings-tokens').oninput = function () {
-			document.getElementById('label-tokens').innerText = this.value;
-			saveAdminSettings();
+		document.getElementById('settings-tokens').oninput = function() {
+		    document.getElementById('label-tokens').innerText = this.value;
 		};
-
-		document.getElementById('settings-temp').oninput = function () {
-			document.getElementById('label-temp').innerText = this.value;
-			saveAdminSettings();
+		document.getElementById('settings-temp').oninput = function() {
+		    document.getElementById('label-temp').innerText = this.value;
 		};
-
-		document.getElementById('settings-thinking').oninput = function () {
-			const labels = ["LOW", "MEDIUM", "HIGH"];
-			document.getElementById('label-thinking').innerText = labels[this.value - 1];
-			saveAdminSettings();
+		document.getElementById('settings-thinking').oninput = function() {
+		    const labels = ["LOW", "MEDIUM", "HIGH"];
+		    document.getElementById('label-thinking').innerText = labels[this.value - 1];
 		};
+		
+		document.getElementById('upload-toggle').onchange = () => {
+		    saveAdminSettings();
+		};
+		document.getElementById('settings-tokens').onchange = saveAdminSettings;
+		document.getElementById('settings-temp').onchange = saveAdminSettings;
+		document.getElementById('settings-thinking').onchange = saveAdminSettings;
+		document.getElementById('systemPromptInput').onchange = saveAdminSettings;
 
 		const dropdownTrigger = document.getElementById('dropdown-trigger');
 		const dropdownMenu = document.getElementById('dropdown-menu');
@@ -1449,30 +1527,37 @@
 			loadHistory();
 		}
 
-		async function loadSession(id) {
-			currentSessionId = id;
-			const { data: msgs } = await _supabase.from('chat_messages').select('*').eq('session_id', id).order('timestamp', { ascending: true });
-			document.getElementById('messagesArea').innerHTML = '';
-			chatHistory = msgs.map(m => {
-				let text = m.content;
-				if (m.content.includes(FILE_CARD_SEPARATOR)) {
-					text = m.content.split(FILE_CARD_SEPARATOR)[0];
-				}
-				return { role: m.role, parts: [{ text: text }] };
-			});
-
-			msgs.forEach(m => {
-				let content = m.content;
-				let fileCards = "";
-				if (content.includes(FILE_CARD_SEPARATOR)) {
-					const parts = content.split(FILE_CARD_SEPARATOR);
-					content = parts[0];
-					fileCards = parts[1];
-				}
-				appendMsg(m.role, content, m.timestamp, fileCards);
-			});
-			loadHistory();
-			toggleSidebar(false);
+		async function loadSession(id, isInitialLoad = false) {
+		    currentSessionId = id;
+		    const { data: msgs } = await _supabase.from('chat_messages').select('*').eq('session_id', id).order('timestamp', { ascending: true });
+		    document.getElementById('messagesArea').innerHTML = '';
+		    chatHistory = msgs.map(m => {
+		        let text = m.content;
+		        if (m.content.includes(FILE_CARD_SEPARATOR)) {
+		            text = m.content.split(FILE_CARD_SEPARATOR)[0];
+		        }
+		        return { role: m.role, parts: [{ text: text }] };
+		    });
+		
+		    msgs.forEach(m => {
+		        let content = m.content;
+		        let fileCards = "";
+		        if (content.includes(FILE_CARD_SEPARATOR)) {
+		            const parts = content.split(FILE_CARD_SEPARATOR);
+		            content = parts[0];
+		            fileCards = parts[1];
+		        }
+		        appendMsg(m.role, content, m.timestamp, fileCards);
+		    });
+		    
+		    loadHistory();
+		
+		    if (!isInitialLoad) {
+		        const sidebar = document.getElementById('mainSidebar');
+		        if (!sidebar.classList.contains('-translate-x-full')) {
+		            toggleSidebar(false);
+		        }
+		    }
 		}
 
 		function typeWriter(elementId, text) {
@@ -1534,22 +1619,26 @@
 		}
 
 		function toggleSidebar(s) {
-			const sb = document.getElementById('mainSidebar');
-			const ov = document.getElementById('sidebarOverlay');
-			if (s) {
-				sb.classList.remove('-translate-x-full');
-				ov.classList.remove('hidden');
-				setTimeout(() => ov.classList.remove('opacity-0'), 10);
-			} else {
-				sb.classList.add('-translate-x-full');
-				ov.classList.add('opacity-0');
-				setTimeout(() => ov.classList.add('hidden'), 300);
-			}
+		    const sb = document.getElementById('mainSidebar');
+		    const ov = document.getElementById('sidebarOverlay');
+		    if (s) {
+		        sb.classList.remove('-translate-x-full');
+		        ov.classList.remove('hidden');
+		        setTimeout(() => ov.classList.remove('opacity-0'), 10);
+		    } else {
+		        sb.classList.add('-translate-x-full');
+		        ov.classList.add('opacity-0');
+		        setTimeout(() => ov.classList.add('hidden'), 300);
+		    }
 		}
 
 		document.getElementById('menuBtn').onclick = () => toggleSidebar(true);
 
-		document.getElementById('sidebarOverlay').onclick = () => toggleSidebar(false);
+		const overlay = document.getElementById('sidebarOverlay');
+		overlay.addEventListener('pointerdown', function(e) {
+		    e.preventDefault();
+		    toggleSidebar(false);
+		});
 
 		document.getElementById('settingsBtn').onclick = () => {
 			document.getElementById('adminScreen').classList.replace('hidden', 'flex');
@@ -1578,27 +1667,44 @@
 		};
 
 		async function init() {
-			const { data: { session } } = await _supabase.auth.getSession();
-			if (session) {
-				document.getElementById('loginScreen').style.display = 'none';
-				document.getElementById('appInterface').style.display = 'flex';
-				document.getElementById('sidebarEmail').innerText = session.user.email;
-
-				loadAdminSettings();
-
-				const { data: sessions } = await _supabase.from('chat_sessions').select('*').eq('user_id', session.user.id).order('timestamp', { ascending: false }).limit(1);
-				if (sessions && sessions.length > 0) {
-					loadSession(sessions[0].id);
-				} else {
-					currentSessionId = Date.now().toString();
-					loadHistory();
-				}
-				lucide.createIcons();
-			} else {
-				document.getElementById('loginScreen').style.display = 'flex';
-				document.getElementById('appInterface').style.display = 'none';
-			}
-			applyNativeKeyboardFix();
+		    lucide.createIcons();
+		    const cachedUpload = localStorage.getItem('awas_allow_upload');
+		    if (cachedUpload !== null) {
+		        applyUploadUIState(cachedUpload === 'true');
+		    }
+		
+		    const { data: { session } } = await _supabase.auth.getSession();
+		    
+		    if (session) {
+		        document.getElementById('loginScreen').style.display = 'none';
+		        document.getElementById('appInterface').style.display = 'flex';
+		        document.getElementById('sidebarEmail').innerText = session.user.email;
+		
+		        const settingsBtn = document.getElementById('settingsBtn');
+		        settingsBtn.style.display = 'none';
+		
+		        loadAdminSettings().then(() => {
+		            lucide.createIcons(); 
+		        });
+		
+		        const { data: profile } = await _supabase.from('profiles').select('role').eq('id', session.user.id).single();
+		
+		        if (profile && profile.role === 'admin') {
+		            settingsBtn.style.display = 'block';
+		        } 
+		
+		        const { data: sessions } = await _supabase.from('chat_sessions').select('*').eq('user_id', session.user.id).order('timestamp', { ascending: false }).limit(1);
+		        if (sessions && sessions.length > 0) {
+		            loadSession(sessions[0].id, true);
+		        } else {
+		            currentSessionId = Date.now().toString();
+		            loadHistory();
+		        }
+		    } else {
+		        document.getElementById('loginScreen').style.display = 'flex';
+		        document.getElementById('appInterface').style.display = 'none';
+		    }
+		    applyNativeKeyboardFix();
 		}
 
 		document.addEventListener('click', (e) => {
