@@ -313,6 +313,60 @@
 				transform: scale(1.2);
 			}
 		}
+
+		@keyframes spin {
+			to {
+				transform: rotate(360deg);
+			}
+		}
+
+		.btn-spinner {
+			width: 18px;
+			height: 18px;
+			border: 2.5px solid rgba(255, 255, 255, 0.3);
+			border-top-color: #fff;
+			border-radius: 50%;
+			animation: spin 0.6s linear infinite;
+			display: inline-block;
+		}
+
+		.btn-spinner.dark {
+			border-color: rgba(37, 99, 235, 0.2);
+			border-top-color: #2563eb;
+		}
+
+		.toast-notification {
+			position: fixed;
+			bottom: 90px;
+			left: 50%;
+			transform: translateX(-50%) translateY(20px);
+			background: #1e293b;
+			color: #fff;
+			padding: 12px 24px;
+			border-radius: 16px;
+			font-size: 13px;
+			font-weight: 600;
+			z-index: 9999;
+			opacity: 0;
+			transition: all 0.3s ease;
+			pointer-events: none;
+			max-width: 90vw;
+			text-align: center;
+			box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+		}
+
+		.toast-notification.toast-error {
+			background: #dc2626;
+		}
+
+		.toast-notification.toast-success {
+			background: #16a34a;
+		}
+
+		.toast-notification.show {
+			opacity: 1;
+			transform: translateX(-50%) translateY(0);
+		}
 	</style>
 </head>
 
@@ -359,7 +413,8 @@
 				<input type="password" id="passwordInput" placeholder="Password" required
 					class="w-full px-5 py-4 bg-gray-50 rounded-2xl text-sm font-semibold border-none outline-none">
 				<button type="submit" id="loginBtn"
-					class="w-full py-4 bg-black text-white rounded-2xl font-bold text-sm uppercase">Masuk</button>
+					class="w-full py-4 bg-black text-white rounded-2xl font-bold text-sm uppercase flex items-center justify-center gap-2 min-h-[52px]"><span
+						id="loginBtnText">Masuk</span></button>
 				<div id="loginError"
 					class="text-red-500 text-[11px] font-bold hidden text-center uppercase mt-2 tracking-widest"></div>
 			</form>
@@ -614,6 +669,25 @@
 
 		let currentSelectedModel = localStorage.getItem('awas_model') || "gemini-3-flash-preview";
 		const thinkingMap = { "1": 4000, "2": 16000, "3": 32000 };
+
+		function showToast(message, type = "info") {
+			const existing = document.querySelector('.toast-notification');
+			if (existing) existing.remove();
+
+			const toast = document.createElement('div');
+			toast.className = `toast-notification ${type === 'error' ? 'toast-error' : type === 'success' ? 'toast-success' : ''}`;
+			toast.textContent = message;
+			document.body.appendChild(toast);
+
+			requestAnimationFrame(() => {
+				requestAnimationFrame(() => toast.classList.add('show'));
+			});
+
+			setTimeout(() => {
+				toast.classList.remove('show');
+				setTimeout(() => toast.remove(), 300);
+			}, 3000);
+		}
 
 		async function saveAdminSettings() {
 			const isUploadEnabled = document.getElementById('upload-toggle').checked;
@@ -903,7 +977,7 @@
 			const files = Array.from(event.target.files);
 			if (!files.length) return;
 			if (pendingFiles.length + files.length > 4) {
-				alert("Maksimal 4 file dalam satu pengiriman.");
+				showToast("Maksimal 4 file dalam satu pengiriman.", "error");
 				event.target.value = '';
 				return;
 			}
@@ -1428,8 +1502,25 @@
 
 		document.getElementById('loginForm').onsubmit = async (e) => {
 			e.preventDefault();
+			const loginBtn = document.getElementById('loginBtn');
+			const loginBtnText = document.getElementById('loginBtnText');
+			const loginError = document.getElementById('loginError');
+
+			loginBtn.disabled = true;
+			loginBtnText.innerHTML = '<div class="btn-spinner"></div>';
+			loginError.classList.add('hidden');
+			loginError.innerText = '';
+
 			const { error } = await _supabase.auth.signInWithPassword({ email: emailInput.value, password: passwordInput.value });
-			if (error) alert("Login Gagal"); else location.reload();
+
+			if (error) {
+				loginBtnText.innerText = 'Masuk';
+				loginBtn.disabled = false;
+				loginError.innerText = 'Login Gagal';
+				loginError.classList.remove('hidden');
+			} else {
+				location.reload();
+			}
 		};
 
 		async function init() {
@@ -1595,11 +1686,11 @@
 			const email = document.getElementById('newUserEmail').value;
 			const password = document.getElementById('newUserPassword').value;
 
-			if (!email || !password) return alert("Email dan Password harus diisi!");
+			if (!email || !password) return showToast("Email dan Password harus diisi!", "error");
 
 			const btn = e.target;
-			const originalText = btn.innerText;
-			btn.innerText = "PROSES...";
+			const originalHTML = btn.innerHTML;
+			btn.innerHTML = '<div class="btn-spinner dark" style="margin:0 auto;"></div>';
 			btn.disabled = true;
 
 			try {
@@ -1616,16 +1707,16 @@
 				const data = await res.json();
 				if (data.error) throw new Error(data.error);
 
-				alert("User berhasil dibuat!");
+				showToast("User berhasil dibuat!", "success");
 				document.getElementById('newUserEmail').value = '';
 				document.getElementById('newUserPassword').value = '';
 				toggleAddUserForm();
 				fetchUsers();
 
-			} catch (e) {
-				alert("Gagal membuat user: " + e.message);
+			} catch (err) {
+				showToast("Gagal membuat user: " + err.message, "error");
 			} finally {
-				btn.innerText = originalText;
+				btn.innerHTML = originalHTML;
 				btn.disabled = false;
 			}
 		}
@@ -1649,7 +1740,7 @@
 
 				fetchUsers();
 			} catch (e) {
-				alert("Gagal menghapus: " + e.message);
+				showToast("Gagal menghapus: " + e.message, "error");
 			}
 		}
 
@@ -1675,7 +1766,7 @@
 
 				fetchUsers();
 			} catch (e) {
-				alert(`Gagal ${action}: ` + e.message);
+				showToast(`Gagal ${action}: ` + e.message, "error");
 			}
 		}
 	</script>
