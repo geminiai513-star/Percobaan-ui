@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	<title>ASISTEN</title>
-	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-status-bar-style" content="default">
 	<meta name="theme-color" content="#ffffff">
 	<meta name="apple-mobile-web-app-title" content="ASISTEN">
@@ -606,6 +606,56 @@
 						class="w-full bg-gray-100 rounded-xl px-4 py-3 text-[15px] font-medium text-slate-600 outline-none resize-none"></textarea>
 				</div>
 
+				<!-- KNOWLEDGE BASE SECTION -->
+				<div class="w-full bg-slate-50 rounded-2xl p-5 shadow-sm">
+					<div class="mb-4">
+						<span class="text-xs font-black text-slate-500 uppercase tracking-widest">Knowledge Base</span>
+					</div>
+					<div class="space-y-4">
+						<div class="flex items-center justify-between bg-white p-3 rounded-xl border border-slate-100">
+							<div class="flex items-center gap-3">
+								<div
+									class="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600">
+									<i data-lucide="book-open" class="w-4 h-4"></i>
+								</div>
+								<span class="text-sm font-bold text-slate-700">Knowledge Base</span>
+							</div>
+							<label class="relative inline-flex items-center cursor-pointer">
+								<input type="checkbox" id="kb-toggle" class="sr-only peer">
+								<div
+									class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600">
+								</div>
+							</label>
+						</div>
+
+						<div class="flex gap-2">
+							<input type="file" id="kb-file-input" accept=".txt" class="hidden">
+							<button type="button" onclick="document.getElementById('kb-file-input').click()"
+								class="flex-1 flex items-center justify-center gap-2 py-3 bg-white rounded-xl border border-slate-100 text-sm font-bold text-slate-600 hover:bg-slate-50 active:scale-95 transition-all">
+								<i data-lucide="upload" class="w-4 h-4"></i>
+								Upload File .txt
+							</button>
+						</div>
+
+						<div id="kb-upload-progress" class="hidden">
+							<div class="bg-white p-3 rounded-xl border border-slate-100">
+								<div class="flex items-center gap-2 mb-2">
+									<div class="btn-spinner dark"></div>
+									<span id="kb-progress-text"
+										class="text-xs font-bold text-slate-500">Memproses...</span>
+								</div>
+								<div class="w-full bg-slate-100 rounded-full h-1.5">
+									<div id="kb-progress-bar"
+										class="bg-emerald-500 h-1.5 rounded-full transition-all duration-300"
+										style="width: 0%"></div>
+								</div>
+							</div>
+						</div>
+
+						<div id="kb-doc-list" class="space-y-2"></div>
+					</div>
+				</div>
+
 				<!-- MANAJEMEN USER SECTION -->
 				<div class="w-full bg-slate-50 rounded-2xl p-5 shadow-sm">
 					<div class="flex justify-between items-center mb-4">
@@ -702,7 +752,7 @@
 				thinking_level: parseInt(document.getElementById('settings-thinking').value),
 				system_prompt: document.getElementById('systemPromptInput').value,
 				use_google_search: document.getElementById('google-search-toggle').checked,
-
+				use_knowledge_base: document.getElementById('kb-toggle').checked,
 				allow_file_upload: isUploadEnabled,
 				updated_at: new Date()
 			};
@@ -773,6 +823,10 @@
 
 				const elUploadToggle = document.getElementById('upload-toggle');
 				if (elUploadToggle) elUploadToggle.checked = data.allow_file_upload;
+
+				const elKBToggle = document.getElementById('kb-toggle');
+				if (elKBToggle) elKBToggle.checked = data.use_knowledge_base;
+				loadKBDocuments();
 
 			} catch (e) {
 				console.error(e);
@@ -849,6 +903,10 @@
 		document.getElementById('google-search-toggle').onchange = () => {
 			saveAdminSettings();
 		};
+		document.getElementById('kb-toggle').onchange = () => {
+			saveAdminSettings();
+		};
+		document.getElementById('kb-file-input').onchange = (e) => uploadKnowledgeBase(e);
 
 
 		function findScrollableParent(el, axis) {
@@ -1209,24 +1267,48 @@
 					? `[FILE LAMPIRAN]\n${textContext}\n\nPERTANYAAN USER:\n${rawInput}`
 					: rawInput;
 
+				// RAG: Cari knowledge base jika aktif
+				let finalMessage = userMessage;
+				const useKB = document.getElementById('kb-toggle')?.checked;
+				if (useKB && rawInput) {
+					try {
+						const kbContext = await searchKnowledgeBase(rawInput);
+						if (kbContext) {
+							finalMessage = `${userMessage}\n\n---\nInformasi tambahan yang MUNGKIN relevan (gunakan HANYA jika pertanyaan di atas berkaitan):\n${kbContext}\n---\nJika pertanyaan user TIDAK berkaitan dengan informasi di atas, ABAIKAN informasi tersebut dan jawab seperti biasa. Jangan pernah menyebut "referensi", "sumber", atau "dokumen". Jawab natural.`;
+						}
+					} catch (kbErr) {
+						console.warn('KB search failed:', kbErr);
+					}
+				}
+
 				const payload = {
 					system_instruction: { parts: [{ text: customSystemPrompt }] },
 					contents: [
 						...chatHistory,
-						{ role: "user", parts: [...apiParts, { text: userMessage }] }
+						{ role: "user", parts: [...apiParts, { text: finalMessage }] }
 					],
 					generationConfig: {
 						temperature: currentTemp,
-						max_output_tokens: currentMaxTokens
+						maxOutputTokens: currentMaxTokens
 					}
 				};
 
 				if (useGoogleSearch) payload.tools = [{ google_search: {} }];
-				if (currentSelectedModel.includes('2.5') || currentSelectedModel.includes('think')) {
-					payload.thinking_config = { include_thoughts: true, thinking_budget_tokens: currentBudget };
+
+				// thinkingConfig harus di dalam generationConfig
+				if (currentSelectedModel.includes('gemini-3')) {
+					const thinkingLevelMap = { "1": "LOW", "2": "MEDIUM", "3": "HIGH" };
+					payload.generationConfig.thinkingConfig = {
+						thinkingLevel: thinkingLevelMap[sliderVal] || "HIGH"
+					};
+				} else if (currentSelectedModel.includes('2.5')) {
+					payload.generationConfig.thinkingConfig = {
+						thinkingBudget: currentBudget
+					};
 				}
 
-				const res = await fetch(`${PROXY_URL}?model=${currentSelectedModel}&action=generateContent`, {
+				// === TRUE STREAMING: gunakan streamGenerateContent ===
+				const res = await fetch(`${PROXY_URL}?model=${currentSelectedModel}&action=streamGenerateContent&alt=sse`, {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
@@ -1237,18 +1319,85 @@
 					signal: abortController.signal
 				});
 
-				const data = await res.json();
-				const parts = data.candidates?.[0]?.content?.parts || [];
-				const aiText = parts.filter(p => p.text).map(p => p.text).join('') || "Gagal memproses jawaban.";
+				if (!res.ok) {
+					const errData = await res.json().catch(() => ({}));
+					throw new Error(errData.error?.message || `HTTP ${res.status}`);
+				}
 
-				await typeWriter(currentLoadingMsgId, aiText);
+				// Baca stream secara real-time
+				const reader = res.body.getReader();
+				const decoder = new TextDecoder();
+				let fullText = "";
+				let buffer = "";
+				let isFirstChunk = true;
+				const element = document.getElementById(currentLoadingMsgId);
+				let lastRenderTime = 0;
+				const RENDER_INTERVAL = 50; // Render setiap 50ms untuk performa optimal
 
-				if (currentStreamedText && currentStreamedText.length > 0) {
+				while (true) {
+					const { done, value } = await reader.read();
+					if (done) break;
+
+					buffer += decoder.decode(value, { stream: true });
+
+					// Parse SSE lines
+					const lines = buffer.split('\n');
+					buffer = lines.pop() || ""; // Simpan baris terakhir yang belum lengkap
+
+					for (const line of lines) {
+						const trimmed = line.trim();
+						if (!trimmed || !trimmed.startsWith('data: ')) continue;
+
+						const jsonStr = trimmed.slice(6); // Hapus prefix "data: "
+						if (jsonStr === '[DONE]') continue;
+
+						try {
+							const chunk = JSON.parse(jsonStr);
+							const parts = chunk.candidates?.[0]?.content?.parts || [];
+							const textParts = parts.filter(p => p.text).map(p => p.text).join('');
+
+							if (textParts) {
+								if (isFirstChunk && element) {
+									element.innerHTML = ''; // Hapus "Thinking..." saat chunk pertama tiba
+									isFirstChunk = false;
+								}
+								fullText += textParts;
+								currentStreamedText = fullText;
+
+								// Throttle rendering untuk performa optimal
+								const now = performance.now();
+								if (now - lastRenderTime >= RENDER_INTERVAL) {
+									if (element) {
+										element.innerHTML = marked.parse(fullText);
+										const container = document.getElementById('chatContainer');
+										container.scrollTop = container.scrollHeight;
+									}
+									lastRenderTime = now;
+								}
+							}
+						} catch (parseErr) {
+							// Skip invalid JSON chunks (bisa terjadi di boundary)
+						}
+					}
+				}
+
+				// Render final setelah stream selesai
+				if (element && fullText) {
+					element.innerHTML = marked.parse(fullText);
+					// Highlight code blocks
+					element.querySelectorAll('pre code').forEach(block => {
+						hljs.highlightElement(block);
+					});
+					const container = document.getElementById('chatContainer');
+					container.scrollTop = container.scrollHeight;
+				}
+
+				if (fullText.length > 0) {
 					chatHistory.push(
 						{ role: "user", parts: [{ text: rawInput }] },
-						{ role: "model", parts: [{ text: currentStreamedText }] }
+						{ role: "model", parts: [{ text: fullText }] }
 					);
-					await saveMsg(session.user.id, rawInput, currentStreamedText, fileCardsHTML);
+					await saveMsg(session.user.id, rawInput, fullText, fileCardsHTML);
 				}
 
 			} catch (err) {
@@ -1471,39 +1620,17 @@
 			}
 		}
 
+		// typeWriter tidak diperlukan lagi — streaming langsung menampilkan teks real-time
 		function typeWriter(elementId, text) {
 			return new Promise(resolve => {
-				typeWriterResolve = resolve;
 				const element = document.getElementById(elementId);
 				if (!element) { resolve(""); return; }
-
-				element.innerHTML = '';
-				currentStreamedText = "";
-				let index = 0;
-				const speed = 5;
-				const charsPerTick = 5;
-
-				if (typingInterval) clearInterval(typingInterval);
-
-				typingInterval = setInterval(() => {
-					if (index >= text.length) {
-						clearInterval(typingInterval);
-						typingInterval = null;
-						element.innerHTML = marked.parse(text);
-						currentStreamedText = text;
-						resolve(text);
-						return;
-					}
-
-					const chunk = text.substring(0, index + charsPerTick);
-					currentStreamedText = chunk;
-					element.innerHTML = marked.parse(chunk);
-
-					const container = document.getElementById('chatContainer');
-					container.scrollTop = container.scrollHeight;
-
-					index += charsPerTick;
-				}, speed);
+				element.innerHTML = marked.parse(text);
+				element.querySelectorAll('pre code').forEach(block => hljs.highlightElement(block));
+				currentStreamedText = text;
+				const container = document.getElementById('chatContainer');
+				container.scrollTop = container.scrollHeight;
+				resolve(text);
 			});
 		}
 
@@ -1594,6 +1721,358 @@
 			}
 		};
 
+		// =============================================
+		// KNOWLEDGE BASE RAG FUNCTIONS
+		// =============================================
+		const KB_CHUNK_SIZE = 500;
+
+		function splitTextIntoChunks(text, maxChunkSize = KB_CHUNK_SIZE) {
+			// Bersihkan teks
+			const cleanText = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n').trim();
+
+			// 1. Pecah berdasarkan paragraf (double newline)
+			const paragraphs = cleanText.split(/\n\s*\n/).map(p => p.trim()).filter(p => p.length > 0);
+
+			// 2. Pecah paragraf panjang menjadi kalimat
+			const segments = [];
+			for (const para of paragraphs) {
+				if (para.length <= maxChunkSize) {
+					segments.push(para);
+				} else {
+					// Pecah berdasarkan kalimat (. ? ! diikuti spasi atau akhir)
+					const sentences = para.match(/[^.!?]*[.!?]+[\s]*/g) || [para];
+					let currentSentences = '';
+					for (const sentence of sentences) {
+						if (currentSentences.length + sentence.length > maxChunkSize && currentSentences.length > 0) {
+							segments.push(currentSentences.trim());
+							currentSentences = '';
+						}
+						currentSentences += sentence;
+					}
+					if (currentSentences.trim().length > 0) {
+						segments.push(currentSentences.trim());
+					}
+				}
+			}
+
+			// 3. Gabungkan segment kecil menjadi chunk yang lebih besar
+			const chunks = [];
+			let currentChunk = '';
+
+			for (const segment of segments) {
+				const separator = currentChunk.length > 0 ? '\n\n' : '';
+				if (currentChunk.length + separator.length + segment.length <= maxChunkSize) {
+					currentChunk += separator + segment;
+				} else {
+					if (currentChunk.length > 0) {
+						chunks.push(currentChunk.trim());
+					}
+					currentChunk = segment;
+				}
+			}
+
+			// Sisa terakhir
+			if (currentChunk.trim().length > 0) {
+				chunks.push(currentChunk.trim());
+			}
+
+			return chunks.filter(c => c.length > 20);
+		}
+
+		async function embedText(text) {
+			const { data: { session } } = await _supabase.auth.getSession();
+			if (!session) throw new Error('Sesi habis');
+
+			const res = await fetch(`${PROXY_URL}?model=gemini-embedding-001&action=embedContent`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${session.access_token}`,
+					'apikey': SUPABASE_KEY
+				},
+				body: JSON.stringify({
+					content: { parts: [{ text }] },
+					outputDimensionality: 768
+				})
+			});
+
+			const responseText = await res.text();
+			let data;
+			try {
+				data = JSON.parse(responseText);
+			} catch (e) {
+				throw new Error('Response embedding bukan JSON valid');
+			}
+
+			if (!res.ok) {
+				throw new Error(data.error?.message || `Embedding gagal: HTTP ${res.status}`);
+			}
+
+			const values = data.embedding?.values;
+			if (!values || !Array.isArray(values) || values.length === 0) {
+				throw new Error('Response embedding tidak mengandung values');
+			}
+
+			return values;
+		}
+
+		async function uploadKnowledgeBase(event) {
+			const file = event.target.files[0];
+			if (!file) return;
+
+			if (!file.name.endsWith('.txt')) {
+				showToast('Hanya file .txt yang diperbolehkan', 'error');
+				event.target.value = '';
+				return;
+			}
+
+			const progressDiv = document.getElementById('kb-upload-progress');
+			const progressText = document.getElementById('kb-progress-text');
+			const progressBar = document.getElementById('kb-progress-bar');
+
+			progressDiv.classList.remove('hidden');
+			progressText.textContent = 'Membaca file...';
+			progressBar.style.width = '5%';
+
+			try {
+				const text = await file.text();
+
+				if (text.trim().length < 50) {
+					throw new Error('File terlalu pendek (minimal 50 karakter)');
+				}
+
+				// Split teks menjadi chunks
+				const chunks = splitTextIntoChunks(text);
+
+
+				// Test embedding dengan chunk pertama dulu
+				progressText.textContent = 'Menguji koneksi embedding...';
+				progressBar.style.width = '8%';
+
+				let testEmbedding;
+				try {
+					testEmbedding = await embedText(chunks[0]);
+				} catch (testErr) {
+					throw new Error(`Embedding test gagal: ${testErr.message}`);
+				}
+
+				if (!testEmbedding) {
+					throw new Error('Embedding test mengembalikan null');
+				}
+
+				// Simpan dokumen
+				progressText.textContent = 'Menyimpan dokumen...';
+				progressBar.style.width = '10%';
+
+				const { data: doc, error: docErr } = await _supabase
+					.from('kb_documents')
+					.insert({
+						filename: file.name,
+						content: text,
+						chunk_count: chunks.length
+					})
+					.select()
+					.single();
+
+				if (docErr) throw new Error('Gagal simpan dokumen: ' + docErr.message);
+
+				// Simpan chunk pertama yang sudah diembed
+				let successCount = 0;
+				let failCount = 0;
+
+				const { error: firstChunkErr } = await _supabase.from('kb_chunks').insert({
+					document_id: doc.id,
+					chunk_text: chunks[0],
+					chunk_index: 0,
+					embedding: JSON.stringify(testEmbedding) // Kirim sebagai string format pgvector
+				});
+
+				if (firstChunkErr) {
+					console.error('Insert chunk pertama gagal:', firstChunkErr);
+					// Coba tanpa stringify
+					const { error: retryErr } = await _supabase.from('kb_chunks').insert({
+						document_id: doc.id,
+						chunk_text: chunks[0],
+						chunk_index: 0,
+						embedding: testEmbedding // Kirim sebagai array langsung
+					});
+					if (retryErr) {
+						throw new Error('Gagal simpan chunk ke database: ' + retryErr.message);
+					}
+				}
+				successCount++;
+
+				// Embed sisa chunks
+				for (let i = 1; i < chunks.length; i++) {
+					progressText.textContent = `Embedding ${i + 1}/${chunks.length}...`;
+					progressBar.style.width = `${10 + (i / chunks.length) * 85}%`;
+
+					try {
+						const embedding = await embedText(chunks[i]);
+						if (!embedding) {
+							failCount++;
+							continue;
+						}
+
+						const { error: chunkErr } = await _supabase.from('kb_chunks').insert({
+							document_id: doc.id,
+							chunk_text: chunks[i],
+							chunk_index: i,
+							embedding: embedding
+						});
+
+						if (chunkErr) {
+							console.error(`Chunk ${i} insert gagal:`, chunkErr);
+							failCount++;
+						} else {
+							successCount++;
+						}
+					} catch (embedErr) {
+						console.error(`Chunk ${i} embedding gagal:`, embedErr.message);
+						failCount++;
+					}
+
+					// Delay agar tidak kena rate limit
+					if (i < chunks.length - 1) {
+						await new Promise(r => setTimeout(r, 250));
+					}
+				}
+
+				progressBar.style.width = '100%';
+
+				if (successCount === 0) {
+					// Hapus dokumen jika semua chunk gagal
+					await _supabase.from('kb_documents').delete().eq('id', doc.id);
+					throw new Error('Semua chunk gagal diproses!');
+				}
+
+				if (failCount > 0) {
+					progressText.textContent = `Selesai (${successCount} OK, ${failCount} gagal)`;
+					showToast(`"${file.name}": ${successCount}/${chunks.length} chunks berhasil`, 'success');
+				} else {
+					progressText.textContent = 'Selesai!';
+					showToast(`"${file.name}" berhasil diupload! (${chunks.length} chunks)`, 'success');
+				}
+
+				loadKBDocuments();
+
+				setTimeout(() => {
+					progressDiv.classList.add('hidden');
+					progressBar.style.width = '0%';
+				}, 3000);
+
+			} catch (e) {
+				console.error('KB upload error:', e);
+				showToast('Gagal: ' + e.message, 'error');
+				progressDiv.classList.add('hidden');
+				progressBar.style.width = '0%';
+			} finally {
+				event.target.value = '';
+			}
+		}
+
+		async function loadKBDocuments() {
+			const container = document.getElementById('kb-doc-list');
+			if (!container) return;
+
+			try {
+				const { data: docs, error } = await _supabase
+					.from('kb_documents')
+					.select('*')
+					.order('created_at', { ascending: false });
+
+				if (error) throw error;
+
+				container.innerHTML = '';
+				if (!docs || docs.length === 0) {
+					container.innerHTML = '<p class="text-xs text-slate-400 text-center py-2 font-medium">Belum ada dokumen knowledge base.</p>';
+					return;
+				}
+
+				docs.forEach(doc => {
+					const div = document.createElement('div');
+					div.className = 'flex items-center justify-between bg-white p-3 rounded-xl border border-slate-100';
+					div.innerHTML = `
+						<div class="flex items-center gap-3 min-w-0 flex-1">
+							<div class="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600 shrink-0">
+								<i data-lucide="file-text" class="w-4 h-4"></i>
+							</div>
+							<div class="min-w-0 flex-1">
+								<p class="text-sm font-bold text-slate-700 truncate">${doc.filename}</p>
+								<p class="text-[10px] font-medium text-slate-400">${doc.chunk_count || 0} chunks • ${new Date(doc.created_at).toLocaleDateString('id-ID')}</p>
+							</div>
+						</div>
+						<button onclick="deleteKBDocument('${doc.id}')" class="p-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition-colors shrink-0 ml-2">
+							<i data-lucide="trash-2" class="w-4 h-4"></i>
+						</button>`;
+					container.appendChild(div);
+				});
+				lucide.createIcons();
+			} catch (e) {
+				console.error('Load KB docs error:', e);
+				container.innerHTML = '<p class="text-xs text-red-400 text-center py-2 font-medium">Gagal memuat dokumen.</p>';
+			}
+		}
+
+		async function deleteKBDocument(docId) {
+			if (!confirm('Yakin ingin menghapus dokumen knowledge base ini?')) return;
+			try {
+				// Chunks dihapus otomatis via ON DELETE CASCADE
+				await _supabase.from('kb_documents').delete().eq('id', docId);
+				showToast('Dokumen berhasil dihapus', 'success');
+				loadKBDocuments();
+			} catch (e) {
+				showToast('Gagal menghapus: ' + e.message, 'error');
+			}
+		}
+
+		async function searchKnowledgeBase(query) {
+			try {
+				const embedding = await embedText(query);
+				if (!embedding) return '';
+
+				const { data: chunks, error } = await _supabase
+					.rpc('match_kb_chunks', {
+						query_embedding: embedding,
+						match_threshold: 0.55,
+						match_count: 5
+					});
+
+				if (error) {
+					console.error('KB RPC error:', error);
+					return '';
+				}
+
+				if (!chunks || chunks.length === 0) {
+					console.log('%c📚 KB Search: Tidak ada chunk yang relevan ditemukan', 'color: #f59e0b; font-weight: bold');
+					return '';
+				}
+
+				// Log detail ke console
+				console.group('%c📚 Knowledge Base Search Results', 'color: #10b981; font-weight: bold; font-size: 13px');
+				console.log(`Query: "${query}"`);
+				console.log(`Chunks ditemukan: ${chunks.length}`);
+				console.table(chunks.map((c, i) => ({
+					'#': i + 1,
+					'Relevansi': (c.similarity * 100).toFixed(1) + '%',
+					'Panjang': c.chunk_text.length + ' chars',
+					'Preview': c.chunk_text.substring(0, 80) + '...'
+				})));
+
+				const totalChars = chunks.reduce((sum, c) => sum + c.chunk_text.length, 0);
+				console.log(`Total konteks: ${totalChars} karakter (~${Math.ceil(totalChars / 4)} tokens)`);
+				console.groupEnd();
+
+				// Gabungkan chunks tanpa label referensi agar AI menjawab natural
+				return chunks
+					.map(c => c.chunk_text)
+					.join('\n\n');
+			} catch (e) {
+				console.error('KB search error:', e);
+				return '';
+			}
+		}
+
 		async function init() {
 			lucide.createIcons();
 			const cachedUpload = localStorage.getItem('awas_allow_upload');
@@ -1613,6 +2092,7 @@
 
 				loadAdminSettings().then(() => {
 					lucide.createIcons();
+					loadKBDocuments();
 				});
 
 				const { data: profile } = await _supabase.from('profiles').select('role').eq('id', session.user.id).single();
